@@ -1,5 +1,6 @@
 import os
 from flask import Flask
+from . import routes
 
 
 def create_app(test_config=None):
@@ -23,19 +24,7 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # a simple page that says hello
-    @app.route('/hello')
-    def hello():
-        return 'Hello, World!'
-
-    @app.route('/d')
-    def d():
-        return '<h1>Hello</h1><p>Hello 2</p>'
-
-    @app.route('/')
-    def index():
-        return 'index'
-
+    routes.init_app(app)
 
     from . import db
     db.init_app(app)
