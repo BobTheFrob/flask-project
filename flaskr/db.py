@@ -35,6 +35,15 @@ def init_db_command():
     init_db()
     click.echo('Initialized the database.')
 
+@click.command('clear-db')
+def clear_db_command():
+    """Clear the existing data."""
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute('DROP TABLE IF EXISTS posts')
+    init_db()
+    click.echo('Cleared the database.')
+
 
 sqlite3.register_converter(
     "timestamp", lambda v: datetime.fromisoformat(v.decode())
@@ -43,3 +52,4 @@ sqlite3.register_converter(
 def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
+    app.cli.add_command(clear_db_command)
