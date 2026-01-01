@@ -1,24 +1,29 @@
 <!doctype html>
-<title>{% block title %}{% endblock %} - DMedias</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon.png') }}">
-<nav>
-  <h1>DMedias</h1>
-  <ul>
-    {% if g.user %}
-      <li><span>{{ g.user['username'] }}</span>
-        {% else %}
-        <li><a href="{{ url_for('main.index') }}">Index</a>
-
-    {% endif %}
-  </ul>
-</nav>
-<section class="content">
-  <header>
-    {% block header %}{% endblock %}
-  </header>
-  {% for message in get_flashed_messages() %}
-    <div class="flash">{{ message }}</div>
-  {% endfor %}
-  {% block content %}{% endblock %}
-</section>
+<head>
+    <title>{% block title %}{% endblock %} - DMedias</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Oswald:wght@200..700&amp;display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon.png') }}">
+</head>
+<body>
+    <nav class="navibox">
+        <h2 class="maintitle">DMedias</h2>
+        <ul class="navi">
+            <div class="navihelper">
+                <li class="navili"><a href="{{ url_for('main.index')}}">Home</a></li>
+                <li class="navili"><a href="{{ url_for('main.posts')}}">Posts</a></li>
+                <li class="navili"><a href="#">About</a></li>
+            </div>
+            <p class="special">By Dylan</p>
+        </ul>
+    </nav>
+    <section class="content">
+      <header>
+        {% block header %}{% endblock %}
+        <hr>
+      </header>
+      {% block content %}{% endblock %}
+    </section>
+</body>

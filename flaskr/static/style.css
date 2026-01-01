@@ -1,3 +1,135 @@
 * {
-    font-family: Arial, Helvetica, sans-serif;
+    color: rgb(205, 205, 205)
+}
+
+body {
+    background-color: rgb(19, 19, 19);
+    padding-bottom: 100px;
+    margin: 0;
+}
+
+h1 {
+    color: white;
+    font-size: 50pt;
+    font-family: "Bebas Neue", "Georgia";
+    margin: 10px 0;
+}
+
+h2 {
+    color: white;
+    margin: 0px 0 10px 0;
+    font-size: 35pt;
+    font-family: "Bebas Neue", "Georgia";
+}
+
+p {
+    font-family: "Oswald", "Georgia";
+    text-align: justify;
+}
+
+a {
+    font-family: "Oswald", "Georgia";
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+a:hover {
+    background: grey;
+    border-radius: 10px;    
+
+}
+
+.maintitle {
+    text-align: center;
+    margin-bottom: 0 !important;
+}
+
+.navi {
+    background-color: rgb(45, 45, 45);
+    padding: 0.2rem;
+    display: flex;
+    margin: 0;
+    justify-content: space-between;
+    list-style-type: none;
+    max-width: 100%;
+    border-radius: 5px;
+}
+
+.navibox {
+    width: 100%;
+    margin: 0;
+    padding-top: 0.5rem;
+    background-color: rgb(23, 23, 23);
+    position: sticky;
+    top: 0px;
+}
+
+.navili {
+    background-color: rgb(23, 23, 23);
+    border-radius: 10px;
+    display: inline;
+    list-style-type: none;
+    width: 100%;
+    margin: 5px 20px;
+}
+
+.navihelper {
+    width: 30%;
+    display: flex;
+}
+
+.content {
+    margin: 3rem 5rem 0 5rem;
+}
+
+.special {
+    font-size: smaller;
+    margin-right: 3rem;
+}
+
+video {
+    height: 55vh;
+    object-fit: cover;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.box {
+    margin: 30px;
+    gap: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 70vw;
+    flex-direction: row;
+}
+
+.box2 {
+    align-items: baseline !important;
+}
+
+.dimg {
+    height: 55vh;
+    border-radius: 10px;
+}
+
+.spec {
+    text-align: center;
+    margin: 0 0 35px 0;
+}
+
+.boxtext {
+    max-width: 400px;
+}
+
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }

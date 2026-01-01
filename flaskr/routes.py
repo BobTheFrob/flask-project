@@ -8,16 +8,13 @@ bp = Blueprint('main', __name__)
 
 @bp.route('/')
 def index():
-    return 'Index Page'
-
-@bp.route('/hello')
-def hello():
-    return 'Hello World!'
+    return render_template("main.html")
 
 @bp.route('/posts',  methods = ['GET', 'POST', 'DELETE'])
-def update_text():
+def posts():
         if request.method == 'GET':
-            return render_template("posts.html")
+            posts = models.get_all_posts()
+            return render_template("posts.html", posts=posts)
         if request.method == 'POST':
             return "post created!"
         if request.method == 'DELETE':

@@ -1,2 +1,15 @@
 {% extends 'base.html' %}
-<p>posts</p>
+{% block title %}Posts{% endblock %}
+
+
+{% block header %}
+    <h1>Posts</h1>
+{% endblock %}
+
+{% block content %}
+    <p>Yaaaay! Got posts working, here they are: </p>
+    <br>
+    {% for post in posts %}
+    <p>{{post['id']}}: {{post['title']}} ({{post['score']}}/10) - {{post['body']}} ({{post['created']}})</p>
+    {% endfor %}
+{% endblock %}

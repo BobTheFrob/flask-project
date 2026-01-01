@@ -9,10 +9,10 @@ def get_all_posts():
     posts = cursor.fetchall()
 
     # turn it into a string for now (just for testing)
-    result = ""
-    for post in posts:
-        result += f"<p>{post['id']}: {post['title']} ({post['score']}/10) - {post['body']} ({post['created']})</p>"
-    return result
+    # result = ""
+    # for post in posts:
+    #     result += f"<p>{post['id']}: {post['title']} ({post['score']}/10) - {post['body']} ({post['created']})</p>"
+    return posts
 
 @click.command('add-post')
 def add_post():
