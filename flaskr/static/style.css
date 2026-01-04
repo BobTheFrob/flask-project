@@ -90,6 +90,10 @@ a:hover {
     margin-right: 3rem;
 }
 
+.input {
+    color: black
+}
+
 video {
     height: 55vh;
     object-fit: cover;

@@ -15,7 +15,7 @@ def get_all_posts():
     return posts
 
 @click.command('add-post')
-def add_post():
+def add_post_terminal():
     con = db.get_db()
     # cursor = con.cursor()
     title = input("Please enter the title:\n")
@@ -26,5 +26,12 @@ def add_post():
     con.execute(sql, (title, body, score))
     con.commit()
 
+def add_post(title, desc, score):
+    con = db.get_db()
+    sql = ''' INSERT INTO posts(title,body,score)
+              VALUES(?,?,?) '''    
+    con.execute(sql, (title, desc, score))
+    con.commit()
+
 def init_app(app):
-    app.cli.add_command(add_post)
+    app.cli.add_command(add_post_terminal)

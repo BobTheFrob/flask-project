@@ -7,6 +7,15 @@
 {% endblock %}
 
 {% block content %}
+    <form method="post">
+        <label for="title">Title</label>
+        <input class="input" name="title" id="title" required>
+        <label for="description">Description</label>
+        <input class="input" name="description" id="description" required>
+        <label for="score">Score</label>
+        <input class="input" type="number" min="0" max="10" name="score" id="score" required>
+        <input class="input" type="submit" value="Post">
+    </form>
     <p>Yaaaay! Got posts working, here they are: </p>
     <br>
     {% for post in posts %}

@@ -16,7 +16,11 @@ def posts():
             posts = models.get_all_posts()
             return render_template("posts.html", posts=posts)
         if request.method == 'POST':
-            return "post created!"
+            title = request.form['title']
+            desc = request.form['description']
+            score = request.form['score']
+            models.add_post(title, desc, score)
+            return redirect(url_for("main.posts"))
         if request.method == 'DELETE':
             pass
         else:
