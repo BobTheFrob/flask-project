@@ -137,3 +137,7 @@ video {
     align-items: center;
     flex-direction: column;
 }
+
+.dhiddentextarea {
+    display: none;
+}

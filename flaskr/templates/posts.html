@@ -20,10 +20,13 @@
     <br>
     {% for post in posts %}
     <p id="post-{{post['id']}}">{{post['id']}}: {{post['title']}} ({{post['score']}}/10) - {{post['body']}} ({{post['created']}})
-    {# <button onclick="deletePost({{post['id']}})"></button> #}
     <form method="post" action="/posts/delete/{{post['id']}}">
-        {# <input type="hidden" name="_method" value="DELETE"> #}
         <button type="submit">Delete</button>
+    </form>
+    <button id="editbtn-{{post['id']}}" onclick="edit_post({{post['id']}})">Edit</button>
+    <form id="editform-{{post['id']}}" class="dhiddentextarea" method="post" action="/posts/edit/{{post['id']}}">
+        <textarea id="editinput-{{post['id']}}"></textarea>
+        <button type="submit">Confirm</button>
     </form>
     </p>
     {% endfor %}
