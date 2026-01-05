@@ -10,21 +10,27 @@ bp = Blueprint('main', __name__)
 def index():
     return render_template("main.html")
 
-@bp.route('/posts',  methods = ['GET', 'POST', 'DELETE'])
+@bp.route('/posts',  methods = ['GET', 'POST'])
 def posts():
-        if request.method == 'GET':
-            posts = models.get_all_posts()
-            return render_template("posts.html", posts=posts)
-        if request.method == 'POST':
-            title = request.form['title']
-            desc = request.form['description']
-            score = request.form['score']
-            models.add_post(title, desc, score)
-            return redirect(url_for("main.posts"))
-        if request.method == 'DELETE':
-            pass
-        else:
-            pass
+    if request.method == 'GET':
+        posts = models.get_all_posts()
+        return render_template("posts.html", posts=posts)
+    if request.method == 'POST':
+        title = request.form['title']
+        desc = request.form['description']
+        score = request.form['score']
+        models.add_post(title, desc, score)
+        return redirect(url_for("main.posts"))
+
+@bp.route('/posts/<int:post_id>',  methods = ['DELETE'])
+def editposts(post_id):
+    if request.method == 'DELETE':
+        try:
+            models.delete_post(str(post_id))
+            return '', 204
+        except Exception as e:
+            print(f"Delete error: {e}")  # Check logs
+            return 'Internal Server Error', 500
 
 def init_app(app):
     app.register_blueprint(bp)
