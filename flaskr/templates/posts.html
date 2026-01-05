@@ -21,10 +21,10 @@
     {% for post in posts %}
     <p id="post-{{post['id']}}">{{post['id']}}: {{post['title']}} ({{post['score']}}/10) - {{post['body']}} ({{post['created']}})
     {# <button onclick="deletePost({{post['id']}})"></button> #}
-        <!-- <form method="post" action="/post/{{ id }}">
-    <input type="hidden" name="_method" value="DELETE">
-    <button type="submit">Delete</button>
-</form> -->
+    <form method="post" action="/posts/delete/{{post['id']}}">
+        {# <input type="hidden" name="_method" value="DELETE"> #}
+        <button type="submit">Delete</button>
+    </form>
     </p>
     {% endfor %}
 {% endblock %}

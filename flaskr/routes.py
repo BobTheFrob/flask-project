@@ -22,12 +22,12 @@ def posts():
         models.add_post(title, desc, score)
         return redirect(url_for("main.posts"))
 
-@bp.route('/posts/<int:post_id>',  methods = ['DELETE'])
+@bp.route('/posts/delete/<int:post_id>',  methods = ['POST'])
 def editposts(post_id):
-    if request.method == 'DELETE':
+    if request.method == 'POST':
         try:
             models.delete_post(str(post_id))
-            return '', 204
+            return redirect(url_for("main.posts"))
         except Exception as e:
             print(f"Delete error: {e}")  # Check logs
             return 'Internal Server Error', 500
