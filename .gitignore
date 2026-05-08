@@ -1,1 +1,3 @@
 flaskr/__pycache__/
+.venv/
+instance/
