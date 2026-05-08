@@ -1,33 +1,69 @@
 {% extends 'base.html' %}
 {% block title %}Posts{% endblock %}
 
-
 {% block header %}
-    <h1>Posts</h1>
+    <h1 class="display-3">Posts</h1>
 {% endblock %}
 
 {% block content %}
-    <form method="post">
-        <label for="title">Title</label>
-        <input class="input" name="title" id="title" required>
-        <label for="description">Description</label>
-        <input class="input" name="description" id="description" required>
-        <label for="score">Score</label>
-        <input class="input" type="number" min="0" max="10" name="score" id="score" required>
-        <input class="input" type="submit" value="Post">
-    </form>
-    <p>Yaaaay! Got posts working, here they are: </p>
-    <br>
-    {% for post in posts %}
-    <p id="post-{{post['id']}}">{{post['id']}}: {{post['title']}} ({{post['score']}}/10) - {{post['body']}} ({{post['created']}})
-    <form method="post" action="/posts/delete/{{post['id']}}">
-        <button type="submit">Delete</button>
-    </form>
-    <button id="editbtn-{{post['id']}}" onclick="edit_post({{post['id']}})">Edit</button>
-    <form id="editform-{{post['id']}}" class="dhiddentextarea" method="post" action="/posts/edit/{{post['id']}}">
-        <textarea id="editinput-{{post['id']}}"></textarea>
-        <button type="submit">Confirm</button>
-    </form>
-    </p>
-    {% endfor %}
+    <div class="card bg-black text-light border-secondary mb-4">
+        <div class="card-body">
+            <form method="post">
+                <div class="mb-3">
+                    <label class="form-label" for="title">Title</label>
+                    <input class="form-control" name="title" id="title" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="description">Description</label>
+                    <textarea class="form-control" name="description" id="description" rows="4" required></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="score">Score</label>
+                    <input class="form-control" type="number" min="0" max="10" name="score" id="score" required>
+                </div>
+
+                <button class="btn btn-light" type="submit">Post</button>
+            </form>
+        </div>
+    </div>
+
+    <p>Yaaaay! Got posts working, here they are:</p>
+
+    <div class="row g-3">
+        {% for post in posts %}
+            <div class="col-12">
+                <div class="card bg-black text-light border-secondary" id="post-{{ post['id'] }}">
+                    <div class="card-body">
+                        <h2 class="h4 card-title">
+                            {{ post['title'] }}
+                            <span class="badge text-bg-secondary">{{ post['score'] }}/10</span>
+                        </h2>
+
+                        <p class="card-text">{{ post['body'] }}</p>
+
+                        <p class="text-secondary small mb-3">
+                            Post #{{ post['id'] }} — {{ post['created'] }}
+                        </p>
+
+                        <div class="d-flex gap-2 flex-wrap">
+                            <form method="post" action="/posts/delete/{{ post['id'] }}">
+                                <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                            </form>
+
+                            <button class="btn btn-outline-light btn-sm" id="editbtn-{{ post['id'] }}" onclick="edit_post({{ post['id'] }})">
+                                Edit
+                            </button>
+                        </div>
+
+                        <form id="editform-{{ post['id'] }}" class="dhiddentextarea mt-3" method="post" action="/posts/edit/{{ post['id'] }}">
+                            <textarea class="form-control mb-2" id="editinput-{{ post['id'] }}" name="description" rows="4">{{ post['body'] }}</textarea>
+                            <button class="btn btn-success btn-sm" type="submit">Confirm</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}
