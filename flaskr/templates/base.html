@@ -1,30 +1,58 @@
 <!doctype html>
+<html lang="en">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>{% block title %}{% endblock %} - DMedias</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Oswald:wght@200..700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='icon.png') }}">
 </head>
-<body>
-    <nav class="navibox">
-        <h2 class="maintitle">DMedias</h2>
-        <ul class="navi">
-            <div class="navihelper">
-                <li class="navili"><a href="{{ url_for('main.index')}}">Home</a></li>
-                <li class="navili"><a href="{{ url_for('main.posts')}}">Posts</a></li>
-                <li class="navili"><a href="#">About</a></li>
+
+<body class="bg-dark text-light">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-black sticky-top border-bottom border-secondary">
+        <div class="container">
+            <a class="navbar-brand fs-2" href="{{ url_for('main.index') }}">DMedias</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.index') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.posts') }}">Posts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                </ul>
+
+                <span class="navbar-text">By Dylan</span>
             </div>
-            <p class="special">By Dylan</p>
-        </ul>
+        </div>
     </nav>
-    <section class="content">
-      <header>
-        {% block header %}{% endblock %}
-        <hr>
-      </header>
-      {% block content %}{% endblock %}
-    </section>
+
+    <main class="container py-4">
+        <header class="mb-4">
+            {% block header %}{% endblock %}
+            <hr>
+        </header>
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
+</html>

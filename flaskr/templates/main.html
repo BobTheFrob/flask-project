@@ -2,11 +2,15 @@
 {% block title %}Main{% endblock %}
 
 {% block header %}
-    <h1>Home</h1>
+    <h1 class="display-3">Home</h1>
 {% endblock %}
 
 {% block content %}
-    <p>Hello world, welcome to my site!</p>
-    <p>Armed with knowledge from my CS3720 course, this is my first flask project.</p>
-    <p>I'm planning to make for simple media tracking, like favourites n stuff.</p>
+    <div class="card bg-black text-light border-secondary">
+        <div class="card-body">
+            <p>Hello world, welcome to my site!</p>
+            <p>Armed with knowledge from my CS3720 course, this is my first Flask project.</p>
+            <p class="mb-0">I'm planning to make simple media tracking, like favourites and stuff.</p>
+        </div>
+    </div>
 {% endblock %}
