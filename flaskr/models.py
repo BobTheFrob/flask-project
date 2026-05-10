@@ -23,21 +23,21 @@ def add_post_terminal():
     score = input("Please enter the score:\n")
     sql = ''' INSERT INTO posts(title,body,score)
               VALUES(?,?,?) '''    
-    con.execute(sql, (title, body, score))
+    con.execute(sql, [title, body, score])
     con.commit()
 
 def add_post(title, desc, score):
     con = db.get_db()
     sql = ''' INSERT INTO posts(title,body,score)
               VALUES(?,?,?) '''    
-    con.execute(sql, (title, desc, score))
+    con.execute(sql, [title, desc, score])
     con.commit()
 
 def delete_post(id):
     con = db.get_db()
     sql = ''' DELETE FROM posts
               WHERE id=(?) '''    
-    con.execute(sql, (id))
+    con.execute(sql, [id])
     con.commit()
 
 @click.command('delete-post')
@@ -46,7 +46,7 @@ def delete_post_terminal():
     id = input("Please enter the id:\n")
     sql = ''' DELETE FROM posts
               WHERE id=(?) '''    
-    con.execute(sql, (id))
+    con.execute(sql, [id])
     con.commit()
     print("Deleted")
 

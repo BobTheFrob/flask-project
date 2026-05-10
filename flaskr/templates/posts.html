@@ -22,11 +22,8 @@
 
                 <div class="mb-3">
                     <label class="form-label" for="description">Description</label>
-                    <textarea class="form-control" name="description" id="description" rows="4" required></textarea>
+                    <textarea class="form-control" name="description" id="description" rows="4"></textarea>
                 </div>
-
-
-
                 <button class="btn btn-light" type="submit">Post</button>
             </form>
         </div>
@@ -36,7 +33,7 @@
 
     <div class="row g-3">
         {% for post in posts %}
-            <div class="col-12">
+            <div class="col-lg-3 col-md-6">
                 <div class="card bg-black text-light border-secondary" id="post-{{ post['id'] }}">
                     <div class="card-body">
                         <h2 class="h4 card-title">
