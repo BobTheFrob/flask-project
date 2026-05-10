@@ -58,7 +58,7 @@
                         </div>
 
                         <form id="editform-{{ post['id'] }}" class="dhiddentextarea mt-3" method="post" action="/posts/edit/{{ post['id'] }}">
-                            <textarea class="form-control mb-2" id="editinput-{{ post['id'] }}" name="description" rows="4">{{ post['body'] }}</textarea>
+                            <textarea class="form-control mb-2" id="editinput-{{ post['id'] }}" name="editinput-{{ post['id'] }}" rows="4">{{ post['body'] }}</textarea>
                             <button class="btn btn-success btn-sm" type="submit">Confirm</button>
                         </form>
                     </div>

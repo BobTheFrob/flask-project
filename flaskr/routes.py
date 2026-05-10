@@ -34,17 +34,17 @@ def deletepost(post_id):
             print(f"Delete error: {e}")  # Check logs
             return 'Internal Server Error', 500
 
-@bp.route('/posts/edit/<int:post_id>',  methods = ['POST'])
+@bp.route('/posts/edit/<int:post_id>', methods=['POST'])
 def editposts(post_id):
-    if request.method == 'POST':
-        try:
-            # body = request.form[f'editinput-{str(post_id)}']
-            # print(body)
-            # models.edit_post(post_id, body)
-            return redirect(url_for("main.posts"))
-        except Exception as e:
-            print(f"Edit error: {e}")  # Check logs
-            return 'Internal Server Error', 500
+    try:
+        body = request.form[f'editinput-{post_id}']
+        models.edit_post(body, post_id)
+        return redirect(url_for("main.posts"))
+
+    except Exception as e:
+        print(f"Edit error: {e}")
+        return f'Internal Server Error: {e}', 500
+    
 
 def init_app(app):
     app.register_blueprint(bp)
