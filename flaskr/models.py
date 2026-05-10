@@ -7,11 +7,6 @@ def get_all_posts():
     cursor = con.cursor()
     cursor.execute('SELECT id, title, body, score, created FROM posts ORDER BY created')
     posts = cursor.fetchall()
-
-    # turn it into a string for now (just for testing)
-    # result = ""
-    # for post in posts:
-    #     result += f"<p>{post['id']}: {post['title']} ({post['score']}/10) - {post['body']} ({post['created']})</p>"
     return posts
 
 @click.command('add-post')
@@ -38,6 +33,16 @@ def delete_post(id):
     sql = ''' DELETE FROM posts
               WHERE id=(?) '''    
     con.execute(sql, (id))
+    con.commit()
+
+def edit_post(body, id):
+    con = db.get_db()
+    sql = ''' 
+            UPDATE posts
+            SET body = (?)
+            WHERE id = (?)
+        '''    
+    con.execute(sql, (body, id))
     con.commit()
 
 @click.command('delete-post')
