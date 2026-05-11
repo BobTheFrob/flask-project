@@ -9,6 +9,13 @@ def get_all_posts():
     posts = cursor.fetchall()
     return posts
 
+def get_post_by_id(id):
+    con = db.get_db()
+    cursor = con.cursor()
+    cursor.execute('SELECT id, title, body, score, created FROM posts WHERE id = ?', [id])
+    post = cursor.fetchone()
+    return post
+
 @click.command('add-post')
 def add_post_terminal():
     con = db.get_db()
