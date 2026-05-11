@@ -5,11 +5,16 @@
     <h1 class="display-3">Posts</h1>
 {% endblock %}
 
+
+
 {% block content %}
+    {% if error %}
+        <p class="text-danger">{{ error }}</p>
+    {% endif %}
     <div class="card bg-black text-light border-secondary mb-4 col-lg-6 col-md-8">
         <div class="card-body">
             <form method="post"> 
-                <div class="row">
+                <div class="row"> 
                     <div class="mb-3 col-10">
                         <label class="form-label" for="title">Title</label>
                         <input class="form-control" name="title" id="title" required>
@@ -29,6 +34,8 @@
         </div>
     </div>
 
+
+
     <p>Yaaaay! Got posts working, here they are:</p>
 
     <div class="row g-3">
@@ -38,8 +45,8 @@
                     <div class="card-body">
                         <h2 class="h4 card-title">
                             {{ post['title'] }}
-                            <span class="badge text-bg-secondary">{{ post['score'] }}/10</span>
                         </h2>
+                        <span class="badge text-bg-secondary my-2">{{ post['score'] }}/10</span>
 
                         <p class="card-text">{{ post['body'] }}</p>
 
@@ -47,14 +54,14 @@
                             Post #{{ post['id'] }} — {{ post['created'] }}
                         </p>
 
-                        <div class="d-flex gap-2 flex-wrap">
-                            <form method="post" action="/posts/delete/{{ post['id'] }}">
-                                <button class="btn btn-danger btn-sm" type="submit">Delete</button>
-                            </form>
-
-                            <button class="btn btn-outline-light btn-sm" id="editbtn-{{ post['id'] }}" onclick="edit_post({{ post['id'] }})">
+                        <div class="card-text container-fluid row g-2 center d-flex justify-content-center">
+                            <button class="btn btn-outline-light btn-sm col-lg-8" id="editbtn-{{ post['id'] }}" onclick="edit_post({{ post['id'] }})">
                                 Edit
                             </button>
+                            
+                            <form method="post" action="/posts/delete/{{ post['id'] }}" class="col-lg-4">
+                                <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                            </form>
                         </div>
 
                         <form id="editform-{{ post['id'] }}" class="dhiddentextarea mt-3" method="post" action="/posts/edit/{{ post['id'] }}">

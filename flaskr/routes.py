@@ -19,8 +19,13 @@ def posts():
         title = request.form['title']
         desc = request.form['description']
         score = request.form['score']
-        if not title.strip() or not desc.strip() or not score.strip():
-            flash("Post cannot be empty.")
+        if not title.strip() or not score.strip():
+            posts = models.get_all_posts()
+            return render_template(
+                "posts.html",
+                posts=posts,
+                error="Post cannot be empty."
+            )
         models.add_post(title, desc, score)
         return redirect(url_for("main.posts"))
 
