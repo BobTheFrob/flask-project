@@ -18,7 +18,7 @@
         <div class="card-body">
             <form method="post"> 
                 <div class="row"> 
-                    <div class="mb-3 col-10">
+                    <div class="mb-3 col-lg-10">
                         <label class="form-label" for="title">Title</label>
                         <input class="form-control" name="title" id="title" required>
                     </div>
@@ -37,19 +37,17 @@
         </div>
     </div>
 
-
-
     <p>Yaaaay! Got posts working, here they are:</p>
 
     <div class="row g-3">
         {% for post in posts %}
-            <div class="col-lg-3 col-md-6">
+            <div class="col-lg-4 col-md-6">
                 <div class="card bg-black text-light border-secondary" id="post-{{ post['id'] }}">
                     <div class="card-body">
                         <h2 class="h4 card-title">
                             {{ post['title'] }}
                         </h2>
-                        <span class="badge text-bg-secondary my-2">{{ post['score'] }}/10</span>
+                        <h4><span class="badge text-bg-secondary my-2">{{ post['score'] }}/10</span></h4>
 
                         <p class="card-text">{{ post['body'] }}</p>
 
@@ -68,7 +66,12 @@
                         </div>
 
                         <form id="editform-{{ post['id'] }}" class="dhiddentextarea mt-3" method="post" action="/posts/edit/{{ post['id'] }}">
-                            <textarea class="form-control mb-2" id="editinput-{{ post['id'] }}" name="editinput-{{ post['id'] }}" rows="4">{{ post['body'] }}</textarea>
+                            <div class="card-text container-fluid g-2 center d-flex justify-content-start align-items-center p-0">
+                                <p class="text-secondary w-auto">Score:</p>
+                                <input class="form-control mb-2 mx-2 w-auto" type="number" min="0" max="10" id="editscore-{{ post['id'] }}" name="editscore-{{ post['id'] }}" value="{{ post['score'] }}" required>
+                            </div>
+                            <p class="text-secondary">Description:</p>
+                            <textarea class="form-control mb-2" id="editdesc-{{ post['id'] }}" name="editdesc-{{ post['id'] }}" rows="4">{{ post['body'] }}</textarea>
                             <button class="btn btn-success btn-sm" type="submit">Confirm</button>
                         </form>
                     </div>

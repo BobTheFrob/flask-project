@@ -60,14 +60,15 @@ def delete_post(id):
 # EDIT POST
 # Edit a post in the database by id. If the id does not exist, do nothing.
 #
-def edit_post(body, id):
+def edit_post(body, score, id):
     con = db.get_db()
     sql = ''' 
             UPDATE posts
-            SET body = (?)
+            SET body = (?),
+            score = (?)
             WHERE id = (?)
         '''    
-    con.execute(sql, (body, id))
+    con.execute(sql, (body, score, id))
     con.commit()
 
 # DELETE POST
