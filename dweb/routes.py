@@ -43,6 +43,9 @@ def deletepost(post_id):
 def editposts(post_id):
     try:
         body = request.form[f'editinput-{post_id}']
+        post = models.get_post_by_id(post_id)
+        if str(post["body"]) == str(body):
+            return render_template("posts.html", posts=models.get_all_posts(), warning="No changes detected.")
         models.edit_post(body, post_id)
         return redirect(url_for("main.posts"))
 
