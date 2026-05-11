@@ -59,8 +59,12 @@ def deletepost(post_id):
 @bp.route('/posts/edit/<int:post_id>', methods=['POST'])
 def editposts(post_id):
     try:
-        body = request.form[f'editinput-{post_id}']
-        models.edit_post(body, post_id)
+        body = request.form[f'editdesc-{post_id}']
+        score = request.form[f'editscore-{post_id}']
+        post = models.get_post_by_id(post_id)
+        if str(post["body"]) == str(body) and str(post["score"]) == str(score):
+            return render_template("posts.html", posts=models.get_all_posts(), warning="No changes detected.")
+        models.edit_post(body, score, post_id)
         return redirect(url_for("main.posts"))
 
     except Exception as e:
