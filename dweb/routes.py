@@ -28,8 +28,10 @@ def posts_page():
         return render_template("posts.html", posts=posts)
     if request.method == 'POST':
         title = request.form['title']
-        desc = request.form['description']
+        body = request.form['description']
         score = request.form['score']
+        if not body.strip():
+            body = ""
         if not title.strip() or not score.strip():
             posts = models.get_all_posts()
             return render_template(
@@ -37,7 +39,7 @@ def posts_page():
                 posts=posts,
                 error="Post cannot be empty."
             )
-        models.add_post(title, desc, score)
+        models.add_post(title, body, score)
         return redirect(url_for("main.posts_page"))
 
 # DELETE POST
@@ -66,6 +68,8 @@ def edit_post(post_id):
         body = request.form[f'editdesc-{post_id}']
         score = request.form[f'editscore-{post_id}']
         post = models.get_post_by_id(post_id)
+        if not body.strip():
+            body = ""
         if str(post["body"]) == str(body) and str(post["score"]) == str(score):
             return render_template("posts.html", posts=models.get_all_posts(), warning="No changes detected.")
         models.edit_post(body, score, post_id)

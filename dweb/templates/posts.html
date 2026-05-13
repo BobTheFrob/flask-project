@@ -40,6 +40,7 @@
     <p>Yaaaay! Got posts working, here they are:</p>
 
     <div class="row g-3">
+    {% if posts %}
         {% for post in posts %}
             <div class="col-lg-4 col-md-6">
                 <div class="card bg-black text-light border-secondary" id="post-{{ post['id'] }}">
@@ -78,5 +79,8 @@
                 </div>
             </div>
         {% endfor %}
+    {% else %}
+        <p>No posts yet! Go post something!</p>
+    {% endif %}
     </div>
 {% endblock %}
