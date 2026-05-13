@@ -2,3 +2,136 @@ function edit_post(id) {
     textarea = document.getElementById(`editform-${id}`)
     textarea.classList.toggle("dhiddentextarea");
 }
+
+function createPostCard(post) {
+    const wrapper = document.createElement("div")
+    wrapper.innerHTML = `
+        <div class="col-lg-4 col-md-6">
+            <div class="card bg-black text-light border-secondary">
+                <div class="card-body">
+                    <h2 class="h4 card-title"></h2>
+                    <h4><span class="badge text-bg-secondary my-2"></span></h4>
+                    <p class="card-text dyprintnewline"></p>
+                    <p class="text-secondary small mb-3 post-meta"></p>
+                    <div class="card-text container-fluid row g-2 center d-flex justify-content-center">
+                        <button class="btn btn-outline-light btn-sm col-lg-8 edit-btn">
+                            Edit
+                        </button>
+                        <form class="col-lg-4 delete-form">
+                            <button class="btn btn-danger btn-sm" type="submit">
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                    <form class="dhiddentextarea mt-3 edit-form">
+                        <div class="card-text container-fluid g-2 center d-flex justify-content-start align-items-center p-0">
+                            <p class="text-secondary w-auto">
+                                Score:
+                            </p>
+                            <input
+                                class="form-control mb-2 mx-2 w-auto edit-score"
+                                type="number"
+                                min="0"
+                                max="10"
+                                required>
+                        </div>
+                        <p class="text-secondary">Description: </p>
+                        <textarea class="form-control mb-2 edit-desc" rows="4"></textarea>
+                        <button class="btn btn-success btn-sm" type="submit">Confirm</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    `
+
+    // ROOT CARD
+    const card = wrapper.querySelector(".card")
+    card.id = `post-${post.id}`
+
+    // TITLE
+    wrapper.querySelector(".card-title").textContent =
+        post.title
+
+    // SCORE BADGE
+    wrapper.querySelector(".badge").textContent =
+        `${post.score}/10`
+
+    // BODY
+    wrapper.querySelector(".dyprintnewline").textContent =
+        post.description
+
+    // META
+    wrapper.querySelector(".post-meta").textContent =
+        `Post #${post.id} — ${post.created}`
+
+    // EDIT BUTTON
+    const editBtn = wrapper.querySelector(".edit-btn")
+
+    editBtn.id = `editbtn-${post.id}`
+
+    editBtn.addEventListener("click", () => {
+        edit_post(post.id)
+    })
+
+    // DELETE FORM
+    const deleteForm = wrapper.querySelector(".delete-form")
+
+    deleteForm.action = `/posts/delete/${post.id}`
+    deleteForm.method = "post"
+
+    // EDIT FORM
+    const editForm = wrapper.querySelector(".edit-form")
+
+    editForm.id = `editform-${post.id}`
+    editForm.action = `/posts/edit/${post.id}`
+    editForm.method = "post"
+
+    // SCORE INPUT
+    const scoreInput = wrapper.querySelector(".edit-score")
+
+    scoreInput.id = `editscore-${post.id}`
+    scoreInput.name = `editscore-${post.id}`
+    scoreInput.value = post.score
+
+    // TEXTAREA
+    const textarea = wrapper.querySelector(".edit-desc")
+
+    textarea.id = `editdesc-${post.id}`
+    textarea.name = `editdesc-${post.id}`
+    textarea.value = post.description
+
+    return wrapper.firstElementChild
+}
+
+
+document.getElementById("post-form").addEventListener("submit", async (e) => {
+    e.preventDefault()
+    const formData = new FormData(e.target)
+    const title = formData.get("title")
+    const body = formData.get("description")
+    const score = formData.get("score")
+    console.log("Submitting post:", { title, body, score })
+    document.getElementById("posts-container")
+    fetch("api/posts", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ title: title, description: body, score: score })
+        }).then(res => {
+            if (!res.ok) {
+                throw new Error("Request failed")
+            }
+            return res.json()
+        })
+        .then(data => {
+            console.log(data)
+            document.getElementById("posts-container").appendChild(createPostCard(data["post"]))
+
+        })
+        .catch(err => {
+            console.error(err)
+        })
+    e.target.reset()
+})
+
