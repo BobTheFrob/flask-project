@@ -50,7 +50,7 @@ h2 {
     line-height: 1.1;
 }
 
-p {
+p, span {
     font-family: "Oswald", "Georgia";
     text-align: left;
     line-height: 1.6;
