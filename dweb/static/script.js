@@ -3,6 +3,15 @@ function edit_post(id) {
     textarea.classList.toggle("dhiddentextarea");
 }
 
+function emptyPostsHandler() {
+    const postContainer = document.getElementById("posts-container")
+    const emptyPostMsg = postContainer.querySelector(".demptypost")
+    console.log(emptyPostMsg, postContainer.children.length)
+    emptyPostMsg.style.display = postContainer.children.length > 1 ? "none" : "block"
+}
+
+emptyPostsHandler()
+
 document.querySelectorAll(".post-time").forEach(span => {
     const time = new Date(span.textContent + " UTC")
     span.textContent = time.toLocaleString()
@@ -24,6 +33,7 @@ function deletePostHandler(form) {
                 if (postCard) {
                     postCard.remove()
                 }
+                emptyPostsHandler()
         }} catch (err) {
             console.error(err) 
         }
@@ -192,4 +202,5 @@ document.getElementById("post-form").addEventListener("submit", async (e) => {
         console.error(err)
     }
     e.target.reset()
+    emptyPostsHandler()
 })
