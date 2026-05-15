@@ -28,24 +28,35 @@ function deletePostHandler(form) {
             console.error(err) 
         }
     })}
-// .then(res => {
-//             if (!res.ok) {
-//                 throw new Error("Request failed")
-//             }
-//             return res.json()
-//         })
-//         .then(data => {
-//             console.log(data)
-//             const postCard = document.getElementById(`post-${postId}`)
-//             if (postCard) {
-//                 postCard.remove()
-//             }
-//         })
-//         .catch(err => {
-//             console.error(err)
-//         })
-function editPostHandler(form) {
 
+function editPostHandler(form) {
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault()
+        const formData = new FormData(e.target)
+        const postId = form.id.split("-").pop()
+        const body = formData.get(`editdesc-${postId}`)
+        const score = formData.get(`editscore-${postId}`)
+        console.log(postId, body, score)
+        try {
+            const response = await fetch(`/api/posts/${postId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({description: body, score: score})
+            })
+            if (!response.ok) {
+                throw new Error("Request failed")
+            }
+            const data = await response.json()
+            console.log(data)
+            document.getElementById(`post-${postId}`).querySelector(".card-text").textContent = body
+            document.getElementById(`post-${postId}`).querySelector(".badge").textContent = `${score}/10`
+            edit_post(postId)
+        } catch (err) {
+            console.error(err)
+        }
+        })
 }
 
 function createPostCard(post) {
@@ -151,6 +162,10 @@ function createPostCard(post) {
 
 document.querySelectorAll(".delete-form").forEach(form => {
     deletePostHandler(form)
+})
+
+document.querySelectorAll(".edit-form").forEach(form => {
+    editPostHandler(form)
 })
 
 document.getElementById("post-form").addEventListener("submit", async (e) => {
