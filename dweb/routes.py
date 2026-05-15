@@ -28,8 +28,10 @@ def posts_page():
         return render_template("posts.html", posts=posts)
     if request.method == 'POST':
         title = request.form['title']
-        desc = request.form['description']
+        body = request.form['description']
         score = request.form['score']
+        if not body.strip():
+            body = ""
         if not title.strip() or not score.strip():
             posts = models.get_all_posts()
             return render_template(
@@ -37,7 +39,7 @@ def posts_page():
                 posts=posts,
                 error="Post cannot be empty."
             )
-        models.add_post(title, desc, score)
+        models.add_post(title, body, score)
         return redirect(url_for("main.posts_page"))
 
 # DELETE POST
@@ -66,6 +68,8 @@ def edit_post(post_id):
         body = request.form[f'editdesc-{post_id}']
         score = request.form[f'editscore-{post_id}']
         post = models.get_post_by_id(post_id)
+        if not body.strip():
+            body = ""
         if str(post["body"]) == str(body) and str(post["score"]) == str(score):
             return render_template("posts.html", posts=models.get_all_posts(), warning="No changes detected.")
         models.edit_post(body, score, post_id)
@@ -95,8 +99,8 @@ def post_dict(post):
         "created": post["created"]
     })
 
-# GET ALL POSTS
-# Posts page route. Return the posts in json. If the request method is POST, add a post to the database and redirect to the posts page.
+# GET ALL POSTS API
+# Posts api route. Return the posts in json. If the request method is POST, add a post to the database and redirect to the posts page.
 #"
 @apibp.route('/posts',  methods = ['GET', 'POST'])
 def api_posts():
@@ -117,13 +121,16 @@ def api_posts():
             return jsonify({
                 "error": "Post cannot be empty.",
             }), 400
-        models.add_post(title, desc, score)
-        return jsonify({
-                "message": "Post created.",
-            }), 200
+        id = models.add_post(title, desc, score)
+        post = post_dict(models.get_post_by_id(id))
 
-# POST BY ID
-# Post page routed by id. Return the post in json. If the request method is PUT, 
+        return jsonify({
+            "message": "Post created.",
+            "post": post
+        }), 200
+
+# POST BY ID API
+# Post api routed by id. Return the post in json. If the request method is PUT, 
 # edit the post in the database and return 200. 
 # If the request method is DELETE, delete the post from the database and return 200. If the post does not exist, return 404.
 #
@@ -147,17 +154,19 @@ def get_post(post_id):
         body = data.get('description')
         score = data.get('score')
         try:
+            if body is None or score is None:
+                return jsonify({"error": "Missing description or score."}), 400
             if int(score) > 10 or int(score) < 0:
                 return jsonify({
                     "message": "Invalid score. Score must be between 0 and 10."
                 }), 400
             if str(post["body"]) == str(body) and str(post["score"]) == str(score):
-                return jsonify({
-                    ""
-                }), 204
+                return "", 204
             models.edit_post(body, score, post_id)
+            post = post_dict(models.get_post_by_id(post_id))
             return jsonify({
                 "message": "Post edited.",
+                "post": post
             }), 200
         except Exception as e:
             print(f"Edit error: {e}")

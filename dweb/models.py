@@ -44,8 +44,10 @@ def add_post(title, desc, score):
     con = db.get_db()
     sql = ''' INSERT INTO posts(title,body,score)
               VALUES(?,?,?) '''    
-    con.execute(sql, [title, desc, score])
+    cursor = con.execute(sql, [title, desc, score])
+    new_id = cursor.lastrowid
     con.commit()
+    return new_id
 
 # DELETE POST
 # Delete a post from the database by id. If the id does not exist, do nothing.
