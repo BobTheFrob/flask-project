@@ -24,7 +24,7 @@ function createPostCard(post) {
                             </button>
                         </form>
                     </div>
-                    <form class="dhiddentextarea mt-3 edit-form">
+                    <form class="dhiddenarea mt-3 edit-form">
                         <div class="card-text container-fluid g-2 center d-flex justify-content-start align-items-center p-0">
                             <p class="text-secondary w-auto">
                                 Score:

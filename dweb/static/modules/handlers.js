@@ -1,11 +1,19 @@
 import { createPostCard } from "./render.js"
 export {emptyPostsHandler, deletePostHandler, editPostHandler, showEditTextArea, postHandler}
 
+// EMPTY POSTS HANDLER
+// Checks if there are any posts in the container and shows/hides the empty post message accordingly
+//
 function emptyPostsHandler() {
     const postContainer = document.getElementById("posts-container")
-    const emptyPostMsg = postContainer.querySelector(".demptypost")
-    emptyPostMsg.style.display = postContainer.children.length > 1 ? "none" : "block"
+    const emptyPostMsg = postContainer.querySelector(".dmessage")
+    emptyPostMsg.style.display = postContainer.children.length > 1 ? emptyPostMsg.textContent = "" : emptyPostMsg.textContent = "No posts yet! Go post something!"
 }
+
+
+// POST HANDLER
+// Handles the submission of the post form, sends a POST request to the server, and updates the UI with the new post without refreshing the page
+//
 function postHandler() {
     emptyPostsHandler()
     document.getElementById("post-form").addEventListener("submit", async (e) => {
@@ -35,11 +43,21 @@ function postHandler() {
     })
 }
 
+// SHOW EDIT TEXTAREA
+// Toggles the visibility of the edit textarea for a specific post when the edit button is clicked
+//
 function showEditTextArea(id) {
     const textarea = document.getElementById(`editform-${id}`)
-    textarea.classList.toggle("dhiddentextarea");
+    textarea.classList.toggle("dhiddenarea");
+    document.querySelectorAll(".edit-form").forEach(form => {
+    if (form.id !== `editform-${id}`) {
+        form.classList.add("dhiddenarea")
+    }})
 }
 
+// DELETE POST HANDLER
+// Handles the submission of the delete form, sends a DELETE request to the server, and removes the post from the UI without refreshing the page
+//
 function deletePostHandler(form) {
     form.addEventListener("submit", async (e) => {
         e.preventDefault()
@@ -61,6 +79,9 @@ function deletePostHandler(form) {
         }
     })}
 
+// EDIT POST HANDLER
+// Handles the submission of the edit form, sends a PUT request to the server with the updated post data, and updates the post in the UI without refreshing the page
+//
 function editPostHandler(form) {
     form.addEventListener("submit", async (e) => {
         e.preventDefault()
