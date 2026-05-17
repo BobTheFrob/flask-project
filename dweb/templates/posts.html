@@ -18,7 +18,9 @@
         <p class="text-primary">{{ message }}</p>
     {% endif %}
     <div class="card bg-black text-light border-secondary mb-4 col-lg-6 col-md-8">
-        <div class="card-body">
+        <div class="card-body mt-3">
+            <h2 class="h4 card-title">Create a post</h2>
+            <p class="card-text">Share your thoughts and opinions by creating a post! Just give it a title, a score out of 10, and a description if you want.</p>
             <form method="post" id="post-form"> 
                 <div class="row"> 
                     <div class="mb-3 col-lg-10">
@@ -39,7 +41,13 @@
             </form>
         </div>
     </div>
-
+    <div class="card bg-black text-light border-secondary mb-4 col-lg-4 col-md-6">
+        <div class="card-body">
+            <h2 class="h4 card-title">Search posts</h2>
+            <p class="card-text">Use the search bar below to filter posts by title or description!</p>
+            <input class="form-control" id="search-input" placeholder="Search posts...">
+        </div>
+    </div>
     <p>Yaaaay! Got posts working, here they are:</p>
 
     <div class="row g-3" id="posts-container">
@@ -60,7 +68,7 @@
                             <span class="text-secondary small mb-3 post-time">{{ post['created'] }}</span>
                         </div>
                         <div class="card-text container-fluid row g-2 center d-flex justify-content-center">
-                            <button class="btn btn-outline-light btn-sm col-lg-8" id="editbtn-{{ post['id'] }}" onclick="edit_post({{ post['id'] }})">
+                            <button class="btn btn-outline-light btn-sm col-lg-8 edit-btn" id="editbtn-{{ post['id'] }}">
                                 Edit
                             </button>
                             
@@ -69,7 +77,7 @@
                             </form>
                         </div>
 
-                        <form id="editform-{{ post['id'] }}" class="dhiddentextarea mt-3 edit-form" method="post" action="/posts/edit/{{ post['id'] }}">
+                        <form id="editform-{{ post['id'] }}" class="dhiddenarea mt-3 edit-form" method="post" action="/posts/edit/{{ post['id'] }}">
                             <div class="card-text container-fluid g-2 center d-flex justify-content-start align-items-center p-0">
                                 <p class="text-secondary w-auto">Score:</p>
                                 <input class="form-control mb-2 mx-2 w-auto" type="number" min="0" max="10" id="editscore-{{ post['id'] }}" name="editscore-{{ post['id'] }}" value="{{ post['score'] }}" required>
@@ -82,6 +90,6 @@
                 </div>
             </div>
         {% endfor %}
-        <p class="demptypost">No posts yet! Go post something!</p>
+        <p class="dmessage"></p>
     </div>
 {% endblock %}
