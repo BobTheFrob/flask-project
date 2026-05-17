@@ -26,10 +26,10 @@ document.querySelectorAll(".edit-form").forEach(form => {
 // SEARCH
 document.getElementById("search-input").addEventListener("keyup", (e) => {
     console.log("input: ", e.target.value)
-    const re = new RegExp(e.target.value, "i");
+    let re = new RegExp(e.target.value.replace(/\s+/g,""), "gi");
     console.log(re)
     document.getElementById("posts-container").querySelectorAll(".post-card").forEach(card => {
-    if (card.querySelector(".card-title").textContent.match(re) || card.querySelector(".dyprintnewline").textContent.match(re)) {
+    if (card.querySelector(".card-title").textContent.replace(/\s+/g,"").match(re) || card.querySelector(".dyprintnewline").textContent.replace(/\s+/g,"").match(re)) {
         card.classList.remove("dhiddenarea")
     } 
     else {

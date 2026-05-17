@@ -14,38 +14,41 @@
     {% if warning %}
         <p class="text-warning">{{ warning }}</p>
     {% endif %}
-    {% if message %}
-        <p class="text-primary">{{ message }}</p>
-    {% endif %}
-    <div class="card bg-black text-light border-secondary mb-4 col-lg-6 col-md-8">
-        <div class="card-body mt-3">
-            <h2 class="h4 card-title">Create a post</h2>
-            <p class="card-text">Share your thoughts and opinions by creating a post! Just give it a title, a score out of 10, and a description if you want.</p>
-            <form method="post" id="post-form"> 
-                <div class="row"> 
-                    <div class="mb-3 col-lg-10">
-                        <label class="form-label" for="title">Title</label>
-                        <input class="form-control" name="title" id="title" required>
-                    </div>
-                    <div class="mb-3 col">
-                        <label class="form-label" for="score">Score</label>
-                        <input class="form-control" type="number" min="0" max="10" name="score" id="score" required>
-                    </div>
-                </div>
+    <div class="row row-cols-1 row-cols-lg-4">
+        <div class="col-lg-6">
+            <div class="card bg-black text-light border-secondary mb-4">
+                <div class="card-body mt-3">
+                    <h2 class="h4 card-title">Create a post</h2>
+                    <p class="card-text">Share your thoughts and opinions by creating a post! Just give it a title, a score out of 10, and a description if you want.</p>
+                    <form method="post" id="post-form"> 
+                        <div class="row"> 
+                            <div class="mb-3 col-lg-10">
+                                <label class="form-label" for="title">Title</label>
+                                <input class="form-control" name="title" id="title" required>
+                            </div>
+                            <div class="mb-3 col">
+                                <label class="form-label" for="score">Score</label>
+                                <input class="form-control" type="number" min="0" max="10" name="score" id="score" required>
+                            </div>
+                        </div>
 
-                <div class="mb-3">
-                    <label class="form-label" for="description">Description</label>
-                    <textarea class="form-control" name="description" id="description" rows="4"></textarea>
+                        <div class="mb-3">
+                            <label class="form-label" for="description">Description</label>
+                            <textarea class="form-control" name="description" id="description" rows="4"></textarea>
+                        </div>
+                        <button class="btn btn-success w-100" type="submit">Post</button>
+                    </form>
                 </div>
-                <button class="btn btn-success w-100" type="submit">Post</button>
-            </form>
+            </div>
         </div>
-    </div>
-    <div class="card bg-black text-light border-secondary mb-4 col-lg-4 col-md-6">
-        <div class="card-body">
-            <h2 class="h4 card-title">Search posts</h2>
-            <p class="card-text">Use the search bar below to filter posts by title or description!</p>
-            <input class="form-control" id="search-input" placeholder="Search posts...">
+        <div class="col-lg-3">
+            <div class="card bg-black text-light border-secondary mb-4">
+                <div class="card-body mt-3">
+                    <h2 class="h4 card-title">Search posts</h2>
+                    <p class="card-text">Use the search bar below to filter posts by title or description!</p>
+                    <input class="form-control mb-3" id="search-input" placeholder="Search posts...">
+                </div>
+            </div>
         </div>
     </div>
     <p>Yaaaay! Got posts working, here they are:</p>
@@ -90,6 +93,6 @@
                 </div>
             </div>
         {% endfor %}
-        <p class="dmessage"></p>
     </div>
+    <p class="dmessage"></p>
 {% endblock %}
