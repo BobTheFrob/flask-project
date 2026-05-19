@@ -2,7 +2,7 @@
 {% block title %}Posts{% endblock %}
 
 {% block header %}
-    <h1 class="display-3">Posts</h1>
+    <h1 class="display-3">Anime</h1>
 {% endblock %}
 
 
@@ -18,8 +18,8 @@
         <div class="col-lg-6">
             <div class="card bg-black text-light border-secondary mb-4">
                 <div class="card-body mt-3">
-                    <h2 class="h4 card-title">Create a post</h2>
-                    <p class="card-text">Share your thoughts and opinions by creating a post! Just give it a title, a score out of 10, and a description if you want.</p>
+                    <h2 class="h4 card-title">Track an anime</h2>
+                    <p class="card-text">Share your thoughts and opinions by tracking an anime! Just give it a title, a score out of 10, and a description if you want.</p>
                     <form method="post" id="post-form"> 
                         <div class="row"> 
                             <div class="mb-3 col-lg-10">
@@ -45,7 +45,7 @@
             <div class="card bg-black text-light border-secondary mb-4">
                 <div class="card-body mt-3">
                     <h2 class="h4 card-title">Search posts</h2>
-                    <p class="card-text">Use the search bar below to filter posts by title or description!</p>
+                    <p class="card-text">Use the search bar below to filter anime by title or description!</p>
                     <input class="form-control mb-3" id="search-input" placeholder="Search posts...">
                 </div>
             </div>
@@ -93,6 +93,10 @@
                 </div>
             </div>
         {% endfor %}
-    </div>
     <p class="dmessage"></p>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script type="module" src="{{ url_for('static', filename='posts.js') }}"></script>
 {% endblock %}
