@@ -75,12 +75,12 @@
                                 Edit
                             </button>
                             
-                            <form method="post" action="/posts/delete/{{ post['id'] }}" class="col-lg-4 delete-form">
+                            <form id="deletepost-{{ post['id'] }}" class="col-lg-4 delete-form">
                                 <button class="btn btn-danger btn-sm" type="submit">Delete</button>
                             </form>
                         </div>
 
-                        <form id="editform-{{ post['id'] }}" class="dhiddenarea mt-3 edit-form" method="post" action="/posts/edit/{{ post['id'] }}">
+                        <form id="editpost-{{ post['id'] }}" class="dhiddenarea mt-3 edit-form" method="post">
                             <div class="card-text container-fluid g-2 center d-flex justify-content-start align-items-center p-0">
                                 <p class="text-secondary w-auto">Score:</p>
                                 <input class="form-control mb-2 mx-2 w-auto" type="number" min="0" max="10" id="editscore-{{ post['id'] }}" name="editscore-{{ post['id'] }}" value="{{ post['score'] }}" required>
@@ -93,8 +93,8 @@
                 </div>
             </div>
         {% endfor %}
-    <p class="dmessage"></p>
     </div>
+    <p id="posts-message" class="dmessage mt-4"></p>
 {% endblock %}
 
 {% block script %}

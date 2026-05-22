@@ -23,11 +23,13 @@ document.querySelectorAll(".edit-form").forEach(form => {
     editPostHandler(form)
 })
 
+function escapeRegex(value) {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 // SEARCH
 document.getElementById("search-input").addEventListener("keyup", (e) => {
-    console.log("input: ", e.target.value)
-    let re = new RegExp(e.target.value.replace(/\s+/g,""), "gi");
-    console.log(re)
+    let re = new RegExp(escapeRegex(e.target.value.replace(/\s+/g,"")), "gi");
     document.getElementById("posts-container").querySelectorAll(".post-card").forEach(card => {
     if (card.querySelector(".card-title").textContent.replace(/\s+/g,"").match(re) || card.querySelector(".dyprintnewline").textContent.replace(/\s+/g,"").match(re)) {
         card.classList.remove("dhiddenarea")

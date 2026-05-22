@@ -6,11 +6,6 @@ from . import models
 
 bp = Blueprint('main', __name__)
 
-####____________________________####
-####                            ####
-####        FORM ROUTES         ####
-####____________________________####
-
 # MAIN PAGE
 # Main page route. Render the main page template.
 #
@@ -26,61 +21,6 @@ def posts_page():
     if request.method == 'GET':
         posts = models.get_all_posts()
         return render_template("posts.html", posts=posts)
-    if request.method == 'POST':
-        title = request.form['title']
-        body = request.form['description']
-        score = request.form['score']
-        if not body.strip():
-            body = ""
-        if not title.strip() or not score.strip():
-            posts = models.get_all_posts()
-            return render_template(
-                "posts.html",
-                posts=posts,
-                error="Post cannot be empty."
-            )
-        models.add_post(title, body, score)
-        return redirect(url_for("main.posts_page"))
-
-# DELETE POST
-# Delete post route. If the request method is POST, delete the post from the database and redirect to the posts page.
-#
-@bp.route('/posts/delete/<int:post_id>',  methods = ['POST'])
-def delete_post(post_id):
-    if request.method == 'POST':
-        try:
-            if not models.get_post_by_id(post_id):
-                return 'Post not found', 404
-            models.delete_post(str(post_id))
-            return redirect(url_for("main.posts_page"))
-        except Exception as e:
-            print(f"Delete error: {e}")  # Check logs
-            return 'Internal Server Error', 500
-
-# EDIT POST
-# Edit post route. If the request method is POST, edit the post in the database and redirect to the posts page.
-#
-@bp.route('/posts/edit/<int:post_id>', methods=['POST'])
-def edit_post(post_id):
-    try:
-        if not models.get_post_by_id(post_id):
-            return 'Post not found', 404
-        body = request.form[f'editdesc-{post_id}']
-        score = request.form[f'editscore-{post_id}']
-        post = models.get_post_by_id(post_id)
-        if not body.strip():
-            body = ""
-        if str(post["body"]) == str(body) and str(post["score"]) == str(score):
-            return render_template("posts.html", posts=models.get_all_posts(), warning="No changes detected.")
-        models.edit_post(body, score, post_id)
-        return redirect(url_for("main.posts_page"))
-
-    except Exception as e:
-        print(f"Edit error: {e}")
-        return f'Internal Server Error: {e}', 500
-
-
-
 
 ####___________________________####
 ####                           ####

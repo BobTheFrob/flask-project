@@ -6,8 +6,8 @@ export {emptyPostsHandler, deletePostHandler, editPostHandler, showEditTextArea,
 //
 function emptyPostsHandler() {
     const postContainer = document.getElementById("posts-container")
-    const emptyPostMsg = postContainer.querySelector(".dmessage")
-    emptyPostMsg.style.display = postContainer.children.length > 1 ? emptyPostMsg.textContent = "" : emptyPostMsg.textContent = "No posts yet! Go post something!"
+    const emptyPostMsg = document.getElementById("posts-message")
+    emptyPostMsg.style.display = postContainer.children.length > 0 ? emptyPostMsg.textContent = "" : emptyPostMsg.textContent = "No posts yet! Go post something!"
 }
 
 
@@ -47,10 +47,10 @@ function postHandler() {
 // Toggles the visibility of the edit textarea for a specific post when the edit button is clicked
 //
 function showEditTextArea(id) {
-    const textarea = document.getElementById(`editform-${id}`)
+    const textarea = document.getElementById(`editpost-${id}`)
     textarea.classList.toggle("dhiddenarea");
     document.querySelectorAll(".edit-form").forEach(form => {
-    if (form.id !== `editform-${id}`) {
+    if (form.id !== `editpost-${id}`) {
         form.classList.add("dhiddenarea")
     }})
 }
@@ -61,7 +61,7 @@ function showEditTextArea(id) {
 function deletePostHandler(form) {
     form.addEventListener("submit", async (e) => {
         e.preventDefault()
-        const postId = form.action.split("/").pop()
+        const postId = form.id.split("-").pop()
         try {
             const response = await fetch(`/api/posts/${postId}`, {
             method: "DELETE"})

@@ -11,8 +11,8 @@ function createPostCard(post) {
                     <h4><span class="badge text-bg-secondary my-2"></span></h4>
                     <p class="card-text dyprintnewline"></p>
                     <div class="d-flex align-items-center">
-                    <p class="text-secondary small mb-3 post-meta"></p>
-                    <span class="text-secondary small mb-3 post-time"></span>
+                        <p class="text-secondary small mb-3 post-meta"></p>
+                        <span class="text-secondary small mb-3 post-time"></span>
                     </div>
                     <div class="card-text container-fluid row g-2 center d-flex justify-content-center">
                         <button class="btn btn-outline-light btn-sm col-lg-8 edit-btn">
@@ -73,15 +73,13 @@ function createPostCard(post) {
     // DELETE FORM
     const deleteForm = wrapper.querySelector(".delete-form")
     deleteForm.method = "post"
-    deleteForm.action = `/posts/delete/${post.id}`
+    deleteForm.id = `deletepost-${post.id}`
     deletePostHandler(deleteForm)
 
     // EDIT FORM
     const editForm = wrapper.querySelector(".edit-form")
 
-    editForm.id = `editform-${post.id}`
-    // editForm.action = `/posts/edit/${post.id}`
-    // editForm.method = "post"
+    editForm.id = `editpost-${post.id}`
     editPostHandler(editForm)
 
     // SCORE INPUT
