@@ -25,21 +25,6 @@ def get_post_by_id(id):
 # ADD POST
 # Add a post to the database. The post is added with the current date and time.
 #
-@click.command('add-post')
-def add_post_terminal():
-    con = db.get_db()
-    # cursor = con.cursor()
-    title = input("Please enter the title:\n")
-    body = input("Please enter the description:\n")
-    score = input("Please enter the score:\n")
-    sql = ''' INSERT INTO posts(title,body,score)
-              VALUES(?,?,?) '''    
-    con.execute(sql, [title, body, score])
-    con.commit()
-
-# ADD POST
-# Add a post to the database. The post is added with the current date and time.
-#
 def add_post(title, desc, score):
     con = db.get_db()
     sql = ''' INSERT INTO posts(title,body,score)
@@ -72,23 +57,3 @@ def edit_post(body, score, id):
         '''    
     con.execute(sql, (body, score, id))
     con.commit()
-
-# DELETE POST
-# Click command (terminal). Delete a post from the database by id. If the id does not exist, do nothing.
-#
-@click.command('delete-post')
-def delete_post_terminal():
-    con = db.get_db()
-    id = input("Please enter the id:\n")
-    sql = ''' DELETE FROM posts
-              WHERE id=(?) '''    
-    con.execute(sql, [id])
-    con.commit()
-    print("Deleted")
-
-# INIT APP   
-# Init the app by adding the click commands to the app. This allows us to use the commands in the terminal.
-#
-def init_app(app):
-    app.cli.add_command(add_post_terminal)
-    app.cli.add_command(delete_post_terminal)

@@ -52,7 +52,7 @@
         </div>
     </div>
     <p>Yaaaay! Got posts working, here they are:</p>
-
+    <p id="posts-message" class="dpostsmessage mb-4"></p>
     <div class="row g-3" id="posts-container">
         {% for post in posts %}
             <div class="col-lg-4 col-md-6 post-card" id="post-{{ post['id'] }}">
@@ -87,6 +87,7 @@
                             </div>
                             <p class="text-secondary">Description:</p>
                             <textarea class="form-control mb-2" id="editdesc-{{ post['id'] }}" name="editdesc-{{ post['id'] }}" rows="4">{{ post['body'] }}</textarea>
+                            <p class="text-warning small dhiddenarea"></p>
                             <button class="btn btn-success btn-sm" type="submit">Confirm</button>
                         </form>
                     </div>
@@ -94,7 +95,6 @@
             </div>
         {% endfor %}
     </div>
-    <p id="posts-message" class="dmessage mt-4"></p>
 {% endblock %}
 
 {% block script %}

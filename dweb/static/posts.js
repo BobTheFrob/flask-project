@@ -38,8 +38,8 @@ document.getElementById("search-input").addEventListener("keyup", (e) => {
         card.classList.add("dhiddenarea")}
     })
     if (document.getElementById("posts-container").querySelectorAll(".post-card:not(.dhiddenarea)").length === 0) {
-        document.querySelector(".dmessage").textContent = "No posts match your search :("
+        document.querySelector(".dpostsmessage").textContent = "No posts match your search :("
     } else {
-        document.querySelector(".dmessage").textContent = ""
+        document.querySelector(".dpostsmessage").textContent = ""
     }
 })
