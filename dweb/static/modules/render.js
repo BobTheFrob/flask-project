@@ -7,9 +7,9 @@ function createPostCard(post) {
         <div class="col-lg-4 col-md-6 post-card" id="post-${post.id}">
             <div class="card bg-black text-light border-secondary">
                 <div class="card-body">
-                    <h2 class="h4 card-title">${post.title}</h2>
-                    <h4><span class="badge text-bg-secondary my-2">${post.score}/10</span></h4>
-                    <p class="card-text dyprintnewline">${post.description}</p>
+                    <h2 class="h4 card-title" id="post-${post.id}-title">${post.title}</h2>
+                    <h4><span class="badge text-bg-secondary my-2" id="post-${post.id}-score">${post.score}/10</span></h4>
+                    <p class="card-text dyprintnewline" id="post-${post.id}-description">${post.description}</p>
                     <div class="d-flex align-items-center">
                         <p class="text-secondary small mb-3 post-meta">Post #${post.id} — </p>
                         <span class="text-secondary small mb-3 post-time">${new Date(post.created + " UTC").toLocaleString()}</span>
@@ -39,6 +39,7 @@ function createPostCard(post) {
                         </div>
                         <p class="text-secondary">Description: </p>
                         <textarea class="form-control mb-2 edit-desc" id="editdesc-${post.id}" name="editdesc-${post.id}" rows="4"></textarea>
+                        <p class="text-warning small dhiddenarea" id="editmessage-${post.id}"></p>
                         <button class="btn btn-success btn-sm" type="submit">Confirm</button>
                     </form>
                 </div>

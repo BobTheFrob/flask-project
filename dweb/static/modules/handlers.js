@@ -89,23 +89,33 @@ function editPostHandler(form) {
         const postId = form.id.split("-").pop()
         const body = formData.get(`editdesc-${postId}`)
         const score = formData.get(`editscore-${postId}`)
-        try {
-            const response = await fetch(`/api/posts/${postId}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({description: body, score: score})
-            })
-            if (!response.ok) {
-                throw new Error("Request failed")
+        const orgBody = document.getElementById(`post-${postId}-description`).textContent
+        const orgScore = document.getElementById(`post-${postId}-score`).textContent.split("/")[0]
+        const message = document.getElementById(`editmessage-${postId}`)
+        if (body == orgBody && score == orgScore) {
+            message.classList.remove("dhiddenarea")
+            message.textContent = "No changes detected."
+        } else {
+            message.classList.add("dhiddenarea")
+            message.textContent = ""
+            try {
+                const response = await fetch(`/api/posts/${postId}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({description: body, score: score})
+                })
+                if (!response.ok) {
+                    throw new Error("Request failed")
+                }
+                const data = await response.json()
+                document.getElementById(`post-${postId}`).querySelector(".card-text").textContent = body
+                document.getElementById(`post-${postId}`).querySelector(".badge").textContent = `${score}/10`
+                showEditTextArea(postId)
+            } catch (err) {
+                console.error(err)
             }
-            const data = await response.json()
-            document.getElementById(`post-${postId}`).querySelector(".card-text").textContent = body
-            document.getElementById(`post-${postId}`).querySelector(".badge").textContent = `${score}/10`
-            showEditTextArea(postId)
-        } catch (err) {
-            console.error(err)
         }
         })
 }
