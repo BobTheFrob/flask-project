@@ -7,7 +7,7 @@ import click
 def get_all_posts():
     con = db.get_db()
     cursor = con.cursor()
-    cursor.execute('SELECT id, title, body, score, created FROM posts ORDER BY created')
+    cursor.execute('SELECT id, title, body, score, watchingStatus, animeType, created FROM posts ORDER BY created')
     posts = cursor.fetchall()
     return posts
 
@@ -18,18 +18,18 @@ def get_all_posts():
 def get_post_by_id(id):
     con = db.get_db()
     cursor = con.cursor()
-    cursor.execute('SELECT id, title, body, score, created FROM posts WHERE id = ?', [id])
+    cursor.execute('SELECT id, title, body, score, watchingStatus, animeType, created FROM posts WHERE id = ?', [id])
     post = cursor.fetchone()
     return post
 
 # ADD POST
 # Add a post to the database. The post is added with the current date and time.
 #
-def add_post(title, desc, score):
+def add_post(post):
     con = db.get_db()
     sql = ''' INSERT INTO posts(title,body,score)
               VALUES(?,?,?) '''    
-    cursor = con.execute(sql, [title, desc, score])
+    cursor = con.execute(sql, [post['title'], post['desc'], post['score']])
     new_id = cursor.lastrowid
     con.commit()
     return new_id
@@ -47,7 +47,7 @@ def delete_post(id):
 # EDIT POST
 # Edit a post in the database by id. If the id does not exist, do nothing.
 #
-def edit_post(body, score, id):
+def edit_post(post):
     con = db.get_db()
     sql = ''' 
             UPDATE posts
@@ -55,5 +55,5 @@ def edit_post(body, score, id):
             score = (?)
             WHERE id = (?)
         '''    
-    con.execute(sql, (body, score, id))
+    con.execute(sql, [post['title'], post['desc'], post['score']])
     con.commit()

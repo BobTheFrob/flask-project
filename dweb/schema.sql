@@ -4,6 +4,6 @@ CREATE TABLE IF NOT EXISTS posts (
   title TEXT NOT NULL,
   body TEXT,
   score INT NOT NULL,
-  watchingStatus TEXT CHECK( pType IN ('completed','watching','dropped', 'planned') ) NOT NULL DEFAULT 'watching',
-  animeType TEXT CHECK( pType IN ('anime','movie','ova') )   NOT NULL DEFAULT 'anime'
+  watchingStatus TEXT CHECK( watchingStatus IN ('completed','watching','dropped', 'planned') ) NOT NULL DEFAULT 'watching',
+  animeType TEXT CHECK( animeType IN ('anime','movie','ova') )   NOT NULL DEFAULT 'anime'
 );

@@ -36,12 +36,14 @@ def post_dict(post):
         "id": post["id"],
         "description": post["body"],
         "score": post["score"],
+        "watchingStatus": post["watchingStatus"],
+        "animeType": post["animeType"],
         "created": post["created"]
     })
 
 # GET ALL POSTS API
 # Posts api route. Return the posts in json. If the request method is POST, add a post to the database and redirect to the posts page.
-#"
+#
 @apibp.route('/posts',  methods = ['GET', 'POST'])
 def api_posts():
     if request.method == 'GET':
@@ -49,24 +51,26 @@ def api_posts():
         return jsonify([post_dict(post) for post in posts])
     if request.method == 'POST':
         data = request.get_json() or {}
-        title = data.get('title')
-        desc = data.get('description')  
-        score = data.get('score')
-        if int(score) > 10 or int(score) < 0:
+        post = {
+            "title": data.get('title'),
+            "desc": data.get('description'),
+            "score": data.get('score')
+        }
+        if int(post["score"]) > 10 or int(post["score"]) < 0:
             return jsonify({
                 "message": "Invalid score. Score must be between 0 and 10."
             }), 400
-        if not title or not title.strip():
+        if not post["title"] or not post["title"].strip():
             posts = models.get_all_posts()
             return jsonify({
                 "error": "Post cannot be empty.",
             }), 400
-        id = models.add_post(title, desc, score)
-        post = post_dict(models.get_post_by_id(id))
+        id = models.add_post(post)
+        postReturned = post_dict(models.get_post_by_id(id))
 
         return jsonify({
             "message": "Post created.",
-            "post": post
+            "post": postReturned
         }), 200
 
 # POST BY ID API
