@@ -29,7 +29,7 @@ def add_post(post):
     con = db.get_db()
     sql = ''' INSERT INTO posts(title,body,score)
               VALUES(?,?,?) '''    
-    cursor = con.execute(sql, [post['title'], post['desc'], post['score']])
+    cursor = con.execute(sql, [post['title'], post['body'], post['score']])
     new_id = cursor.lastrowid
     con.commit()
     return new_id
@@ -55,5 +55,5 @@ def edit_post(post):
             score = (?)
             WHERE id = (?)
         '''    
-    con.execute(sql, [post['title'], post['desc'], post['score']])
+    con.execute(sql, [post['body'], post['score'], post['id']])
     con.commit()

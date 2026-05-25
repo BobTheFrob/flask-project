@@ -53,7 +53,7 @@ def api_posts():
         data = request.get_json() or {}
         post = {
             "title": data.get('title'),
-            "desc": data.get('description'),
+            "body": data.get('description'),
             "score": data.get('score')
         }
         if int(post["score"]) > 10 or int(post["score"]) < 0:
@@ -82,35 +82,41 @@ def api_posts():
 def get_post(post_id):
 
     # Validate post exists
-    post = models.get_post_by_id(post_id)
-    if not post:
+    postValidate = models.get_post_by_id(post_id)
+    if not postValidate:
         return jsonify({
                 "error": "Post not found",
             }), 404
     
     # GET POST BY ID
     if request.method == 'GET':
-        return jsonify(post_dict(post))
+        return jsonify(post_dict(postValidate))
     
     # EDIT POST
     if request.method == 'PUT':
         data = request.get_json() or {}
-        body = data.get('description')
-        score = data.get('score')
+        # body = data.get('description')
+        # score = data.get('score')
+        post = {
+            "id": post_id,
+            "title": data.get('title'),
+            "body": data.get('description'),
+            "score": data.get('score')
+        }
         try:
-            if body is None or score is None:
+            if post["body"] is None or post["score"] is None:
                 return jsonify({"error": "Missing description or score."}), 400
-            if int(score) > 10 or int(score) < 0:
+            if int(post["score"]) > 10 or int(post["score"]) < 0:
                 return jsonify({
                     "message": "Invalid score. Score must be between 0 and 10."
                 }), 400
-            if str(post["body"]) == str(body) and str(post["score"]) == str(score):
+            if str(postValidate["body"]) == str(post["body"]) and str(postValidate["score"]) == str(post["score"]):
                 return "", 204
-            models.edit_post(body, score, post_id)
-            post = post_dict(models.get_post_by_id(post_id))
+            models.edit_post(post)
+            postReturn = post_dict(models.get_post_by_id(post_id))
             return jsonify({
                 "message": "Post edited.",
-                "post": post
+                "post": postReturn
             }), 200
         except Exception as e:
             print(f"Edit error: {e}")
