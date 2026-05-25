@@ -27,9 +27,9 @@ def get_post_by_id(id):
 #
 def add_post(post):
     con = db.get_db()
-    sql = ''' INSERT INTO posts(title,body,score)
-              VALUES(?,?,?) '''    
-    cursor = con.execute(sql, [post['title'], post['body'], post['score']])
+    sql = ''' INSERT INTO posts(title,body,score,watchingStatus,animeType)
+              VALUES(?,?,?,?,?) '''    
+    cursor = con.execute(sql, [post['title'], post['body'], post['score'], post['watchingStatus'], post['animeType']])
     new_id = cursor.lastrowid
     con.commit()
     return new_id
@@ -52,8 +52,10 @@ def edit_post(post):
     sql = ''' 
             UPDATE posts
             SET body = (?),
-            score = (?)
+            score = (?),
+            watchingStatus = (?),
+            animeType = (?),
             WHERE id = (?)
         '''    
-    con.execute(sql, [post['body'], post['score'], post['id']])
+    con.execute(sql, [post['body'], post['score'], post['watchingStatus'], post['animeType'], post['id']])
     con.commit()
