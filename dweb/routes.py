@@ -29,6 +29,8 @@ def posts_page():
 
 apibp = Blueprint('api', __name__, url_prefix='/api')
 
+
+### HELPERS ###
 # Helper function to convert a post to a dictionary. This is used to convert the post to json when returning it in the API routes in preferred order.
 def post_dict(post):
     return ({
@@ -41,6 +43,32 @@ def post_dict(post):
         "created": post["created"]
     })
 
+# Helper function to validate dropdown fields like animeType and watchingStatus
+def validateEnumFields(post):
+    MEDIA_TYPES = {
+        "anime": "Anime",
+        "game": "Game",
+        "movie": "Movie",
+        "ova": "Ova"
+    }
+    WATCH_STATUSES = {
+        "planned": "Planned",
+        "watching": "Watching",
+        "completed": "Completed",
+        "dropped": "Dropped"
+    }
+    return post["animeType"] in MEDIA_TYPES and post["watchingStatus"] in WATCH_STATUSES
+
+def getRequestPost (data):
+    post = {
+        "title": (data.get("title") or "").strip(),
+        "body": (data.get("description") or "").strip(),
+        "score": data.get('score'),
+        "watchingStatus": (data.get('watchingStatus')) or "watching",
+        "animeType": data.get('animeType') or "anime"
+    }
+    return post
+
 # GET ALL POSTS API
 # Posts api route. Return the posts in json. If the request method is POST, add a post to the database and redirect to the posts page.
 #
@@ -51,11 +79,7 @@ def api_posts():
         return jsonify([post_dict(post) for post in posts])
     if request.method == 'POST':
         data = request.get_json() or {}
-        post = {
-            "title": data.get('title'),
-            "body": data.get('description'),
-            "score": data.get('score')
-        }
+        post = getRequestPost(data)
         if int(post["score"]) > 10 or int(post["score"]) < 0:
             return jsonify({
                 "message": "Invalid score. Score must be between 0 and 10."
@@ -64,6 +88,10 @@ def api_posts():
             posts = models.get_all_posts()
             return jsonify({
                 "error": "Post cannot be empty.",
+            }), 400
+        if not validateEnumFields(post):
+            return jsonify({
+                "error": "Invalid type.",
             }), 400
         id = models.add_post(post)
         postReturned = post_dict(models.get_post_by_id(id))
@@ -97,12 +125,8 @@ def get_post(post_id):
         data = request.get_json() or {}
         # body = data.get('description')
         # score = data.get('score')
-        post = {
-            "id": post_id,
-            "title": data.get('title'),
-            "body": data.get('description'),
-            "score": data.get('score')
-        }
+        post = getRequestPost(data)
+        post["id"] = post_id
         try:
             if post["body"] is None or post["score"] is None:
                 return jsonify({"error": "Missing description or score."}), 400

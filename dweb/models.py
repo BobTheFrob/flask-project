@@ -54,7 +54,7 @@ def edit_post(post):
             SET body = (?),
             score = (?),
             watchingStatus = (?),
-            animeType = (?),
+            animeType = (?)
             WHERE id = (?)
         '''    
     con.execute(sql, [post['body'], post['score'], post['watchingStatus'], post['animeType'], post['id']])
