@@ -22,13 +22,17 @@ function postHandler() {
         const title = formData.get("title")
         const body = formData.get("description")
         const score = formData.get("score")
+        const status = formData.get("watchingStatus")
+        const type = formData.get("animeType")
+        console.log(title, status, type)
         try {
             const response = await fetch("/api/posts", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({title: title, description: body, score: score})
+                body: JSON.stringify({title: title, description: body, score: score, watchingStatus: status,
+                animeType: type})
             })
             if (!response.ok) {
                 throw new Error("Request failed")
