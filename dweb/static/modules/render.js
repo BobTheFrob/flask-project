@@ -20,11 +20,11 @@ function createPostCard(post) {
                         <p class="text-secondary small mb-3 post-meta">Post #${post.id} — </p>
                         <span class="text-secondary small mb-3 post-time">${new Date(post.created + " UTC").toLocaleString()}</span>
                     </div>
-                    <div class="card-text container-fluid row g-2 center d-flex justify-content-center">
-                        <button class="btn btn-outline-light btn-sm col-lg-8 edit-btn" id="editbtn-${post.id}">
+                    <div class="card-text d-flex justify-content-between gap-2">
+                        <button class="btn btn-outline-light btn-sm flex-grow-1 edit-btn" id="editbtn-${post.id}">
                             Edit
                         </button>
-                        <form class="col-lg-4 delete-form" id="deletepost-${post.id}">
+                        <form class="m-0 delete-form" id="deletepost-${post.id}">
                             <button class="btn btn-danger btn-sm" type="submit">
                                 Delete
                             </button>
