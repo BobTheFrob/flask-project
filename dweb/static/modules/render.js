@@ -45,6 +45,26 @@ function createPostCard(post) {
                         </div>
                         <p class="text-secondary">Description: </p>
                         <textarea class="form-control mb-2 edit-desc" id="editdesc-${post.id}" name="editdesc-${post.id}" rows="4"></textarea>
+                        <div class="mt-3 row">
+                            <div class="mb-3 col">
+                                <label class="form-label" for="watchingStatus">Status</label>
+                                <select class="form-select" name="editWatchingStatus-${post['id']}" id="editWatchingStatus-${post['id']}">
+                                    <option value="watching">Watching</option>
+                                    <option value="completed">Completed</option>
+                                    <option value="planned">Planned</option>
+                                    <option value="dropped">Dropped</option>
+                                </select>
+                            </div>
+                            <div class="mb-3 col">
+                                <label class="form-label" for="animeType">Type</label>
+                                <select class="form-select" name="editAnimeType-${post['id']}" id="editAnimeType-${post['id']}">
+                                    <option value="anime">Anime</option>
+                                    <option value="movie">Movie</option>
+                                    <option value="ova">Ova</option>
+                                    <option value="game">Game</option>
+                                </select>
+                            </div>
+                        </div>
                         <p class="text-warning small dhiddenarea" id="editmessage-${post.id}"></p>
                         <button class="btn btn-success btn-sm" type="submit">Confirm</button>
                     </form>

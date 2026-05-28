@@ -24,7 +24,6 @@ function postHandler() {
         const score = formData.get("score")
         const status = formData.get("watchingStatus")
         const type = formData.get("animeType")
-        console.log(title, status, type)
         try {
             const response = await fetch("/api/posts", {
                 method: "POST",
@@ -89,14 +88,24 @@ function deletePostHandler(form) {
 function editPostHandler(form) {
     form.addEventListener("submit", async (e) => {
         e.preventDefault()
+
         const formData = new FormData(e.target)
+
         const postId = form.id.split("-").pop()
-        const body = formData.get(`editdesc-${postId}`)
+        const body = formData.get(`editdesc-${postId}`).trim()
         const score = formData.get(`editscore-${postId}`)
+        const animeType = formData.get(`editAnimeType-${postId}`)
+        const watchingStatus = formData.get(`editWatchingStatus-${postId}`)
+
         const orgBody = document.getElementById(`post-${postId}-description`).textContent
         const orgScore = document.getElementById(`post-${postId}-score`).textContent.split("/")[0]
+        const orgAnimeType = document.getElementById(`post-${postId}-animetype`).textContent
+        const orgWatchingStatus = document.getElementById(`post-${postId}-watchingstatus`).textContent
+        
         const message = document.getElementById(`editmessage-${postId}`)
-        if (body == orgBody && score == orgScore) {
+        
+
+        if (body == orgBody && score == orgScore && animeType == orgAnimeType && watchingStatus == orgWatchingStatus) {
             message.classList.remove("dhiddenarea")
             message.textContent = "No changes detected."
         } else {
@@ -108,14 +117,17 @@ function editPostHandler(form) {
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({description: body, score: score})
+                    body: JSON.stringify({description: body, score: score,
+                    animeType: animeType, watchingStatus: watchingStatus})
                 })
                 if (!response.ok) {
                     throw new Error("Request failed")
                 }
                 const data = await response.json()
-                document.getElementById(`post-${postId}`).querySelector(".card-text").textContent = body
-                document.getElementById(`post-${postId}`).querySelector(".badge").textContent = `${score}/10`
+                document.getElementById(`post-${postId}-description`).textContent = body
+                document.getElementById(`post-${postId}-score`).textContent = `${score}/10`
+                document.getElementById(`post-${postId}-watchingstatus`).textContent = watchingStatus
+                document.getElementById(`post-${postId}-animetype`).textContent = animeType
                 showEditTextArea(postId)
             } catch (err) {
                 console.error(err)

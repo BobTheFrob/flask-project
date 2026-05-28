@@ -123,8 +123,6 @@ def get_post(post_id):
     # EDIT POST
     if request.method == 'PUT':
         data = request.get_json() or {}
-        # body = data.get('description')
-        # score = data.get('score')
         post = getRequestPost(data)
         post["id"] = post_id
         try:
@@ -134,7 +132,9 @@ def get_post(post_id):
                 return jsonify({
                     "message": "Invalid score. Score must be between 0 and 10."
                 }), 400
-            if str(postValidate["body"]) == str(post["body"]) and str(postValidate["score"]) == str(post["score"]):
+            if (str(postValidate["body"]) == str(post["body"]) and str(postValidate["score"]) == str(post["score"])
+                and str(postValidate["watchingStatus"]) == str(post["watchingStatus"])
+                and str(postValidate["animeType"]) == str(post["animeType"])):
                 return "", 204
             models.edit_post(post)
             postReturn = post_dict(models.get_post_by_id(post_id))
