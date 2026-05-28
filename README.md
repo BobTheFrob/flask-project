@@ -21,14 +21,20 @@ A small web application built with Flask and SQLite to practice backend developm
 ## Running the project
 1. Create and activate a virtual environment
 2. Install dependencies from `requirements.txt`
-3. Run:
+3. Initialize db and run:
 
-   `flask --app dweb init-db && flask --app dweb run --debug --port 8000`
-   
-   the first time
-
+   To run:
    `
    flask --app dweb run --debug --port 8000
+   `
+
+   To clear the db:
+   `
+   flask --app dweb clear-db
+   `
+
+   To initialize the db:
+   `
+   flask --app dweb clear-db
    ` 
    
-   when hosting again after first time
