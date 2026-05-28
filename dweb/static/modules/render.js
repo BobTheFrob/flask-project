@@ -61,7 +61,6 @@ function createPostCard(post) {
                                     <option value="anime">Anime</option>
                                     <option value="movie">Movie</option>
                                     <option value="ova">Ova</option>
-                                    <option value="game">Game</option>
                                 </select>
                             </div>
                         </div>

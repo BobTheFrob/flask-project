@@ -47,7 +47,6 @@ def post_dict(post):
 def validateEnumFields(post):
     MEDIA_TYPES = {
         "anime": "Anime",
-        "game": "Game",
         "movie": "Movie",
         "ova": "Ova"
     }
