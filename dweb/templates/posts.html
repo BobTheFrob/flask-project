@@ -81,9 +81,9 @@
                             </h2>
                             <h4 class=""><span class="badge text-bg-secondary" id="post-{{ post['id'] }}-score">{{ post['score'] }}/10</span></h4>
                         </div>
-                        <div class="d-flex justify-content-start gap-2 align-items-start mb-3 mt-2">
-                            <span class="badge text-bg-secondary text-capitalize" id="post-{{ post['id'] }}-watchingstatus">{{ post['watchingStatus'] }}</span>
-                            <span class="badge text-bg-secondary text-capitalize" id="post-{{ post['id'] }}-animetype">{{ post['animeType'] }}</span>
+                        <div class="d-flex justify-content-start gap-2 align-items-start mb-3">
+                            <span class="badge text-bg-secondary text-capitalize fw-light" id="post-{{ post['id'] }}-watchingstatus">{{ post['watchingStatus'] }}</span>
+                            <span class="badge text-bg-secondary text-capitalize fw-light" id="post-{{ post['id'] }}-animetype">{{ post['animeType'] }}</span>
                         </div>
                         <p class="card-text dyprintnewline" id="post-{{ post['id'] }}-description">{{ post['body'] }}</p>
                         <div class="d-flex align-items-center">
@@ -94,7 +94,7 @@
                         </div>
                         <div class="card-text d-flex justify-content-between gap-2">
                             <button class="btn btn-outline-light btn-sm edit-btn flex-grow-1"id="editbtn-{{ post['id'] }}">Edit</button>
-                            <form id="deletepost-{{ post['id'] }}" class="m-0">
+                            <form id="deletepost-{{ post['id'] }}" class="m-0 delete-form">
                                 <button class="btn btn-danger btn-sm" type="submit">
                                 Delete
                                 </button>

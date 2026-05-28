@@ -7,8 +7,14 @@ function createPostCard(post) {
         <div class="col-lg-4 col-md-6 post-card" id="post-${post.id}">
             <div class="card bg-black text-light border-secondary">
                 <div class="card-body">
-                    <h2 class="h4 card-title" id="post-${post.id}-title">${post.title}</h2>
-                    <h4><span class="badge text-bg-secondary my-2" id="post-${post.id}-score">${post.score}/10</span></h4>
+                    <div class="d-flex justify-content-between align-items-start">
+                        <h2 class="h4 card-title" id="post-${post.id}-title">${post.title}</h2>
+                        <h4><span class="badge text-bg-secondary" id="post-${post.id}-score">${post.score}/10</span></h4>
+                    </div>
+                    <div class="d-flex justify-content-start gap-2 align-items-start mb-3">
+                        <span class="badge text-bg-secondary text-capitalize fw-light" id="post-${post.id}-watchingstatus">${post['watchingStatus']}</span>
+                        <span class="badge text-bg-secondary text-capitalize fw-light" id="post-${post.id}-animetype">${post['animeType']}</span>
+                    </div>
                     <p class="card-text dyprintnewline" id="post-${post.id}-description">${post.description}</p>
                     <div class="d-flex align-items-center">
                         <p class="text-secondary small mb-3 post-meta">Post #${post.id} — </p>
