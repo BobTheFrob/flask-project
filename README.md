@@ -1,6 +1,6 @@
 # Flask Web Application
 
-A small web application built with Flask and SQLite to practice backend development, routing, templates, and database queries.
+A small web application built with Flask and SQLite to practice fullstack development, routing, templates, and database queries.
 
 ## Features
 - Flask app structure with routes and templates
@@ -11,7 +11,7 @@ A small web application built with Flask and SQLite to practice backend developm
 - Python
 - Flask
 - SQLite
-- HTML/CSS
+- HTML/CSS/JS
 
 ## What I learned
 - Organizing a Flask project

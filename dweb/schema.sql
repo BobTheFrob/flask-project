@@ -7,3 +7,10 @@ CREATE TABLE IF NOT EXISTS posts (
   watchingStatus TEXT CHECK( watchingStatus IN ('completed', 'watching', 'dropped', 'planned') ) NOT NULL DEFAULT 'watching',
   animeType TEXT CHECK( animeType IN ('anime', 'movie', 'ova') )   NOT NULL DEFAULT 'anime'
 );
+
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT UNIQUE NOT NULL,
+  password TEXT NOT NULL,
+  bio TEXT
+);
