@@ -17,6 +17,7 @@ A small web application built with Flask and SQLite to practice fullstack develo
 - Organizing a Flask project
 - Connecting a web app to a SQLite database
 - Handling requests and rendering dynamic content
+- Emphasized importance of naming and language conventions
 
 ## Running the project
 1. Create and activate a virtual environment

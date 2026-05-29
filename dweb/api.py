@@ -16,18 +16,17 @@ def index():
 # POSTS
 # Posts page route. Render the posts page template. If the request method is POST, add a post to the database and redirect to the posts page.
 #
-@bp.route('/posts',  methods = ['GET', 'POST'])
+@bp.route('/posts',  methods = ['GET'])
 def posts_page():
-    if request.method == 'GET':
-        posts = models.get_all_posts()
-        return render_template("posts.html", posts=posts)
+    posts = models.get_all_posts()
+    return render_template("posts.html", posts=posts)
 
 ####___________________________####
 ####                           ####
 ####        API ROUTES         ####
 ####___________________________####
 
-apibp = Blueprint('api', __name__, url_prefix='/api')
+posts_apibp = Blueprint('posts_api', __name__, url_prefix='/api')
 
 
 ### HELPERS ###
@@ -71,11 +70,12 @@ def getRequestPost (data):
 # GET ALL POSTS API
 # Posts api route. Return the posts in json. If the request method is POST, add a post to the database and redirect to the posts page.
 #
-@apibp.route('/posts',  methods = ['GET', 'POST'])
+@posts_apibp.route('/posts',  methods = ['GET', 'POST'])
 def api_posts():
     if request.method == 'GET':
         posts = models.get_all_posts()
         return jsonify([post_dict(post) for post in posts])
+    
     if request.method == 'POST':
         data = request.get_json() or {}
         post = getRequestPost(data)
@@ -105,7 +105,7 @@ def api_posts():
 # edit the post in the database and return 200. 
 # If the request method is DELETE, delete the post from the database and return 200. If the post does not exist, return 404.
 #
-@apibp.route('/posts/<int:post_id>',  methods = ['GET', 'PUT', 'DELETE'])
+@posts_apibp.route('/posts/<int:post_id>',  methods = ['GET', 'PUT', 'DELETE'])
 def get_post(post_id):
 
     # Validate post exists
@@ -165,4 +165,4 @@ def get_post(post_id):
 #
 def init_app(app):
     app.register_blueprint(bp)
-    app.register_blueprint(apibp)
+    app.register_blueprint(posts_apibp)
