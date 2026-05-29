@@ -29,7 +29,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse" id="mainNav">
+            <div class="collapse navbar-collapse d-flex justify-content-between" id="mainNav">
                 <ul class="navbar-nav me-auto mb-2 mb-sm-0">
                     <li class="nav-item me-2">
                         <a class="nav-link" href="{{ url_for('main.index') }}">Home</a>
@@ -38,8 +38,9 @@
                         <a class="nav-link" href="{{ url_for('main.posts_page') }}">Anime</a>
                     </li>
                 </ul>
-
-                <span class="navbar-text">By Dylan</span>
+                <ul class="navbar-nav mb-2 mb-sm-0 d-flex flex-row-reverse">
+                    <a class="nav-link" href="{{ url_for('auth.login_page') }}">Login</a>
+                </ul>
             </div>
         </div>
     </nav>

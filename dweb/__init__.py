@@ -1,6 +1,6 @@
 import os
 from flask import Flask
-from . import api
+from . import api, auth
 
 
 def create_app(test_config=None):
@@ -25,6 +25,7 @@ def create_app(test_config=None):
         pass
 
     api.init_app(app)
+    auth.init_app(app)
 
     from . import db
     db.init_app(app)
