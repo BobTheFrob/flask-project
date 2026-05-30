@@ -57,6 +57,7 @@ def clear_db_command():
     db = get_db()
     cursor = db.cursor()
     cursor.execute('DROP TABLE IF EXISTS posts')
+    cursor.execute('DROP TABLE IF EXISTS users')
     init_db()
     click.echo('Cleared the database.')
 

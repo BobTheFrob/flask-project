@@ -1,7 +1,10 @@
 from flask import Blueprint
+import sqlite3
 from flask import (
     Blueprint, g, redirect, render_template, request, session, url_for, jsonify
 )
+import functools
+from werkzeug.security import check_password_hash, generate_password_hash
 from . import models
 
 authbp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -15,9 +18,9 @@ def login_page():
     return render_template("login.html")
 
 
-def validateUserRegisterData(data):
+def validateUserDetails(data):
     username = (data.get('username') or "").strip().casefold()
-    password = (data.get('password') or "").strip()
+    password = (data.get('password') or "")
     if (username and password):
         return {
             "username": username,
@@ -29,41 +32,86 @@ def validateUserRegisterData(data):
         return {"error": "Must have a password."}
 
 
-
 @auth_apibp.route('/register', methods = ['POST'])
 def register():
-    if request.method == 'POST':
-        data = request.get_json() or {}
-        userData = validateUserRegisterData(data)
-        if (userData.get("error")):
+    data = request.get_json() or {}
+    userData = validateUserDetails(data)
+    userData["password"] = generate_password_hash(userData["password"])
+    if (userData.get("error")):
+        return jsonify({
+            "error": userData.get("error")
+        }), 400
+    else:
+        try:
+            models.register_user(userData)
+        except sqlite3.IntegrityError:
+            return jsonify({"error": "Username already exists."}), 409
+        except Exception:
+            return jsonify({"error": "Registration failed."}), 500
+    return jsonify({"message": "User registered successfully."}), 201
+
+@auth_apibp.route('/login', methods = ['POST'])
+def login():
+    data = request.get_json() or {}
+    userData = validateUserDetails(data)
+    if (userData.get("error")):
+        return jsonify({
+            "error": userData.get("error")
+        }), 400
+    userSearched = models.login_user(userData)
+    if userSearched is None:
+        return jsonify({
+            "error": "Incorrect username"
+        }), 400
+    elif not check_password_hash(userSearched['password'], userData['password']):
+        return jsonify({
+            "error": "Incorrect password."
+        }), 400
+    session.clear()
+    session['user_id'] = userSearched['id']
+    session.permanent = True
+    return jsonify({
+        "message": "Logged in."
+    })
+    # return redirect(url_for('index'))
+
+    #     flash(error)
+
+    # return render_template('auth/login.html')
+@auth_apibp.before_app_request
+def load_logged_in_user():
+    user_id = session.get('user_id')
+
+    if user_id is None:
+        g.user = None
+    else:
+        g.user = models.get_user_by_id({"id": user_id})
+
+@auth_apibp.route("/logout", methods = ['POST'])
+def logout():
+    session.clear()
+    return jsonify({"message": "Logged out."})
+
+@auth_apibp.get("/me")
+def me():
+    if g.user is None:
+        return jsonify({"error": "Not logged in"}), 401
+    
+    return {
+        "user": g.user["username"]
+    }
+
+def login_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None:
             return jsonify({
-                "error": userData.get("error")
-            })
-        
-            # if not username:
-            #     error = 'Username is required.'
-            # elif not password:
-            #     error = 'Password is required.'
+                "error": "Authentication required"
+            }), 401
 
-            # if error is None:
-            #     try:
-            #         db.execute(
-            #             "INSERT INTO user (username, password) VALUES (?, ?)",
-            #             (username, generate_password_hash(password)),
-            #         )
-            #         db.commit()
-            #     except db.IntegrityError:
-            #         error = f"User {username} is already registered."
-            #     else:
-            #         return redirect(url_for("auth.login"))
+        return view(**kwargs)
 
-            # flash(error)
-
-
-# @apibp.route('/login', methods = ['POST'])
-# def login():
-
-
+    return wrapped_view
 
 # INIT APP
 # Register bp

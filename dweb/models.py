@@ -1,6 +1,12 @@
 from . import db
 import click
 
+
+####_____________________________####
+####                             ####
+####            POSTS            ####
+####_____________________________#### 
+
 # GET ALL POSTS
 # Return posts from the database. The returned list is ordered by the created date.
 #
@@ -59,3 +65,40 @@ def edit_post(post):
         '''    
     con.execute(sql, [post['body'], post['score'], post['watchingStatus'], post['animeType'], post['id']])
     con.commit()
+
+####_____________________________####
+####                             ####
+####            USERS            ####
+####_____________________________#### 
+
+# REGISTER USER
+# Pass user data to insert into users table
+#
+def register_user(userData):
+    con = db.get_db()
+    sql = ''' INSERT INTO users(username, password)
+              VALUES(?,?) '''    
+    cursor = con.execute(sql, [userData['username'], userData['password']])
+    new_id = cursor.lastrowid
+    con.commit()
+    return new_id
+
+# LOGIN USER
+# Pass user id to fetch user from users table
+#
+def get_user_by_id(userData):
+    con = db.get_db()
+    cursor = con.cursor()
+    cursor.execute('SELECT * FROM users WHERE id = ?', [userData['id']])
+    user = cursor.fetchone()
+    return user
+
+# LOGIN USER
+# Pass user data to fetch user from users table
+#
+def login_user(userData):
+    con = db.get_db()
+    cursor = con.cursor()
+    cursor.execute('SELECT * FROM users WHERE username = ?', [userData['username']])
+    user = cursor.fetchone()
+    return user
