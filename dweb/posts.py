@@ -3,6 +3,7 @@ from flask import (
     Blueprint, g, redirect, render_template, request, session, url_for, jsonify
 )
 from . import models
+from .auth import login_required_api, login_required_page
 
 bp = Blueprint('main', __name__)
 
@@ -17,6 +18,7 @@ def index():
 # Posts page route. Render the posts page template. If the request method is POST, add a post to the database and redirect to the posts page.
 #
 @bp.route('/posts',  methods = ['GET'])
+@login_required_page
 def posts_page():
     posts = models.get_all_posts()
     return render_template("posts.html", posts=posts)
@@ -71,6 +73,7 @@ def getRequestPost (data):
 # Posts api route. Return the posts in json. If the request method is POST, add a post to the database and redirect to the posts page.
 #
 @posts_apibp.route('/posts',  methods = ['GET', 'POST'])
+@login_required_api
 def api_posts():
     if request.method == 'GET':
         posts = models.get_all_posts()
@@ -106,6 +109,7 @@ def api_posts():
 # If the request method is DELETE, delete the post from the database and return 200. If the post does not exist, return 404.
 #
 @posts_apibp.route('/posts/<int:post_id>',  methods = ['GET', 'PUT', 'DELETE'])
+@login_required_api
 def get_post(post_id):
 
     # Validate post exists

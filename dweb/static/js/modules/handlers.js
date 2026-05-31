@@ -1,5 +1,7 @@
 import { createPostCard } from "./render.js"
-export {emptyPostsHandler, deletePostHandler, editPostHandler, showEditTextArea, postHandler}
+export {emptyPostsHandler, deletePostHandler, editPostHandler, showEditTextArea, postHandler,
+    loginHandler, registerHandler
+}
 
 // EMPTY POSTS HANDLER
 // Checks if there are any posts in the container and shows/hides the empty post message accordingly
@@ -136,4 +138,60 @@ function editPostHandler(form) {
         })
 }
 
+// REGISTER HANDLER
+// Handles the submission of the register form, sends a POST request to the server
+//
+function registerHandler() {
+    document.getElementById("register-form").addEventListener("submit", async (e) => {
+        e.preventDefault()
+        const formData = new FormData(e.target)
+        const username = formData.get("register-username")
+        const password = formData.get("register-password")
+        try {
+            const response = await fetch("/api/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({username: username, password: password})
+            })
+            if (!response.ok) {
+                throw new Error("Request failed")
+            }
+            const data = await response.json()
+            console.log("REGISTERED")
+        } catch (err) {
+            console.error(err)
+        }
+        e.target.reset()
+    })
+}
 
+// LOGIN HANDLER
+// Handles the submission of the register form, sends a POST request to the server
+//
+function loginHandler() {
+    document.getElementById("login-form").addEventListener("submit", async (e) => {
+        e.preventDefault()
+        const formData = new FormData(e.target)
+        const username = formData.get("login-username")
+        const password = formData.get("login-password")
+        try {
+            const response = await fetch("/api/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({username: username, password: password})
+            })
+            if (!response.ok) {
+                throw new Error("Request failed")
+            }
+            const data = await response.json()
+            console.log("LOGGED IN")
+        } catch (err) {
+            console.error(err)
+        }
+        e.target.reset()
+    })
+}

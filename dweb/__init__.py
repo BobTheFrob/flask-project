@@ -1,6 +1,6 @@
 import os
 from flask import Flask
-from . import api, auth
+from . import auth, posts
 
 
 def create_app(test_config=None):
@@ -24,7 +24,7 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    api.init_app(app)
+    posts.init_app(app)
     auth.init_app(app)
 
     from . import db

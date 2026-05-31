@@ -101,7 +101,7 @@ def me():
         "user": g.user["username"]
     }
 
-def login_required(view):
+def login_required_api(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
@@ -109,6 +109,15 @@ def login_required(view):
                 "error": "Authentication required"
             }), 401
 
+        return view(**kwargs)
+
+    return wrapped_view
+
+def login_required_page(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None:
+            return redirect(url_for("auth.login_page"))
         return view(**kwargs)
 
     return wrapped_view
