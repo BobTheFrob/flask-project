@@ -61,7 +61,7 @@ def login():
     userSearched = models.login_user(userData)
     if userSearched is None:
         return jsonify({
-            "error": "Incorrect username"
+            "error": "Incorrect username."
         }), 400
     elif not check_password_hash(userSearched['password'], userData['password']):
         return jsonify({
@@ -72,7 +72,7 @@ def login():
     session.permanent = True
     return jsonify({
         "message": "Logged in."
-    })
+    }), 200
     # return redirect(url_for('index'))
 
     #     flash(error)
