@@ -34,6 +34,7 @@ def validateUserDetails(data):
 
 @auth_apibp.route('/register', methods = ['POST'])
 def register():
+    session.clear()
     data = request.get_json() or {}
     userData = validateUserDetails(data)
     userData["password"] = generate_password_hash(userData["password"])
@@ -61,11 +62,11 @@ def login():
     userSearched = models.login_user(userData)
     if userSearched is None:
         return jsonify({
-            "error": "Incorrect username."
+            "error": "Incorrect username/password."
         }), 400
     elif not check_password_hash(userSearched['password'], userData['password']):
         return jsonify({
-            "error": "Incorrect password."
+            "error": "Incorrect username/password."
         }), 400
     session.clear()
     session['user_id'] = userSearched['id']
@@ -116,8 +117,11 @@ def login_required_api(view):
 def login_required_page(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
+        print("DECORATOR g.user:", g.user)
+
         if g.user is None:
             return redirect(url_for("auth.login_page"))
+
         return view(**kwargs)
 
     return wrapped_view
