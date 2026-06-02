@@ -10,14 +10,16 @@ from . import models
 authbp = Blueprint('auth', __name__, url_prefix='/auth')
 auth_apibp = Blueprint('authapi', __name__, url_prefix='/api')
 
-# LOGIN
+# LOGIN ROUTE
 # Return login/register template
 #
 @authbp.route('/login',  methods = ['GET'])
 def login_page():
     return render_template("login.html")
 
-
+# VALIDATE DATA
+# Return validated data or message from json
+#
 def validateUserDetails(data):
     username = (data.get('username') or "").strip().casefold()
     password = (data.get('password') or "")
@@ -31,7 +33,9 @@ def validateUserDetails(data):
     elif (not password):
         return {"error": "Must have a password."}
 
-
+# REGISTER API
+# Register and add to models
+#
 @auth_apibp.route('/register', methods = ['POST'])
 def register():
     session.clear()
@@ -51,6 +55,9 @@ def register():
             return jsonify({"error": "Registration failed."}), 500
     return jsonify({"message": "User registered successfully."}), 201
 
+# LOGIN API
+# Login and get data from models
+#
 @auth_apibp.route('/login', methods = ['POST'])
 def login():
     data = request.get_json() or {}
@@ -60,11 +67,7 @@ def login():
             "error": userData.get("error")
         }), 400
     userSearched = models.login_user(userData)
-    if userSearched is None:
-        return jsonify({
-            "error": "Incorrect username/password."
-        }), 400
-    elif not check_password_hash(userSearched['password'], userData['password']):
+    if userSearched is None or not check_password_hash(userSearched['password'], userData['password']):
         return jsonify({
             "error": "Incorrect username/password."
         }), 400
@@ -74,11 +77,10 @@ def login():
     return jsonify({
         "message": "Logged in."
     }), 200
-    # return redirect(url_for('index'))
 
-    #     flash(error)
-
-    # return render_template('auth/login.html')
+# LOGIN FOR EVERY REQUEST
+# Call flask decorator everytime a request is made
+#
 @auth_apibp.before_app_request
 def load_logged_in_user():
     user_id = session.get('user_id')
@@ -88,20 +90,17 @@ def load_logged_in_user():
     else:
         g.user = models.get_user_by_id({"id": user_id})
 
+# LOGOUT API
+# Logout and clear session
+#
 @auth_apibp.route("/logout", methods = ['POST'])
 def logout():
     session.clear()
     return jsonify({"message": "Logged out."})
 
-@auth_apibp.get("/me")
-def me():
-    if g.user is None:
-        return jsonify({"error": "Not logged in"}), 401
-    
-    return {
-        "user": g.user["username"]
-    }
-
+# LOGIN REQUIRED DECORATOR
+# For api
+#
 def login_required_api(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
@@ -114,11 +113,12 @@ def login_required_api(view):
 
     return wrapped_view
 
+# LOGIN REQUIRED DECORATOR
+# For pages
+#
 def login_required_page(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
-        print("DECORATOR g.user:", g.user)
-
         if g.user is None:
             return redirect(url_for("auth.login_page"))
 
@@ -127,7 +127,7 @@ def login_required_page(view):
     return wrapped_view
 
 # INIT APP
-# Register bp
+# Register bps
 #
 def init_app(app):
     app.register_blueprint(authbp)

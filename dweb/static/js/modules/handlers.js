@@ -1,6 +1,6 @@
 import { createPostCard } from "./render.js"
 export {emptyPostsHandler, deletePostHandler, editPostHandler, showEditTextArea, postHandler,
-    loginHandler, registerHandler
+    loginHandler, registerHandler, logoutHandler
 }
 
 // EMPTY POSTS HANDLER
@@ -202,5 +202,18 @@ function loginHandler() {
         })
         authRequestHandler(response, message)
         e.target.reset()
+    })
+}
+
+// LOGOUT HANDLER
+// Handles the logout button, sends a POST request to the server
+//
+function logoutHandler() {
+    document.getElementById("logout-btn").addEventListener("click", async (e) => {
+        console.log("clicked")
+        const response = await fetch("/api/logout", {
+            method: "POST",
+        })
+        window.location.href = 'auth/login';
     })
 }

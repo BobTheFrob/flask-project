@@ -38,8 +38,12 @@
                         <a class="nav-link" href="{{ url_for('main.posts_page') }}">Anime</a>
                     </li>
                 </ul>
-                <ul class="navbar-nav mb-2 mb-sm-0 d-flex flex-row-reverse">
-                    <a class="nav-link" href="{{ url_for('auth.login_page') }}">Login</a>
+                <ul class="navbar-nav mb-2 mb-sm-0 d-flex flex-row-reverse pe-5">
+                    {% if g.user %}
+                        <button class="btn btn-danger btn-sm" id="logout-btn">Logout</button>
+                    {% else %}
+                        <a class="btn btn-outline-light btn-sm" href="{{ url_for('auth.login_page') }}">Login</a>
+                    {% endif %}
                 </ul>
             </div>
         </div>

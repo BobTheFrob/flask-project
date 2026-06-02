@@ -146,7 +146,6 @@ def get_post(post_id):
                 "post": postReturn
             }), 200
         except Exception as e:
-            print(f"Edit error: {e}")
             return jsonify({
                 "error": "Internal Server Error"
             }), 500
@@ -159,7 +158,6 @@ def get_post(post_id):
                 "message": "Post deleted.",
             }), 200
         except Exception as e:
-            print(f"Delete error: {e}")  # Check logs
             return jsonify({
                 "error": "Internal Server Error"
             }), 500

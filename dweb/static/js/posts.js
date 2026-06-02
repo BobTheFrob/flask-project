@@ -1,4 +1,4 @@
-import {deletePostHandler, editPostHandler, showEditTextArea, postHandler} from "./modules/handlers.js"
+import {deletePostHandler, editPostHandler, showEditTextArea, postHandler, logoutHandler} from "./modules/handlers.js"
 
 // STARTUP
 // Add event listeners to existing edit buttons to toggle the visibility of the edit textarea when clicked
@@ -10,6 +10,8 @@ document.querySelectorAll(".edit-btn").forEach(button => {
 })
 // Add event listener to the post creation form to handle new post submissions without refreshing the page
 postHandler()
+// Add event listener to logout button
+logoutHandler()
 /// Format sql timestamps to local time
 document.querySelectorAll(".post-time").forEach(span => {
     const time = new Date(span.textContent + " UTC")
@@ -23,6 +25,7 @@ document.querySelectorAll(".edit-form").forEach(form => {
     editPostHandler(form)
 })
 
+// Helper for search
 function escapeRegex(value) {
     return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
