@@ -78,6 +78,15 @@ def login():
         "message": "Logged in."
     }), 200
 
+@auth_apibp.route('/me', methods = ['GET'])
+def me():
+    x = session.get("user_id")
+    y = g.user["username"]
+    return jsonify({
+        "message": x,
+        "message2": y
+    }), 200
+
 # LOGIN FOR EVERY REQUEST
 # Call flask decorator everytime a request is made
 #

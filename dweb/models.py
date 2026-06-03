@@ -10,11 +10,17 @@ import click
 # GET ALL POSTS
 # Return posts from the database. The returned list is ordered by the created date.
 #
-def get_all_posts():
+def get_all_posts(id):
     con = db.get_db()
     cursor = con.cursor()
-    cursor.execute('SELECT id, title, body, score, watchingStatus, animeType, created FROM posts ORDER BY created')
-    posts = cursor.fetchall()
+    posts = con.execute("""
+        SELECT *
+        FROM posts
+        JOIN users
+            ON posts.user_id = users.id
+        WHERE posts.user_id = ?
+        ORDER BY created
+    """, [id]).fetchall()
     return posts
 
 
@@ -33,9 +39,25 @@ def get_post_by_id(id):
 #
 def add_post(post):
     con = db.get_db()
-    sql = ''' INSERT INTO posts(title,body,score,watchingStatus,animeType)
-              VALUES(?,?,?,?,?) '''    
-    cursor = con.execute(sql, [post['title'], post['body'], post['score'], post['watchingStatus'], post['animeType']])
+    sql = """
+    INSERT INTO posts(
+        title,
+        body,
+        score,
+        watchingStatus,
+        animeType,
+        user_id
+    )
+    VALUES(
+        :title,
+        :body,
+        :score,
+        :watchingStatus,
+        :animeType,
+        :user_id
+    )
+    """   
+    cursor = con.execute(sql, post)
     new_id = cursor.lastrowid
     con.commit()
     return new_id

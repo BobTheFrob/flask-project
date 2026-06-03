@@ -20,7 +20,7 @@ def index():
 @bp.route('/posts',  methods = ['GET'])
 @login_required_page
 def posts_page():
-    posts = models.get_all_posts()
+    posts = models.get_all_posts(session.get("user_id"))
     return render_template("posts.html", posts=posts)
 
 ####___________________________####
@@ -62,6 +62,7 @@ def validateEnumFields(post):
 def getRequestPost (data):
     post = {
         "title": (data.get("title") or "").strip(),
+        "user_id": session.get("user_id"),
         "body": (data.get("description") or "").strip(),
         "score": data.get('score'),
         "watchingStatus": (data.get('watchingStatus')) or "watching",
