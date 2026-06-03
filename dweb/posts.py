@@ -97,7 +97,7 @@ def api_posts():
                 "error": "Invalid type.",
             }), 400
         id = models.add_post(post)
-        postReturned = post_dict(models.get_post_by_id(id))
+        postReturned = post_dict(models.get_post_by_id(session.get("user_id"), id))
 
         return jsonify({
             "message": "Post created.",
@@ -114,7 +114,7 @@ def api_posts():
 def get_post(post_id):
 
     # Validate post exists
-    postValidate = models.get_post_by_id(post_id)
+    postValidate = models.get_post_by_id(session.get("user_id"), post_id)
     if not postValidate:
         return jsonify({
                 "error": "Post not found",
@@ -141,7 +141,7 @@ def get_post(post_id):
                 and str(postValidate["animeType"]) == str(post["animeType"])):
                 return "", 204
             models.edit_post(post)
-            postReturn = post_dict(models.get_post_by_id(post_id))
+            postReturn = post_dict(models.get_post_by_id(session.get("user_id"), post_id))
             return jsonify({
                 "message": "Post edited.",
                 "post": postReturn
@@ -154,7 +154,7 @@ def get_post(post_id):
     # DELETE POST
     if request.method == 'DELETE':
         try: 
-            models.delete_post(str(post_id))
+            models.delete_post(session.get("user_id"), post_id)
             return jsonify({
                 "message": "Post deleted.",
             }), 200

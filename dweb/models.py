@@ -10,9 +10,8 @@ import click
 # GET ALL POSTS
 # Return posts from the database. The returned list is ordered by the created date.
 #
-def get_all_posts(id):
+def get_all_posts(user_id):
     con = db.get_db()
-    cursor = con.cursor()
     posts = con.execute("""
         SELECT *
         FROM posts
@@ -20,17 +19,24 @@ def get_all_posts(id):
             ON posts.user_id = users.id
         WHERE posts.user_id = ?
         ORDER BY created
-    """, [id]).fetchall()
+    """, [user_id]).fetchall()
     return posts
 
 
 # GET POST BY ID
 # Return a post from the database by id. If the id does not exist, return None.
 #
-def get_post_by_id(id):
+def get_post_by_id(user_id ,id):
     con = db.get_db()
     cursor = con.cursor()
-    cursor.execute('SELECT id, title, body, score, watchingStatus, animeType, created FROM posts WHERE id = ?', [id])
+    sql = '''
+    SELECT * FROM posts         
+    JOIN users
+        ON posts.user_id = users.id
+    WHERE posts.user_id = ?
+    AND posts.id = ?
+    '''
+    cursor.execute(sql, [user_id, id])
     post = cursor.fetchone()
     return post
 
@@ -65,11 +71,11 @@ def add_post(post):
 # DELETE POST
 # Delete a post from the database by id. If the id does not exist, do nothing.
 #
-def delete_post(id):
+def delete_post(user_id, id):
     con = db.get_db()
     sql = ''' DELETE FROM posts
-              WHERE id=(?) '''    
-    con.execute(sql, [id])
+              WHERE user_id=(?) AND id=(?)'''    
+    con.execute(sql, [user_id, id])
     con.commit()
 
 # EDIT POST
@@ -78,14 +84,15 @@ def delete_post(id):
 def edit_post(post):
     con = db.get_db()
     sql = ''' 
-            UPDATE posts
-            SET body = (?),
-            score = (?),
-            watchingStatus = (?),
-            animeType = (?)
-            WHERE id = (?)
+        UPDATE posts
+        SET
+            body = :body,
+            score = :score,
+            watchingStatus = :watchingStatus,
+            animeType = :animeType
+        WHERE user_id = :user_id
         '''    
-    con.execute(sql, [post['body'], post['score'], post['watchingStatus'], post['animeType'], post['id']])
+    con.execute(sql, post)
     con.commit()
 
 ####_____________________________####
