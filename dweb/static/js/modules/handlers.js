@@ -143,10 +143,12 @@ async function authRequestHandler(response, messageElement) {
     const message = messageElement.querySelector(".card-text")
     messageElement.classList.remove("dhiddenarea")  
 
-    if (response.status === 201 || response.status === 200) {
+    if (response.status === 200) {
+        window.location.href = '../posts';
+    }
+    else if (response.status === 201) {
         message.textContent = data.message
         message.classList = "card-text text-success"
-        window.location.href = '../posts';
     }
     else if (response.status === 400) {
         message.textContent = data.error

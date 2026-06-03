@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Main{% endblock %}
+{% block title %}Home{% endblock %}
 
 {% block header %}
     <h1 class="display-3">Home</h1>
@@ -13,4 +13,8 @@
             <p class="mb-0">I'm planning to make simple media tracking, like favourites and stuff.</p>
         </div>
     </div>
+{% endblock %}
+
+{% block script %}
+    <script type="module" src="{{ url_for('static', filename='js/home.js') }}"></script>
 {% endblock %}
