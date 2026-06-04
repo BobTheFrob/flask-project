@@ -212,7 +212,6 @@ function loginHandler() {
 //
 function logoutHandler() {
     document.getElementById("logout-btn").addEventListener("click", async (e) => {
-        console.log("clicked")
         const response = await fetch("/api/logout", {
             method: "POST",
         })
