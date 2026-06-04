@@ -3,6 +3,7 @@ from flask import (
     Blueprint, g, redirect, render_template, request, session, url_for, jsonify
 )
 from . import models
+from .auth import login_required_api, login_required_page
 
 bp = Blueprint('main', __name__)
 
@@ -16,18 +17,18 @@ def index():
 # POSTS
 # Posts page route. Render the posts page template. If the request method is POST, add a post to the database and redirect to the posts page.
 #
-@bp.route('/posts',  methods = ['GET', 'POST'])
+@bp.route('/posts',  methods = ['GET'])
+@login_required_page
 def posts_page():
-    if request.method == 'GET':
-        posts = models.get_all_posts()
-        return render_template("posts.html", posts=posts)
+    posts = models.get_all_posts(session.get("user_id"))
+    return render_template("posts.html", posts=posts)
 
 ####___________________________####
 ####                           ####
 ####        API ROUTES         ####
 ####___________________________####
 
-apibp = Blueprint('api', __name__, url_prefix='/api')
+posts_apibp = Blueprint('posts_api', __name__, url_prefix='/api')
 
 
 ### HELPERS ###
@@ -61,6 +62,7 @@ def validateEnumFields(post):
 def getRequestPost (data):
     post = {
         "title": (data.get("title") or "").strip(),
+        "user_id": session.get("user_id"),
         "body": (data.get("description") or "").strip(),
         "score": data.get('score'),
         "watchingStatus": (data.get('watchingStatus')) or "watching",
@@ -71,11 +73,13 @@ def getRequestPost (data):
 # GET ALL POSTS API
 # Posts api route. Return the posts in json. If the request method is POST, add a post to the database and redirect to the posts page.
 #
-@apibp.route('/posts',  methods = ['GET', 'POST'])
+@posts_apibp.route('/posts',  methods = ['GET', 'POST'])
+@login_required_api
 def api_posts():
     if request.method == 'GET':
         posts = models.get_all_posts()
         return jsonify([post_dict(post) for post in posts])
+    
     if request.method == 'POST':
         data = request.get_json() or {}
         post = getRequestPost(data)
@@ -93,7 +97,7 @@ def api_posts():
                 "error": "Invalid type.",
             }), 400
         id = models.add_post(post)
-        postReturned = post_dict(models.get_post_by_id(id))
+        postReturned = post_dict(models.get_post_by_id(session.get("user_id"), id))
 
         return jsonify({
             "message": "Post created.",
@@ -105,11 +109,12 @@ def api_posts():
 # edit the post in the database and return 200. 
 # If the request method is DELETE, delete the post from the database and return 200. If the post does not exist, return 404.
 #
-@apibp.route('/posts/<int:post_id>',  methods = ['GET', 'PUT', 'DELETE'])
+@posts_apibp.route('/posts/<int:post_id>',  methods = ['GET', 'PUT', 'DELETE'])
+@login_required_api
 def get_post(post_id):
 
     # Validate post exists
-    postValidate = models.get_post_by_id(post_id)
+    postValidate = models.get_post_by_id(session.get("user_id"), post_id)
     if not postValidate:
         return jsonify({
                 "error": "Post not found",
@@ -136,13 +141,12 @@ def get_post(post_id):
                 and str(postValidate["animeType"]) == str(post["animeType"])):
                 return "", 204
             models.edit_post(post)
-            postReturn = post_dict(models.get_post_by_id(post_id))
+            postReturn = post_dict(models.get_post_by_id(session.get("user_id"), post_id))
             return jsonify({
                 "message": "Post edited.",
                 "post": postReturn
             }), 200
         except Exception as e:
-            print(f"Edit error: {e}")
             return jsonify({
                 "error": "Internal Server Error"
             }), 500
@@ -150,12 +154,11 @@ def get_post(post_id):
     # DELETE POST
     if request.method == 'DELETE':
         try: 
-            models.delete_post(str(post_id))
+            models.delete_post(session.get("user_id"), post_id)
             return jsonify({
                 "message": "Post deleted.",
             }), 200
         except Exception as e:
-            print(f"Delete error: {e}")  # Check logs
             return jsonify({
                 "error": "Internal Server Error"
             }), 500
@@ -165,4 +168,4 @@ def get_post(post_id):
 #
 def init_app(app):
     app.register_blueprint(bp)
-    app.register_blueprint(apibp)
+    app.register_blueprint(posts_apibp)

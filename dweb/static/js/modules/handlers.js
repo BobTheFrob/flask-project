@@ -1,5 +1,7 @@
 import { createPostCard } from "./render.js"
-export {emptyPostsHandler, deletePostHandler, editPostHandler, showEditTextArea, postHandler}
+export {emptyPostsHandler, deletePostHandler, editPostHandler, showEditTextArea, postHandler,
+    loginHandler, registerHandler, logoutHandler
+}
 
 // EMPTY POSTS HANDLER
 // Checks if there are any posts in the container and shows/hides the empty post message accordingly
@@ -71,7 +73,6 @@ function deletePostHandler(form) {
             if (!response.ok) {
                 console.error("Request failed")
             } else {
-                const data = await response.json()
                 const postCard = document.getElementById(`post-${postId}`)
                 if (postCard) {
                     postCard.remove()
@@ -81,6 +82,8 @@ function deletePostHandler(form) {
             console.error(err) 
         }
     })}
+
+
 
 // EDIT POST HANDLER
 // Handles the submission of the edit form, sends a PUT request to the server with the updated post data, and updates the post in the UI without refreshing the page
@@ -123,7 +126,6 @@ function editPostHandler(form) {
                 if (!response.ok) {
                     throw new Error("Request failed")
                 }
-                const data = await response.json()
                 document.getElementById(`post-${postId}-description`).textContent = body
                 document.getElementById(`post-${postId}-score`).textContent = `${score}/10`
                 document.getElementById(`post-${postId}-watchingstatus`).textContent = watchingStatus
@@ -136,4 +138,83 @@ function editPostHandler(form) {
         })
 }
 
+async function authRequestHandler(response, messageElement) {
+    const data = await response.json();
+    const message = messageElement.querySelector(".card-text")
+    messageElement.classList.remove("dhiddenarea")  
 
+    if (response.status === 200) {
+        window.location.href = '../posts';
+    }
+    else if (response.status === 201) {
+        message.textContent = data.message
+        message.classList = "card-text text-success"
+    }
+    else if (response.status === 400) {
+        message.textContent = data.error
+        message.classList = "card-text text-danger"
+    }
+    else if (response.status === 409) {
+        message.textContent = data.error
+        message.classList = "card-text text-warning"
+    }
+    else if (!response.ok) {
+        message.textContent = data.error || "Something went wrong."
+    }
+}
+
+// REGISTER HANDLER
+// Handles the submission of the register form, sends a POST request to the server
+//
+function registerHandler() {
+    document.getElementById("register-form").addEventListener("submit", async (e) => {
+        e.preventDefault()
+        const formData = new FormData(e.target)
+        const username = formData.get("register-username")
+        const password = formData.get("register-password")
+        const message = document.getElementById("dmessage")
+        const response = await fetch("/api/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({username: username, password: password})
+        })
+        authRequestHandler(response, message)
+        e.target.reset()
+    })
+}
+
+// LOGIN HANDLER
+// Handles the submission of the register form, sends a POST request to the server
+//
+function loginHandler() {
+    document.getElementById("login-form").addEventListener("submit", async (e) => {
+        e.preventDefault()
+        const formData = new FormData(e.target)
+        const username = formData.get("login-username")
+        const password = formData.get("login-password")
+        const message = document.getElementById("dmessage")
+        const response = await fetch("/api/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({username: username, password: password})
+        })
+        authRequestHandler(response, message)
+        e.target.reset()
+    })
+}
+
+// LOGOUT HANDLER
+// Handles the logout button, sends a POST request to the server
+//
+function logoutHandler() {
+    document.getElementById("logout-btn").addEventListener("click", async (e) => {
+        const response = await fetch("/api/logout", {
+            method: "POST",
+        })
+        window.location.href = 'auth/login';
+    })
+}
