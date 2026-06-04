@@ -29,13 +29,8 @@ A small web application built with Flask and SQLite to practice fullstack develo
    flask --app dweb run --debug --port 8000
    `
 
-   To clear the db:
+   To clear and initialize the db:
    `
    flask --app dweb clear-db
    `
-
-   To initialize the db:
-   `
-   flask --app dweb clear-db
-   ` 
    
