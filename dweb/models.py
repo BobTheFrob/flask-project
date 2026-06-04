@@ -91,6 +91,7 @@ def edit_post(post):
             watchingStatus = :watchingStatus,
             animeType = :animeType
         WHERE user_id = :user_id
+        AND id = :id
         '''    
     con.execute(sql, post)
     con.commit()
