@@ -1,5 +1,6 @@
 import os
 from flask import Flask
+from flask_caching import Cache
 from . import auth, posts
 
 
@@ -9,8 +10,11 @@ def create_app(test_config=None):
     app.config.from_mapping(
         SECRET_KEY='devd',
         DATABASE=os.path.join(app.instance_path, 'dweb.sqlite'),
+        CACHE_TYPE = "SimpleCache",
+        CACHE_DEFAULT_TIMEOUT = 3600
     )
     app.json.sort_keys = False
+    cache = Cache(app)
     if test_config is None:
         # load the instance config, if it exists, when not testing
         app.config.from_pyfile('config.py', silent=True)
