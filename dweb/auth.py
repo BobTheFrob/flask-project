@@ -23,6 +23,11 @@ def login_page():
 def validateUserDetails(data):
     username = (data.get('username') or "").strip().casefold()
     password = (data.get('password') or "")
+    print(len(username), len(password))
+    if (len(username.replace(" ", "")) < 4):
+        return {"error": "Username must be at least 4 characters (without spaces)."}
+    elif (len(password) < 8):
+        return {"error": "Password must be at least 8 characters."}
     if (username and password):
         return {
             "username": username,
@@ -32,6 +37,7 @@ def validateUserDetails(data):
         return {"error": "Must have a username."}
     elif (not password):
         return {"error": "Must have a password."}
+        
 
 # REGISTER API
 # Register and add to models
@@ -41,12 +47,12 @@ def register():
     session.clear()
     data = request.get_json() or {}
     userData = validateUserDetails(data)
-    userData["password"] = generate_password_hash(userData["password"])
     if (userData.get("error")):
         return jsonify({
             "error": userData.get("error")
-        }), 400
+        }), 400 
     else:
+        userData["password"] = generate_password_hash(userData["password"])
         try:
             models.register_user(userData)
         except sqlite3.IntegrityError:
