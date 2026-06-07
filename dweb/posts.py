@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask import (
     Blueprint, g, redirect, render_template, request, session, url_for, jsonify
 )
-from . import models
+from . import models, cache
 from .auth import login_required_api, login_required_page
 
 bp = Blueprint('main', __name__)
