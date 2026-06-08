@@ -1,3 +1,4 @@
 dweb/__pycache__/
 .venv/
 instance/
+.env

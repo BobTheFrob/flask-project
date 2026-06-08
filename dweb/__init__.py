@@ -1,6 +1,9 @@
 import os
 from flask import Flask
 from flask_caching import Cache
+from dotenv import load_dotenv
+
+load_dotenv()
 
 cache = Cache(config=
     {'CACHE_TYPE': "SimpleCache",
@@ -11,7 +14,7 @@ def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
-        SECRET_KEY='devd',
+        SECRET_KEY=os.getenv("APP_SECRET_KEY"),
         DATABASE=os.path.join(app.instance_path, 'dweb.sqlite')
     )
     app.json.sort_keys = False
