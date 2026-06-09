@@ -1,18 +1,11 @@
 from flask import Blueprint
 from flask import (
-    Blueprint, g, redirect, render_template, request, session, url_for, jsonify
+    Blueprint, render_template, request, session, jsonify
 )
 from . import models, cache
 from .auth import login_required_api, login_required_page
 
-bp = Blueprint('main', __name__)
-
-# MAIN PAGE
-# Main page route. Render the main page template.
-#
-@bp.route('/')
-def index():
-    return render_template("main.html")
+bp = Blueprint('posts', __name__)
 
 # POSTS
 # Posts page route. Render the posts page template. If the request method is POST, add a post to the database and redirect to the posts page.

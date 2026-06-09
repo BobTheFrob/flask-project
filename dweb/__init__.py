@@ -32,9 +32,10 @@ def create_app(test_config=None):
         pass
 
     cache.init_app(app)
-    from . import auth, posts
+    from . import auth, posts, home
     posts.init_app(app)
     auth.init_app(app)
+    home.init_app(app)
 
     from . import db
     db.init_app(app)
