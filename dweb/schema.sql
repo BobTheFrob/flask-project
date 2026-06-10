@@ -18,3 +18,9 @@ CREATE TABLE IF NOT EXISTS users (
   bio TEXT,
   created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS api_cache (
+  cache_key TEXT PRIMARY KEY,
+  response_json TEXT NOT NULL,
+  created INT NOT NULL
+)

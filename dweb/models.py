@@ -1,6 +1,5 @@
-from . import db
-import click
-
+from . import db, cache
+import json, time
 
 ####_____________________________####
 ####                             ####
@@ -132,3 +131,40 @@ def login_user(userData):
     cursor.execute('SELECT * FROM users WHERE username = ?', [userData['username']])
     user = cursor.fetchone()
     return user
+
+@cache.memoize(120)
+def get_cache(key, max_age_seconds):
+    con = db.get_db()
+
+    row = con.execute(
+        "SELECT response_json, created FROM api_cache WHERE cache_key = ?",
+        (key,)
+    ).fetchone()
+
+    if row is None:
+        return None
+
+    age = time.time() - row["created"]
+
+    if age > max_age_seconds:
+        return None
+
+    return json.loads(row["response_json"])
+
+
+def set_cache(key, data):
+    con = db.get_db()
+
+    con.execute("""
+        INSERT INTO api_cache (cache_key, response_json, created)
+        VALUES (?, ?, ?)
+        ON CONFLICT(cache_key) DO UPDATE SET
+            response_json = exc luded.response_json,
+            created = excluded.created
+    """, (
+        key,
+        json.dumps(data),
+        int(time.time())
+    ))
+
+    con.commit()
