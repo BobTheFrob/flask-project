@@ -1,5 +1,6 @@
 from . import db, cache
-import json, time
+import json, time, os
+import requests
 
 ####_____________________________####
 ####                             ####
@@ -132,8 +133,9 @@ def login_user(userData):
     user = cursor.fetchone()
     return user
 
-@cache.memoize(120)
+@cache.memoize(30)
 def get_cache(key, max_age_seconds):
+    print("non cached result called")
     con = db.get_db()
 
     row = con.execute(
@@ -159,7 +161,7 @@ def set_cache(key, data):
         INSERT INTO api_cache (cache_key, response_json, created)
         VALUES (?, ?, ?)
         ON CONFLICT(cache_key) DO UPDATE SET
-            response_json = exc luded.response_json,
+            response_json = excluded.response_json,
             created = excluded.created
     """, (
         key,
@@ -168,3 +170,17 @@ def set_cache(key, data):
     ))
 
     con.commit()
+
+def get_resynced_videos():
+    response = requests.get(
+        "https://www.googleapis.com/youtube/v3/search",
+        params={
+            "part": "snippet",
+            "q": "AC Black Flag Resynced",
+            "maxResults": 10,
+            "type": "video",
+            "key": os.getenv("YOUTUBE_API_KEY")
+        }
+    )
+
+    return response.json()
