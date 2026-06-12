@@ -1,6 +1,7 @@
 from . import db, cache
 import json, time, os
 import requests
+from datetime import datetime, timedelta, timezone
 
 ####_____________________________####
 ####                             ####
@@ -173,14 +174,17 @@ def set_cache(key, data):
 
     con.commit()
 
-def get_resynced_videos():
+def get_youtube_videos(query):
+    one_week_ago = (datetime.now(timezone.utc) 
+    - timedelta(days=7)).isoformat().replace("+00:00", "Z")
     response = requests.get(
         "https://www.googleapis.com/youtube/v3/search",
         params={
             "part": "snippet",
-            "q": "AC Black Flag Resynced",
-            "maxResults": 10,
+            "q": query,
+            "maxResults": 6,
             "type": "video",
+            "publishedAfter": one_week_ago,
             "key": os.getenv("YOUTUBE_API_KEY")
         }
     )

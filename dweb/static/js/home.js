@@ -5,7 +5,7 @@ document.getElementById("logout-btn")? logoutHandler() : null
 
 
 async function updateACVideos(max) {
-    const response = await fetch(`/api/acupdates?max=${max}&key=youtube:ac_black_flag_resynced`)
+    const response = await fetch(`/api/videoupdates?max=${max}&key=youtube:ac black flag resynced`)
     if (response.status == 200) {
         const json = await response.json()
         createACVideoUpdates(json)
@@ -18,6 +18,5 @@ async function updateACVideos(max) {
 updateACVideos(1800)
 
 document.getElementById("force-update-btn").addEventListener("click", (e) => {
-    e.preventDefault()
     updateACVideos(0)
 })

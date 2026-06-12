@@ -50,6 +50,10 @@ h2 {
     line-height: 1.1;
 }
 
+h3, h4, h5, h6 {
+    font-family: "Bebas Neue", "Georgia";
+}
+
 p, span {
     font-family: "Oswald", "Georgia";
     text-align: left;

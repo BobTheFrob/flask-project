@@ -105,23 +105,28 @@ function decodeHtml(html) {
 }
 
 function renderVideoThumbnails(video) {
-    const videosContainer = document.getElementById("ac-videos-area")
+    const videosContainer = document.getElementById("update-videos-area")
     const wrapper = document.createElement("div")
     wrapper.innerHTML = `
-        <div class="card bg-black text-light border-secondary">
+    <div class="col-lg-4 col-md-6">
+        <div class="card bg-black text-light border-secondary p-2 text-center">
             <div class="card-body">
-            ${decodeHtml(video.snippet.title)}
-            <img class="img-fluid" src="${video.snippet.thumbnails.medium.url}">
+            <h5 class="card-title mb-3">
+            <a href="https://www.youtube.com/watch?v=${video.id.videoId}" class="h5" target="_blank">${decodeHtml(video.snippet.title)}</a>
+            </h5>
+            <div class="text-center mb-3"><img class="img-fluid img-thumbnail" src="${video.snippet.thumbnails.medium.url}"></div>
             </div>
         </div>
+    </div>
     `
-    videosContainer.appendChild(wrapper)
+    videosContainer.appendChild(wrapper.firstElementChild)
 }
 
 function createACVideoUpdates(data) {
     if (data) {
+        console.log(data)
+        document.getElementById("update-videos-area").innerHTML = ""
         for (let i in data.items){
-            console.log(data.items[i].snippet)
             renderVideoThumbnails(data.items[i])
         }
     }
