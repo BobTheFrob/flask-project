@@ -19,9 +19,19 @@ def index():
 @home_bp.route('/api/videoupdates', methods = ['GET'])
 def get_update_videos():
     key = request.args.get("key")
-    maxtime = float(request.args.get("max"))
+    try:
+        maxtime = float(request.args.get("max"))
+    except ValueError:
+        return jsonify({
+            "error": "Must be a valid nonnegative number."
+        })
     response = models.get_cache(key, maxtime)
     
+    if maxtime < 0:
+        return jsonify({
+            "error": "Must be a valid nonnegative number."
+        })
+
     if not key.split(':')[1] or not key.split(':')[0]:
         return jsonify({
             "error": "Invalid query type."
