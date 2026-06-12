@@ -111,14 +111,18 @@ function renderVideoThumbnails(video) {
     <div class="col-lg-4 col-md-6">
         <div class="card bg-black text-light border-secondary p-2 text-center">
             <div class="card-body">
-            <h5 class="card-title mb-3">
-            <a href="https://www.youtube.com/watch?v=${video.id.videoId}" class="h5" target="_blank">${decodeHtml(video.snippet.title)}</a>
-            </h5>
-            <div class="text-center mb-3"><img class="img-fluid img-thumbnail" src="${video.snippet.thumbnails.medium.url}"></div>
+            <div class="ratio ratio-16x9 mb-3">
+            <iframe src="https://www.youtube.com/embed/${video.id.videoId}" frameborder="0" allowfullscreen class="rounded" loading="lazy"></iframe>
             </div>
-        </div>
-    </div>
+            <h5 class="card-title mb-3">
+            ${decodeHtml(video.snippet.title)}
+            </h5>
+            <p class="small">${video.snippet.description}</p>
+            </div>
+            </div>
+            </div>
     `
+            // <div class="text-center mb-3"><img class="img-fluid img-thumbnail" src="${video.snippet.thumbnails.medium.url}"></div>
     videosContainer.appendChild(wrapper.firstElementChild)
 }
 

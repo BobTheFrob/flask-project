@@ -2,23 +2,22 @@
 {% block title %}Home{% endblock %}
 
 {% block header %}
-    <h1 class="display-3">Home</h1>
+    <h1 class="display-3 px-5">Home</h1>
 {% endblock %}
 
 {% block content %}
-<div class="px-5">
-    <div class="card bg-black text-light border-secondary mb-3">
-        <div class="card-body">
-            <p>Hello world, welcome to my site!</p>
-            <p>Armed with knowledge from my CS3720 course, this is my first Flask project.</p>
-            <p class="mb-0">I'm planning to make simple media tracking, like favourites and stuff.</p>
-        </div>
+<div class="card bg-black text-light border-secondary mb-3">
+    <div class="card-body">
+        <p>Hello world, welcome to my site!</p>
+        <p>Armed with knowledge from my CS3720 course, this is my first Flask project.</p>
+        <p>I'm planning to make simple media tracking, like favourites and stuff.</p>
+        <h4>Here's some updates on Assassin's Creed Black Flag Resynced in the meantime!</h4>
     </div>
-    <div>
-        <button id="force-update-btn" class="btn btn-primary mb-3">Force Update</button>
-        <div class="row g-3" id="update-videos-area">
-        </div>
+</div>
+<div>
+    <div class="row g-3" id="update-videos-area">
     </div>
+    <button id="force-update-btn" class="btn btn-primary mb-3">Force Update</button>
 </div>
 {% endblock %}
 
