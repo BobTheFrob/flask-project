@@ -6,6 +6,7 @@
 {% endblock %}
 
 {% block content %}
+<div class="px-5">
     <div class="card bg-black text-light border-secondary">
         <div class="card-body">
             <p>Hello world, welcome to my site!</p>
@@ -13,6 +14,12 @@
             <p class="mb-0">I'm planning to make simple media tracking, like favourites and stuff.</p>
         </div>
     </div>
+    <div>
+        <button id="force-update-btn" class="btn btn-primary">Force Update</button>
+        <div class="container" id="ac-videos-area">
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block script %}

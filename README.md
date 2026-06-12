@@ -22,7 +22,13 @@ A small web application built with Flask and SQLite to practice fullstack develo
 ## Running the project
 1. Create and activate a virtual environment
 2. Install dependencies from `requirements.txt`
-3. Initialize db and run:
+3. Create .env file at project directory and define:
+
+   YOUTUBE_API_KEY
+
+   APP_SECRET_KEY
+
+4. Initialize db and run:
 
    To run:
    `

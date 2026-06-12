@@ -1,4 +1,4 @@
-export { createPostCard }
+export { createPostCard, createACVideoUpdates }
 import { deletePostHandler, editPostHandler, showEditTextArea } from "./handlers.js";
 
 function createPostCard(post) {
@@ -96,4 +96,33 @@ function createPostCard(post) {
     textarea.value = post.description
 
     return wrapper.firstElementChild
+}
+
+function decodeHtml(html) {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+}
+
+function renderVideoThumbnails(video) {
+    const videosContainer = document.getElementById("ac-videos-area")
+    const wrapper = document.createElement("div")
+    wrapper.innerHTML = `
+        <div class="card bg-black text-light border-secondary">
+            <div class="card-body">
+            ${decodeHtml(video.snippet.title)}
+            <img class="img-fluid" src="${video.snippet.thumbnails.medium.url}">
+            </div>
+        </div>
+    `
+    videosContainer.appendChild(wrapper)
+}
+
+function createACVideoUpdates(data) {
+    if (data) {
+        for (let i in data.items){
+            console.log(data.items[i].snippet)
+            renderVideoThumbnails(data.items[i])
+        }
+    }
 }

@@ -133,9 +133,8 @@ def login_user(userData):
     user = cursor.fetchone()
     return user
 
-@cache.memoize(30)
+@cache.memoize(1800)
 def get_cache(key, max_age_seconds):
-    print("non cached result called")
     con = db.get_db()
 
     row = con.execute(
@@ -144,13 +143,16 @@ def get_cache(key, max_age_seconds):
     ).fetchone()
 
     if row is None:
+        print("non cached result called")
         return None
 
     age = time.time() - row["created"]
 
     if age > max_age_seconds:
+        print("non cached result called")
         return None
 
+    print("sql result called")
     return json.loads(row["response_json"])
 
 
