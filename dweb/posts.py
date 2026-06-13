@@ -32,12 +32,12 @@ def post_dict(post):
         "id": post["id"],
         "description": post["body"],
         "score": post["score"],
-        "watchingStatus": post["watchingStatus"],
-        "animeType": post["animeType"],
+        "watching_status": post["watching_status"],
+        "anime_type": post["anime_type"],
         "created": post["created"]
     })
 
-# Helper function to validate dropdown fields like animeType and watchingStatus
+# Helper function to validate dropdown fields like anime_type and watching_status
 def validateEnumFields(post):
     MEDIA_TYPES = {
         "anime": "Anime",
@@ -50,7 +50,7 @@ def validateEnumFields(post):
         "completed": "Completed",
         "dropped": "Dropped"
     }
-    return post["animeType"] in MEDIA_TYPES and post["watchingStatus"] in WATCH_STATUSES
+    return post["anime_type"] in MEDIA_TYPES and post["watching_status"] in WATCH_STATUSES
 
 def getRequestPost (data):
     post = {
@@ -58,8 +58,8 @@ def getRequestPost (data):
         "user_id": session.get("user_id"),
         "body": (data.get("description") or "").strip(),
         "score": data.get('score'),
-        "watchingStatus": (data.get('watchingStatus')) or "watching",
-        "animeType": data.get('animeType') or "anime"
+        "watching_status": (data.get('watching_status')) or "watching",
+        "anime_type": data.get('anime_type') or "anime"
     }
     return post
 
@@ -130,8 +130,8 @@ def get_post(post_id):
                     "message": "Invalid score. Score must be between 0 and 10."
                 }), 400
             if (str(postValidate["body"]) == str(post["body"]) and str(postValidate["score"]) == str(post["score"])
-                and str(postValidate["watchingStatus"]) == str(post["watchingStatus"])
-                and str(postValidate["animeType"]) == str(post["animeType"])):
+                and str(postValidate["watching_status"]) == str(post["watching_status"])
+                and str(postValidate["anime_type"]) == str(post["anime_type"])):
                 return "", 204
             models.edit_post(post)
             postReturn = post_dict(models.get_post_by_id(session.get("user_id"), post_id))

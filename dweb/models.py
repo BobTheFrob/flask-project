@@ -51,16 +51,16 @@ def add_post(post):
         title,
         body,
         score,
-        watchingStatus,
-        animeType,
+        watching_status,
+        anime_type,
         user_id
     )
     VALUES(
         :title,
         :body,
         :score,
-        :watchingStatus,
-        :animeType,
+        :watching_status,
+        :anime_type,
         :user_id
     )
     """   
@@ -89,8 +89,8 @@ def edit_post(post):
         SET
             body = :body,
             score = :score,
-            watchingStatus = :watchingStatus,
-            animeType = :animeType
+            watching_status = :watching_status,
+            anime_type = :anime_type
         WHERE user_id = :user_id
         AND id = :id
         '''    

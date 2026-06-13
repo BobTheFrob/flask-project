@@ -23,7 +23,6 @@ def login_page():
 def validateUserDetails(data):
     username = (data.get('username') or "").strip().casefold()
     password = (data.get('password') or "")
-    print(len(username), len(password))
     if (len(username.replace(" ", "")) < 4):
         return {"error": "Username must be at least 4 characters (without spaces)."}
     elif (len(password) < 8):
