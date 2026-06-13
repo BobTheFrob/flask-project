@@ -24,16 +24,16 @@ function postHandler() {
         const title = formData.get("title")
         const body = formData.get("description")
         const score = formData.get("score")
-        const status = formData.get("watchingStatus")
-        const type = formData.get("animeType")
+        const status = formData.get("watching_status")
+        const type = formData.get("anime_type")
         try {
             const response = await fetch("/api/posts", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({title: title, description: body, score: score, watchingStatus: status,
-                animeType: type})
+                body: JSON.stringify({title: title, description: body, score: score, watching_status: status,
+                anime_type: type})
             })
             if (!response.ok) {
                 throw new Error("Request failed")
@@ -97,18 +97,18 @@ function editPostHandler(form) {
         const postId = form.id.split("-").pop()
         const body = formData.get(`editdesc-${postId}`).trim()
         const score = formData.get(`editscore-${postId}`)
-        const animeType = formData.get(`editAnimeType-${postId}`)
-        const watchingStatus = formData.get(`editWatchingStatus-${postId}`)
+        const anime_type = formData.get(`editanime_type-${postId}`)
+        const watching_status = formData.get(`editwatching_status-${postId}`)
 
         const orgBody = document.getElementById(`post-${postId}-description`).textContent
         const orgScore = document.getElementById(`post-${postId}-score`).textContent.split("/")[0]
-        const orgAnimeType = document.getElementById(`post-${postId}-animetype`).textContent
-        const orgWatchingStatus = document.getElementById(`post-${postId}-watchingstatus`).textContent
+        const organime_type = document.getElementById(`post-${postId}-anime_type`).textContent
+        const orgwatching_status = document.getElementById(`post-${postId}-watching_status`).textContent
         
         const message = document.getElementById(`editmessage-${postId}`)
         
 
-        if (body == orgBody && score == orgScore && animeType == orgAnimeType && watchingStatus == orgWatchingStatus) {
+        if (body == orgBody && score == orgScore && anime_type == organime_type && watching_status == orgwatching_status) {
             message.classList.remove("dhiddenarea")
             message.textContent = "No changes detected."
         } else {
@@ -121,15 +121,15 @@ function editPostHandler(form) {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({description: body, score: score,
-                    animeType: animeType, watchingStatus: watchingStatus})
+                    anime_type: anime_type, watching_status: watching_status})
                 })
                 if (!response.ok) {
                     throw new Error("Request failed")
                 }
                 document.getElementById(`post-${postId}-description`).textContent = body
                 document.getElementById(`post-${postId}-score`).textContent = `${score}/10`
-                document.getElementById(`post-${postId}-watchingstatus`).textContent = watchingStatus
-                document.getElementById(`post-${postId}-animetype`).textContent = animeType
+                document.getElementById(`post-${postId}-watching_status`).textContent = watching_status
+                document.getElementById(`post-${postId}-anime_type`).textContent = anime_type
                 showEditTextArea(postId)
             } catch (err) {
                 console.error(err)
