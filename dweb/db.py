@@ -61,6 +61,16 @@ def clear_db_command():
     init_db()
     click.echo('Cleared the database.')
 
+@click.command('update-db')
+def update_db_command():
+    """Update the db with updateschema script."""
+    db = get_db()
+
+    with current_app.open_resource('updateschema.sql') as f:
+        db.executescript(f.read().decode('utf8'))
+
+    click.echo("Database upgraded.")
+
 # TIMESTAMP CONVERTER
 # Register a converter for the timestamp type. This allows us to store and retrieve datetime objects in the database.
 # The converter converts the datetime object to a string when storing it in the database,
@@ -76,3 +86,4 @@ def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
     app.cli.add_command(clear_db_command)
+    app.cli.add_command(update_db_command)
