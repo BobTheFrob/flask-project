@@ -190,3 +190,30 @@ def get_youtube_videos(query):
     )
 
     return response.json()
+
+
+def make_cache_key(path, params=None):
+    params = params or {}
+    stable_params = json.dumps(params, sort_keys=True)
+    return f"jikan:{path}:{stable_params}"
+
+def get_jikan_response(path, params=None):
+    JIKAN_BASE_URL = "https://api.jikan.moe/v4"
+    params = params or {}
+    cache_key = make_cache_key(path, params)
+
+    cached = get_cache(cache_key, max_age_seconds=86400)
+    if cached is not None:
+        return cached
+
+    response = requests.get(
+        f"{JIKAN_BASE_URL}{path}",
+        params=params,
+        timeout=10
+    )
+    response.raise_for_status()
+
+    data = response.json()
+    set_cache(cache_key, data)
+
+    return data

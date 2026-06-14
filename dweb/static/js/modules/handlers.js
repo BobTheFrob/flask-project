@@ -1,6 +1,9 @@
 import { createPostCard } from "./render.js"
-export {emptyPostsHandler, deletePostHandler, editPostHandler, showEditTextArea, postHandler,
-    loginHandler, registerHandler, logoutHandler
+export {
+    emptyPostsHandler, deletePostHandler, editPostHandler, postHandler,
+    loginHandler, registerHandler, logoutHandler,
+    showEditTextArea, 
+    jikanPostSearchHandler
 }
 
 // EMPTY POSTS HANDLER
@@ -216,5 +219,22 @@ function logoutHandler() {
             method: "POST",
         })
         window.location.href = 'auth/login';
+    })
+}
+
+// TITLE SEARCH HANDLER
+// Handles jikan api call search
+//
+function jikanPostSearchHandler () {
+    let suggestions = document.getElementById("suggestions")
+    let title = document.getElementById("title")
+    console.log(title)
+    title.addEventListener("focusin", async () => {
+        console.log("focused")
+        suggestions.classList.remove("d-none")        
+    })
+    title.addEventListener("focusout", async () => {
+        console.log("focused out")
+        suggestions.classList.add("d-none")        
     })
 }
