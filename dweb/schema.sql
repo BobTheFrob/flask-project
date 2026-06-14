@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS posts (
   score INT NOT NULL,
   watching_status TEXT CHECK( watching_status IN ('completed', 'watching', 'dropped', 'planned') ) NOT NULL DEFAULT 'watching',
   anime_type TEXT CHECK( anime_type IN ('anime', 'movie', 'ova') )   NOT NULL DEFAULT 'anime',
-  miruro_watch_link TEXT
+  miruro_watch_link TEXT,
 
   FOREIGN KEY (user_id) REFERENCES users(id)
 );

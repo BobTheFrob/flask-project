@@ -111,8 +111,11 @@ function renderVideoThumbnails(video) {
     <div class="col-lg-4 col-md-6">
         <div class="card bg-black text-light border-secondary p-2 text-center">
             <div class="card-body">
-            <div class="ratio ratio-16x9 mb-3">
-            <iframe src="https://www.youtube.com/embed/${video.id.videoId}" frameborder="0" allowfullscreen class="rounded" loading="lazy"></iframe>
+            <div class="ratio ratio-16x9 mb-3 d-flex justify-content-center align-items-center">
+                <div id="spinner-${video.id.videoId}" class="video-spinner position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center">
+                    <div class="spinner-border"></div>
+                </div>
+                <iframe id="embed-${video.id.videoId}" src="https://www.youtube.com/embed/${video.id.videoId}" frameborder="0" allowfullscreen class="rounded invisible" loading="lazy"></iframe>
             </div>
             <h5 class="card-title mb-3">
             ${decodeHtml(video.snippet.title)}
@@ -122,7 +125,14 @@ function renderVideoThumbnails(video) {
             </div>
             </div>
     `
-            // <div class="text-center mb-3"><img class="img-fluid img-thumbnail" src="${video.snippet.thumbnails.medium.url}"></div>
+    const iframe = wrapper.querySelector("iframe");
+    const spinner = wrapper.querySelector(`#spinner-${video.id.videoId}`);
+
+    iframe.addEventListener("load", () => {
+        iframe.classList.remove("invisible");
+        spinner.classList.add("d-none")
+    });
+
     videosContainer.appendChild(wrapper.firstElementChild)
 }
 
