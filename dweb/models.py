@@ -197,14 +197,16 @@ def make_cache_key(path, params=None):
     stable_params = json.dumps(params, sort_keys=True)
     return f"jikan:{path}:{stable_params}"
 
-def get_jikan_response(path, params=None):
+def get_jikan_response(path: str, params: dict | None = None, to_cache = True):
     JIKAN_BASE_URL = "https://api.jikan.moe/v4"
-    params = params or {}
+    if params:
+        params = dict((k.lower(), v.lower()) for k,v in params.items()) or {}
+    
     cache_key = make_cache_key(path, params)
-
-    cached = get_cache(cache_key, max_age_seconds=86400)
-    if cached is not None:
-        return cached
+    if to_cache:
+        cached = get_cache(cache_key, max_age_seconds=86400)
+        if cached is not None:
+            return cached
 
     response = requests.get(
         f"{JIKAN_BASE_URL}{path}",
