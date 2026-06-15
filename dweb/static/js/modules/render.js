@@ -1,4 +1,4 @@
-export { createPostCard, createACVideoUpdates }
+export { createPostCard, createACVideoUpdates, createTitleSearchThumbnails }
 import { deletePostHandler, editPostHandler, showEditTextArea } from "./handlers.js";
 
 function createPostCard(post) {
@@ -144,4 +144,8 @@ function createACVideoUpdates(data) {
             renderVideoThumbnails(data.items[i])
         }
     }
+}
+
+function createTitleSearchThumbnails (data) {
+
 }

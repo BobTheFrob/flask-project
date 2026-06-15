@@ -1,4 +1,4 @@
-import { createPostCard } from "./render.js"
+import { createPostCard, createTitleSearchThumbnails } from "./render.js"
 export {
     emptyPostsHandler, deletePostHandler, editPostHandler, postHandler,
     loginHandler, registerHandler, logoutHandler,
@@ -222,19 +222,26 @@ function logoutHandler() {
     })
 }
 
+async function updateTitleSearchSuggestions (q) {
+    const response = await fetch(`/api/jikantitlesearch?q=${q}`)
+    const data = await response.json()
+    return data
+};
+
 // TITLE SEARCH HANDLER
 // Handles jikan api call search
 //
 function jikanPostSearchHandler () {
     let suggestions = document.getElementById("suggestions")
     let title = document.getElementById("title")
-    console.log(title)
-    title.addEventListener("focusin", async () => {
-        console.log("focused")
-        suggestions.classList.remove("d-none")        
+    let timerId = null;
+    title.addEventListener("input", async () => {
+        if(title.value ) {
+            timerId = setTimeout(async ()=>{console.log(await updateTitleSearchSuggestions(title.value))}, 2000)
+        }
     })
     title.addEventListener("focusout", async () => {
-        console.log("focused out")
+        clearTimeout(timerId)
         suggestions.classList.add("d-none")        
     })
 }
