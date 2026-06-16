@@ -142,18 +142,13 @@ def get_cache(key, max_age_seconds):
         "SELECT response_json, created FROM api_cache WHERE cache_key = ?",
         (key,)
     ).fetchone()
-
     if row is None:
-        print("non cached result called")
         return None
 
     age = time.time() - row["created"]
-
     if age > max_age_seconds:
-        print("non cached result called")
         return None
 
-    print("sql result called")
     return json.loads(row["response_json"])
 
 

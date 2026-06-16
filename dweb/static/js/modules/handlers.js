@@ -223,8 +223,10 @@ function logoutHandler() {
 }
 
 async function updateTitleSearchSuggestions (q) {
-    const response = await fetch(`/api/jikantitlesearch?q=${q}`)
+    const response = await fetch(`/api/jikantitlesearch?q=${q}&limit=4`)
     const data = await response.json()
+    const entries = data["data"]
+    createTitleSearchThumbnails(entries)
     return data
 };
 
@@ -235,13 +237,20 @@ function jikanPostSearchHandler () {
     let suggestions = document.getElementById("suggestions")
     let title = document.getElementById("title")
     let timerId = null;
-    title.addEventListener("input", async () => {
-        if(title.value ) {
-            timerId = setTimeout(async ()=>{console.log(await updateTitleSearchSuggestions(title.value))}, 2000)
-        }
+
+    title.addEventListener("focusin", async () => {
+        suggestions.classList.remove("d-none")        
     })
     title.addEventListener("focusout", async () => {
         clearTimeout(timerId)
-        suggestions.classList.add("d-none")        
+        // suggestions.classList.add("d-none")        
+    })
+    title.addEventListener("input", async () => {
+        clearTimeout(timerId)
+        if(title.value) {
+            timerId = setTimeout(async ()=>{await updateTitleSearchSuggestions(title.value)}, 500)
+        } else {
+            createTitleSearchThumbnails(null)
+        }
     })
 }
