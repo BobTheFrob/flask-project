@@ -152,7 +152,7 @@ function createTitleSearchThumbnails (data) {
     for (let i in data) {
         const entry = data[i]
         wrapper.innerHTML = `
-            <button class="list-group-item list-group-item-action d-flex gap-2 py-2">
+            <button class="list-group-item list-group-item-action d-flex gap-2 py-2 dliitem">
                 <div class="d-flex w-100 justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
                             <div>
