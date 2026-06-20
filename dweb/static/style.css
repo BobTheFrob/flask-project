@@ -89,3 +89,25 @@ a:hover {
 .dyprintnewline {
     white-space: pre-wrap;
 }
+
+.animethumbnail {
+    width: 60px;
+    height: 100px;
+    min-width: 60px;
+    object-fit: cover;
+}
+
+.dliitem:hover,
+.dliitem:hover small,
+.dliitem:hover h5 {
+    /* --bs-list-group-action-hover-bg: #cdcdcd; */
+    color: var(--bs-list-group-action-hover-color);
+    /* background-color: var(--bs-list-group-action-hover-bg); */
+}
+
+.dliitemhover,
+.dliitemhover small,
+.dliitemhover h5 {
+    color: var(--bs-list-group-action-hover-color);
+    background-color: var(--bs-list-group-action-hover-bg);
+}

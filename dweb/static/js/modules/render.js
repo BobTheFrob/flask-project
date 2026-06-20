@@ -1,4 +1,4 @@
-export { createPostCard, createACVideoUpdates }
+export { createPostCard, createACVideoUpdates, createTitleSearchThumbnails }
 import { deletePostHandler, editPostHandler, showEditTextArea } from "./handlers.js";
 
 function createPostCard(post) {
@@ -138,10 +138,34 @@ function renderVideoThumbnails(video) {
 
 function createACVideoUpdates(data) {
     if (data) {
-        console.log(data)
         document.getElementById("update-videos-area").innerHTML = ""
         for (let i in data.items){
             renderVideoThumbnails(data.items[i])
         }
+    }
+}
+
+function createTitleSearchThumbnails (data) {
+    const suggestions = document.getElementById("suggestions")
+    let wrapper = document.createElement("div")
+    suggestions.innerHTML = ""
+    for (let i in data) {
+        const entry = data[i]
+        wrapper.innerHTML = `
+            <button class="list-group-item list-group-item-action d-flex gap-2 py-2 dliitem">
+                <div class="d-flex w-100 justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <h5 class="small h5">${entry.title}</h5>
+                                <small class="text-secondary">${entry.type? String(entry.type + " • ") : ""}${entry.episodes > 1? String(entry.episodes + " eps") : "1 ep"} </small>
+                            </div>
+                        </div>
+                        <div class="ms-auto">
+                            <img class="animethumbnail img-thumbnail" src="${entry.images.webp.image_url}">
+                        </div>
+                </div>
+            </button>
+            `
+        suggestions.appendChild(wrapper.firstElementChild)
     }
 }

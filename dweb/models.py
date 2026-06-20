@@ -142,18 +142,13 @@ def get_cache(key, max_age_seconds):
         "SELECT response_json, created FROM api_cache WHERE cache_key = ?",
         (key,)
     ).fetchone()
-
     if row is None:
-        print("non cached result called")
         return None
 
     age = time.time() - row["created"]
-
     if age > max_age_seconds:
-        print("non cached result called")
         return None
 
-    print("sql result called")
     return json.loads(row["response_json"])
 
 
@@ -190,3 +185,34 @@ def get_youtube_videos(query):
     )
 
     return response.json()
+
+
+def make_cache_key(path, params=None):
+    params = params or {}
+    stable_params = json.dumps(params, sort_keys=True)
+    return f"jikan:{path}:{stable_params}"
+
+@cache.memoize(86400)
+def get_jikan_response(path: str, params: dict | None = None, to_cache = True):
+    JIKAN_BASE_URL = "https://api.jikan.moe/v4"
+    if params:
+        params = dict((k.lower(), v.lower()) for k,v in params.items()) or {}
+    
+    cache_key = make_cache_key(path, params)
+    if to_cache:
+        cached = get_cache(cache_key, max_age_seconds=86400)
+        if cached is not None:
+            print("cached result given")
+            return cached
+
+    response = requests.get(
+        f"{JIKAN_BASE_URL}{path}",
+        params=params,
+        timeout=10
+    )
+    response.raise_for_status()
+
+    data = response.json()
+    set_cache(cache_key, data)
+    print("jikan result given")
+    return data

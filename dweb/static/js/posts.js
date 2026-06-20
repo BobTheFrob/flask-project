@@ -1,4 +1,9 @@
-import {deletePostHandler, editPostHandler, showEditTextArea, postHandler, logoutHandler} from "./modules/handlers.js"
+import {
+    postHandler, deletePostHandler, editPostHandler,
+    showEditTextArea,
+    logoutHandler,
+    jikanPostSearchHandler
+} from "./modules/handlers.js"
 
 // STARTUP
 // Add event listeners to existing edit buttons to toggle the visibility of the edit textarea when clicked
@@ -46,3 +51,5 @@ document.getElementById("search-input").addEventListener("keyup", (e) => {
         document.querySelector(".dpostsmessage").textContent = ""
     }
 })
+
+jikanPostSearchHandler()

@@ -19,9 +19,14 @@
                     <p class="card-text">Share your thoughts and opinions by tracking an anime! Just give it a title, a score out of 10, and a description if you want.</p>
                     <form method="post" id="post-form"> 
                         <div class="row"> 
-                            <div class="mb-3 col-lg-10">
+                            <div class="mb-3 col-lg-9">
                                 <label class="form-label" for="title">Title</label>
+                                <div class="position-relative">
                                 <input class="form-control" name="title" id="title" required>
+
+                                <div id="suggestions" class="list-group position-absolute w-100 z-3 d-none">
+                                </div>
+                                </div>
                             </div>
                             <div class="mb-3 col">
                                 <label class="form-label" for="score">Score</label>
