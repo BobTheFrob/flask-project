@@ -240,6 +240,13 @@ function setActive(suggestionsChildren, index) {
     }
 }
 
+
+function setTitleValue(element) {
+    let title = document.getElementById("title")
+    if (element) title.value = element.querySelector("h5").textContent
+    else title.value = ""
+}
+
 // TITLE SEARCH HANDLER
 // Handles jikan api call search
 //
@@ -255,24 +262,20 @@ function jikanPostSearchHandler () {
             }
     }
     title.addEventListener("keydown", (e) => {
-        // for (var i = 0; i < suggestionsChildren.length; i++) {
-        //     var tableChild = suggestionsChildren[i];
-        //     tableChild.addEventListener("click", (e) => {
-        //         e.preventDefault()
-        //     })
-        // }
         if (e.key == "ArrowDown") {
             index++
-            if (index >= suggestionsChildren.length) index = 0
+            if (index >= suggestionsChildren.length) index = -1
             clearHoverClasses()
             setActive(suggestionsChildren, index)
+            setTitleValue(suggestionsChildren[index])
         } 
 
         else if (e.key == "ArrowUp") {
             index--
-            if (index < 0) index = suggestionsChildren.length - 1
+            if (index < -1) index = suggestionsChildren.length - 1
             clearHoverClasses()
             setActive(suggestionsChildren, index)
+            setTitleValue(suggestionsChildren[index])
         } 
     })
     title.addEventListener("focusin", async () => {
@@ -281,6 +284,7 @@ function jikanPostSearchHandler () {
     title.addEventListener("focusout", async () => {
         clearTimeout(timerId)
         suggestions.classList.add("d-none")
+        setTitleValue(null)
     })
     title.addEventListener("input", async () => {
         index = -1
@@ -295,6 +299,7 @@ function jikanPostSearchHandler () {
         const item = e.target.closest(".list-group-item")
         if (!item) return
         index = -1
+        setTitleValue(item)
         clearHoverClasses()
     })
 }
