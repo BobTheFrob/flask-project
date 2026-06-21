@@ -127,10 +127,10 @@ function editPostHandler(form) {
                     anime_type: anime_type, watching_status: watching_status})
                 })
                 if (!response.ok) {
-                    throw new Error("Request failed")
+                    throw new Error(response.statusText)
                 }
                 document.getElementById(`post-${postId}-description`).textContent = body
-                document.getElementById(`post-${postId}-score`).textContent = `${score}/10`
+                document.getElementById(`post-${postId}-score`).textContent = `${score? String(score) + "/10" : ""}`
                 document.getElementById(`post-${postId}-watching_status`).textContent = watching_status
                 document.getElementById(`post-${postId}-anime_type`).textContent = anime_type
                 showEditTextArea(postId)
@@ -284,7 +284,6 @@ function jikanPostSearchHandler () {
     title.addEventListener("focusout", async () => {
         clearTimeout(timerId)
         suggestions.classList.add("d-none")
-        setTitleValue(null)
     })
     title.addEventListener("input", async () => {
         index = -1
