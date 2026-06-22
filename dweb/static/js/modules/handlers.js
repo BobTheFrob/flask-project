@@ -29,14 +29,18 @@ function postHandler() {
         const score = formData.get("score")
         const status = formData.get("watching_status")
         const type = formData.get("anime_type")
+        const mal_id = e.target.dataset.malId
+        const image_url = e.target.dataset.imgUrl
         try {
             const response = await fetch("/api/posts", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({title: title, description: body, score: score, watching_status: status,
-                anime_type: type})
+                body: JSON.stringify({
+                title: title, description: body, score: score, 
+                watching_status: status, anime_type: type, image_url: image_url
+                })
             })
             if (!response.ok) {
                 throw new Error("Request failed")
@@ -243,7 +247,12 @@ function setActive(suggestionsChildren, index) {
 
 function setTitleValue(element) {
     let title = document.getElementById("title")
-    if (element) title.value = element.querySelector("h5").textContent
+    if (element) {
+        title.value = element.dataset.title
+        const form = document.getElementById("post-form")
+        form.dataset.malId = element.dataset.malId
+        form.dataset.imgUrl = element.dataset.imgUrl
+    } 
     else title.value = ""
 }
 

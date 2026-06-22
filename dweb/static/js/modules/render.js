@@ -15,6 +15,11 @@ function createPostCard(post) {
                         <span class="badge text-bg-secondary text-capitalize fw-light" id="post-${post.id}-watching_status">${post['watching_status']}</span>
                         <span class="badge text-bg-secondary text-capitalize fw-light" id="post-${post.id}-anime_type">${post['anime_type']}</span>
                     </div>
+                    ${post.image_url? `
+                        <div class="text-center my-2">
+                            <img class="img-fluid dpostimage rounded" src="${post['image_url']}">                    
+                        </div>
+                        ` : ""}
                     <p class="card-text dyprintnewline" id="post-${post.id}-description">${post.description}</p>
                     <div class="d-flex align-items-center">
                         <p class="text-secondary small mb-3 post-meta">Post #${post.id} — </p>
@@ -158,12 +163,13 @@ function createTitleSearchThumbnails (data) {
     for (let i in data) {
         const entry = data[i]
         wrapper.innerHTML = `
-            <button class="list-group-item list-group-item-action d-flex gap-2 py-2 dliitem">
+            <button class="list-group-item list-group-item-action d-flex gap-2 py-2 dliitem" data-mal-id="${entry.mal_id}"
+            data-title="${entry.title}" data-img-url="${entry.images.webp.image_url}">
                 <div class="d-flex w-100 justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
                             <div>
-                                <h5 class="small h5">${entry.title}</h5>
-                                <small class="text-secondary">${entry.type? String(entry.type + " • ") : ""}${entry.episodes > 1? String(entry.episodes + " eps") : "1 ep"} </small>
+                                <h5 class="fs-6 h5">${entry.title}</h5>
+                                <small class="text-secondary fs-6">${entry.type? String(entry.type + " • ") : ""}${entry.episodes > 1? String(entry.episodes + " eps") : "1 ep"} </small>
                             </div>
                         </div>
                         <div class="ms-auto">

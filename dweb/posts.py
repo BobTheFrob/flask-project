@@ -36,6 +36,7 @@ def post_dict(post):
         "watching_status": post["watching_status"],
         "anime_type": post["anime_type"],
         "created": post["created"],
+        "image_url": post["image_url"],
         "miruro_watch_link": post["miruro_watch_link"]
     })
 
@@ -70,6 +71,7 @@ def getRequestPost (data):
         "score": data.get('score'),
         "watching_status": (data.get('watching_status')) or "watching",
         "anime_type": data.get('anime_type') or "tv",
+        "image_url": data.get('image_url') or "",
         "miruro_watch_link": data.get('miruro_watch_link') or ""
     }
     return post

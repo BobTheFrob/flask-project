@@ -55,6 +55,7 @@ def add_post(post):
         anime_type,
         user_id,
         mal_id,
+        image_url,
         miruro_watch_link
     )
     VALUES(
@@ -65,6 +66,7 @@ def add_post(post):
         :anime_type,
         :user_id,
         :mal_id,
+        :image_url,
         :miruro_watch_link
     )
     """   
