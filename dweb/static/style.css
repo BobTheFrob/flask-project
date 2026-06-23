@@ -97,6 +97,11 @@ a:hover {
     object-fit: cover;
 }
 
+.dpostimage {
+    max-height: 200px !important;
+}
+
+
 .dliitem:hover,
 .dliitem:hover small,
 .dliitem:hover h5 {

@@ -53,7 +53,10 @@ def add_post(post):
         score,
         watching_status,
         anime_type,
-        user_id
+        user_id,
+        mal_id,
+        image_url,
+        miruro_watch_link
     )
     VALUES(
         :title,
@@ -61,7 +64,10 @@ def add_post(post):
         :score,
         :watching_status,
         :anime_type,
-        :user_id
+        :user_id,
+        :mal_id,
+        :image_url,
+        :miruro_watch_link
     )
     """   
     cursor = con.execute(sql, post)

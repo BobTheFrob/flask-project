@@ -9,12 +9,17 @@ function createPostCard(post) {
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start">
                         <h2 class="h4 card-title" id="post-${post.id}-title">${post.title}</h2>
-                        <h4><span class="badge text-bg-secondary" id="post-${post.id}-score">${post.score}/10</span></h4>
+                        <h4><span class="badge text-bg-secondary" id="post-${post.id}-score">${post.score? String(post.score) + "/10" : ""}</span></h4>
                     </div>
                     <div class="d-flex justify-content-start gap-2 align-items-start mb-3">
                         <span class="badge text-bg-secondary text-capitalize fw-light" id="post-${post.id}-watching_status">${post['watching_status']}</span>
                         <span class="badge text-bg-secondary text-capitalize fw-light" id="post-${post.id}-anime_type">${post['anime_type']}</span>
                     </div>
+                    ${post.image_url? `
+                        <div class="text-center my-2">
+                            <img class="img-fluid dpostimage rounded" src="${post['image_url']}">                    
+                        </div>
+                        ` : ""}
                     <p class="card-text dyprintnewline" id="post-${post.id}-description">${post.description}</p>
                     <div class="d-flex align-items-center">
                         <p class="text-secondary small mb-3 post-meta">Post #${post.id} — </p>
@@ -36,12 +41,11 @@ function createPostCard(post) {
                                 Score:
                             </p>
                             <input
-                                id = "editscore-${post.id}" name="editscore-${post.id}" 
-                                class="form-control mb-2 mx-2 w-auto edit-score"
-                                type="number"
-                                min="0"
-                                max="10"
-                                required>
+                            id = "editscore-${post.id}" name="editscore-${post.id}" 
+                            class="form-control mb-2 mx-2 w-auto edit-score"
+                            type="number"
+                            min="0"
+                            max="10">
                         </div>
                         <p class="text-secondary">Description: </p>
                         <textarea class="form-control mb-2 edit-desc" id="editdesc-${post.id}" name="editdesc-${post.id}" rows="4"></textarea>
@@ -58,9 +62,16 @@ function createPostCard(post) {
                             <div class="mb-3 col">
                                 <label class="form-label" for="anime_type">Type</label>
                                 <select class="form-select" name="editanime_type-${post['id']}" id="editanime_type-${post['id']}">
-                                    <option value="anime">Anime</option>
+                                    <option value="tv">TV</option>
                                     <option value="movie">Movie</option>
-                                    <option value="ova">Ova</option>
+                                    <option value="special">Special</option>
+                                    <option value="ova">OVA</option>
+                                    <option value="ona">ONA</option>
+                                    <option value="music">Music</option>
+                                    <option value="cm">CM</option>
+                                    <option value="pv">PV</option>
+                                    <option value="tv special">TV Special</option>
+                                    <option value="misc">Miscellaneous</option>
                                 </select>
                             </div>
                         </div>
@@ -152,12 +163,13 @@ function createTitleSearchThumbnails (data) {
     for (let i in data) {
         const entry = data[i]
         wrapper.innerHTML = `
-            <button class="list-group-item list-group-item-action d-flex gap-2 py-2 dliitem">
+            <button class="list-group-item list-group-item-action d-flex gap-2 py-2 dliitem" data-mal-id="${entry.mal_id}"
+            data-title="${entry.title}" data-img-url="${entry.images.webp.image_url}">
                 <div class="d-flex w-100 justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
                             <div>
-                                <h5 class="small h5">${entry.title}</h5>
-                                <small class="text-secondary">${entry.type? String(entry.type + " • ") : ""}${entry.episodes > 1? String(entry.episodes + " eps") : "1 ep"} </small>
+                                <h5 class="fs-6 h5">${entry.title}</h5>
+                                <small class="text-secondary fs-6">${entry.type? String(entry.type + " • ") : ""}${entry.episodes > 1? String(entry.episodes + " eps") : "1 ep"} </small>
                             </div>
                         </div>
                         <div class="ms-auto">

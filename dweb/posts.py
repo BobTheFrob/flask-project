@@ -30,19 +30,29 @@ def post_dict(post):
     return ({
         "title": post["title"],
         "id": post["id"],
+        "mal_id": post["mal_id"],
         "description": post["body"],
         "score": post["score"],
         "watching_status": post["watching_status"],
         "anime_type": post["anime_type"],
-        "created": post["created"]
+        "created": post["created"],
+        "image_url": post["image_url"],
+        "miruro_watch_link": post["miruro_watch_link"]
     })
 
 # Helper function to validate dropdown fields like anime_type and watching_status
 def validateEnumFields(post):
     MEDIA_TYPES = {
-        "anime": "Anime",
+        "tv": "TV",
         "movie": "Movie",
-        "ova": "Ova"
+        "ova": "OVA",
+        "special": "Special",
+        "ona": "ONA",
+        "music": "Music",
+        "cm": "CM",
+        "pv": "PV",
+        "tv special": "TV Special",
+        "misc": "Miscellaneous"
     }
     WATCH_STATUSES = {
         "planned": "Planned",
@@ -56,10 +66,13 @@ def getRequestPost (data):
     post = {
         "title": (data.get("title") or "").strip(),
         "user_id": session.get("user_id"),
+        "mal_id": data.get('mal_id'),
         "body": (data.get("description") or "").strip(),
         "score": data.get('score'),
         "watching_status": (data.get('watching_status')) or "watching",
-        "anime_type": data.get('anime_type') or "anime"
+        "anime_type": data.get('anime_type') or "tv",
+        "image_url": data.get('image_url') or "",
+        "miruro_watch_link": data.get('miruro_watch_link') or ""
     }
     return post
 
@@ -76,14 +89,14 @@ def api_posts():
     if request.method == 'POST':
         data = request.get_json() or {}
         post = getRequestPost(data)
-        if int(post["score"]) > 10 or int(post["score"]) < 0:
+        if post["score"] and (int(post["score"]) > 10 or int(post["score"])) < 0:
             return jsonify({
                 "message": "Invalid score. Score must be between 0 and 10."
             }), 400
         if not post["title"] or not post["title"].strip():
             posts = models.get_all_posts()
             return jsonify({
-                "error": "Post cannot be empty.",
+                "error": "Post must have a title.",
             }), 400
         if not validateEnumFields(post):
             return jsonify({
@@ -125,7 +138,7 @@ def get_post(post_id):
         try:
             if post["body"] is None or post["score"] is None:
                 return jsonify({"error": "Missing description or score."}), 400
-            if int(post["score"]) > 10 or int(post["score"]) < 0:
+            if post["score"] and (int(post["score"]) > 10 or int(post["score"])) < 0:
                 return jsonify({
                     "message": "Invalid score. Score must be between 0 and 10."
                 }), 400

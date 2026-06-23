@@ -29,14 +29,18 @@ function postHandler() {
         const score = formData.get("score")
         const status = formData.get("watching_status")
         const type = formData.get("anime_type")
+        const mal_id = e.target.dataset.malId
+        const image_url = e.target.dataset.imgUrl
         try {
             const response = await fetch("/api/posts", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({title: title, description: body, score: score, watching_status: status,
-                anime_type: type})
+                body: JSON.stringify({
+                title: title, description: body, score: score, 
+                watching_status: status, anime_type: type, image_url: image_url
+                })
             })
             if (!response.ok) {
                 throw new Error("Request failed")
@@ -127,10 +131,10 @@ function editPostHandler(form) {
                     anime_type: anime_type, watching_status: watching_status})
                 })
                 if (!response.ok) {
-                    throw new Error("Request failed")
+                    throw new Error(response.statusText)
                 }
                 document.getElementById(`post-${postId}-description`).textContent = body
-                document.getElementById(`post-${postId}-score`).textContent = `${score}/10`
+                document.getElementById(`post-${postId}-score`).textContent = `${score? String(score) + "/10" : ""}`
                 document.getElementById(`post-${postId}-watching_status`).textContent = watching_status
                 document.getElementById(`post-${postId}-anime_type`).textContent = anime_type
                 showEditTextArea(postId)
@@ -240,6 +244,18 @@ function setActive(suggestionsChildren, index) {
     }
 }
 
+
+function setTitleValue(element) {
+    let title = document.getElementById("title")
+    if (element) {
+        title.value = element.dataset.title
+        const form = document.getElementById("post-form")
+        form.dataset.malId = element.dataset.malId
+        form.dataset.imgUrl = element.dataset.imgUrl
+    } 
+    else title.value = ""
+}
+
 // TITLE SEARCH HANDLER
 // Handles jikan api call search
 //
@@ -255,24 +271,20 @@ function jikanPostSearchHandler () {
             }
     }
     title.addEventListener("keydown", (e) => {
-        // for (var i = 0; i < suggestionsChildren.length; i++) {
-        //     var tableChild = suggestionsChildren[i];
-        //     tableChild.addEventListener("click", (e) => {
-        //         e.preventDefault()
-        //     })
-        // }
         if (e.key == "ArrowDown") {
             index++
-            if (index >= suggestionsChildren.length) index = 0
+            if (index >= suggestionsChildren.length) index = -1
             clearHoverClasses()
             setActive(suggestionsChildren, index)
+            setTitleValue(suggestionsChildren[index])
         } 
 
         else if (e.key == "ArrowUp") {
             index--
-            if (index < 0) index = suggestionsChildren.length - 1
+            if (index < -1) index = suggestionsChildren.length - 1
             clearHoverClasses()
             setActive(suggestionsChildren, index)
+            setTitleValue(suggestionsChildren[index])
         } 
     })
     title.addEventListener("focusin", async () => {
@@ -295,6 +307,7 @@ function jikanPostSearchHandler () {
         const item = e.target.closest(".list-group-item")
         if (!item) return
         index = -1
+        setTitleValue(item)
         clearHoverClasses()
     })
 }
