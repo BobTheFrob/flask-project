@@ -69,8 +69,8 @@ def getRequestPost (data):
         "mal_id": data.get('mal_id'),
         "body": (data.get("description") or "").strip(),
         "score": data.get('score'),
-        "watching_status": (data.get('watching_status')) or "watching",
-        "anime_type": data.get('anime_type') or "tv",
+        "watching_status": (data.get('watching_status')),
+        "anime_type": data.get('anime_type'),
         "image_url": data.get('image_url') or "",
         "miruro_watch_link": data.get('miruro_watch_link') or ""
     }
@@ -94,7 +94,6 @@ def api_posts():
                 "message": "Invalid score. Score must be between 0 and 10."
             }), 400
         if not post["title"] or not post["title"].strip():
-            posts = models.get_all_posts()
             return jsonify({
                 "error": "Post must have a title.",
             }), 400
@@ -109,6 +108,16 @@ def api_posts():
             "message": "Post created.",
             "post": postReturned
         }), 200
+
+def postChanged(postPut, postGet):
+    return not (str(postGet["body"]) == str(postPut["body"]) 
+            and str(postGet["score"]) == str(postPut["score"])
+            and str(postGet["watching_status"]) == str(postPut["watching_status"])
+            and str(postGet["anime_type"]) == str(postPut["anime_type"])
+            and str(postGet["title"]) == str(postPut["title"])
+            and str(postGet["image_url"]) == str(postPut["image_url"])
+            )
+
 
 # POST BY ID API
 # Post api routed by id. Return the post in json. If the request method is PUT, 
@@ -134,17 +143,23 @@ def get_post(post_id):
     if request.method == 'PUT':
         data = request.get_json() or {}
         post = getRequestPost(data)
-        post["id"] = post_id
         try:
-            if post["body"] is None or post["score"] is None:
-                return jsonify({"error": "Missing description or score."}), 400
+            if not post["title"]:
+                return jsonify({
+                    "error": "Post must have a title.",
+                }), 400
             if post["score"] and (int(post["score"]) > 10 or int(post["score"])) < 0:
                 return jsonify({
                     "message": "Invalid score. Score must be between 0 and 10."
                 }), 400
-            if (str(postValidate["body"]) == str(post["body"]) and str(postValidate["score"]) == str(post["score"])
-                and str(postValidate["watching_status"]) == str(post["watching_status"])
-                and str(postValidate["anime_type"]) == str(post["anime_type"])):
+            for key, value in post_dict(postValidate).items():
+                if not post.get(key):
+                    post[key] = value
+            if not validateEnumFields(post):
+                return jsonify({
+                    "error": "Invalid type.",
+                }), 400
+            if (not postChanged(post, postValidate)):
                 return "", 204
             models.edit_post(post)
             postReturn = post_dict(models.get_post_by_id(session.get("user_id"), post_id))
@@ -153,6 +168,7 @@ def get_post(post_id):
                 "post": postReturn
             }), 200
         except Exception as e:
+            print(e)
             return jsonify({
                 "error": "Internal Server Error"
             }), 500

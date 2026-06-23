@@ -93,6 +93,7 @@ def edit_post(post):
     sql = ''' 
         UPDATE posts
         SET
+            title = :title,
             body = :body,
             score = :score,
             watching_status = :watching_status,
