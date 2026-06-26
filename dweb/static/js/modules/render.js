@@ -1,6 +1,12 @@
 export { createPostCard, createACVideoUpdates, createTitleSearchThumbnails }
 import { deletePostHandler, editPostHandler, showEditTextArea } from "./handlers.js";
 
+function htmlToText(str) {
+    const div = document.createElement("div")
+    div.textContent = str
+    return div.innerHTML
+}
+
 function createPostCard(post) {
     const wrapper = document.createElement("div")
     wrapper.innerHTML = `
@@ -8,7 +14,7 @@ function createPostCard(post) {
             <div class="card bg-black text-light border-secondary">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start">
-                        <h2 class="h4 card-title" id="post-${post.id}-title">${post.title}</h2>
+                        <h2 class="h4 card-title" id="post-${post.id}-title">${htmlToText(post.title)}</h2>
                         <h4><span class="badge text-bg-secondary" id="post-${post.id}-score">${post.score? String(post.score) + "/10" : ""}</span></h4>
                     </div>
                     <div class="d-flex justify-content-start gap-2 align-items-start mb-3">
@@ -20,7 +26,7 @@ function createPostCard(post) {
                             <img class="img-fluid dpostimage rounded" src="${post['image_url']}">                    
                         </div>
                         ` : ""}
-                    <p class="card-text dyprintnewline" id="post-${post.id}-description">${post.description}</p>
+                    <p class="card-text dyprintnewline" id="post-${post.id}-description">${htmlToText(post.description)}</p>
                     <div class="d-flex align-items-center">
                         <p class="text-secondary small mb-3 post-meta">Post #${post.id} — </p>
                         <span class="text-secondary small mb-3 post-time">${new Date(post.created + " UTC").toLocaleString()}</span>
@@ -104,7 +110,7 @@ function createPostCard(post) {
 
     // TEXTAREA
     const textarea = wrapper.querySelector(".edit-desc")
-    textarea.value = post.description
+    textarea.value = htmlToText(post.description)
 
     return wrapper.firstElementChild
 }
@@ -131,7 +137,7 @@ function renderVideoThumbnails(video) {
             <h5 class="card-title mb-3">
             ${decodeHtml(video.snippet.title)}
             </h5>
-            <p class="small">${video.snippet.description}</p>
+            <p class="small">${htmlToText(video.snippet.description)}</p>
             </div>
             </div>
             </div>
