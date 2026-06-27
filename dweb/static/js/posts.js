@@ -1,9 +1,10 @@
 import {
-        getAllPostsHandler, postHandler, deletePostHandler, editPostHandler,
+    getAllPostsHandler, postHandler, deletePostHandler, editPostHandler,
     showEditTextArea,
-    logoutHandler,
     jikanPostSearchHandler,
 } from "./modules/handlers.js"
+
+import { logoutHandler } from "./auth.js"
 
 // STARTUP
 // Get and render all posts

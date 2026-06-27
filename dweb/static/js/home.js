@@ -1,7 +1,8 @@
-import {logoutHandler} from "./modules/handlers.js"
+import {logoutHandler} from "./auth.js"
 import {createACVideoUpdates} from "./modules/render.js"
 
-document.getElementById("logout-btn")? logoutHandler() : null
+
+logoutHandler()
 
 
 async function updateACVideos(max) {
