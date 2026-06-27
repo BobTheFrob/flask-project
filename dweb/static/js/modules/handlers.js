@@ -1,6 +1,6 @@
 import { createPostCard, createTitleSearchThumbnails } from "./render.js"
 export {
-    emptyPostsHandler, deletePostHandler, editPostHandler, postHandler,
+    emptyPostsHandler, getAllPostsHandler, deletePostHandler, editPostHandler, postHandler,
     loginHandler, registerHandler, logoutHandler,
     showEditTextArea, 
     jikanPostSearchHandler
@@ -15,6 +15,18 @@ function emptyPostsHandler() {
     emptyPostMsg.style.display = postContainer.children.length > 0 ? emptyPostMsg.textContent = "" : emptyPostMsg.textContent = "No posts yet! Go post something!"
 }
 
+// GET ALL POSTS HANDLER
+// Gets and renders all posts in db
+//
+async function getAllPostsHandler() {
+    const response = await fetch("/api/posts", {
+        method: "GET"
+    })
+    const data = await response.json()
+    for (let i in data) {
+        document.getElementById("posts-container").appendChild(createPostCard(data[i]))
+    }
+}
 
 // POST HANDLER
 // Handles the submission of the post form, sends a POST request to the server, and updates the UI with the new post without refreshing the page

@@ -83,7 +83,7 @@ def getRequestPost (data):
 @login_required_api
 def api_posts():
     if request.method == 'GET':
-        posts = models.get_all_posts()
+        posts = models.get_all_posts(session.get("user_id"))
         return jsonify([post_dict(post) for post in posts])
     
     if request.method == 'POST':
@@ -145,9 +145,7 @@ def get_post(post_id):
         post = getRequestPost(data)
         try:
             if not post["title"]:
-                return jsonify({
-                    "error": "Post must have a title.",
-                }), 400
+                post["title"] = postValidate["title"]
             if post["score"] and (int(post["score"]) > 10 or int(post["score"])) < 0:
                 return jsonify({
                     "message": "Invalid score. Score must be between 0 and 10."
