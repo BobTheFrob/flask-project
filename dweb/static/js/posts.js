@@ -56,4 +56,7 @@ document.getElementById("search-input").addEventListener("keyup", (e) => {
     }
 })
 
-jikanPostSearchHandler()
+let title = document.getElementById("title")
+let formElement = document.getElementById("post-form")
+let suggestions = document.getElementById("suggestions")
+jikanPostSearchHandler(suggestions, title, formElement)
