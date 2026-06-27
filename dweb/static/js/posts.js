@@ -1,10 +1,11 @@
 import {
     getAllPostsHandler, postHandler, deletePostHandler, editPostHandler,
-    showEditTextArea,
-    jikanPostSearchHandler,
+    showEditTextArea
 } from "./modules/handlers.js"
 
 import { logoutHandler } from "./auth.js"
+
+import { jikanPostSearchHandler } from "./modules/external-api-handlers.js"
 
 // STARTUP
 // Get and render all posts
