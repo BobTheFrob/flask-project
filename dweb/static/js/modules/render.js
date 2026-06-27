@@ -42,47 +42,53 @@ function createPostCard(post) {
                         </form>
                     </div>
                     <form class="dhiddenarea mt-3 edit-form">
-                        <div class="card-text container-fluid g-2 center d-flex justify-content-start align-items-center p-0">
-                            <p class="text-secondary w-auto">
-                                Score:
-                            </p>
-                            <input
-                            id = "editscore-${post.id}" name="editscore-${post.id}" 
-                            class="form-control mb-2 mx-2 w-auto edit-score"
-                            type="number"
-                            min="0"
-                            max="10">
-                        </div>
-                        <p class="text-secondary">Description: </p>
-                        <textarea class="form-control mb-2 edit-desc" id="editdesc-${post.id}" name="editdesc-${post.id}" rows="4"></textarea>
-                        <div class="mt-3 row">
-                            <div class="mb-3 col">
-                                <label class="form-label" for="watching_status">Status</label>
-                                <select class="form-select" name="editwatching_status-${post['id']}" id="editwatching_status-${post['id']}">
-                                    <option value="watching">Watching</option>
-                                    <option value="completed">Completed</option>
-                                    <option value="planned">Planned</option>
-                                    <option value="dropped">Dropped</option>
-                                </select>
+                            <div class="card-text p-0 mt-4">
+                                <div class="mb-3">
+                                    <p class="text-secondary w-auto mb-2">Title: </p>
+                                    <input class="form-control edit-title" id="edittitle-${post.id}" name="edittitle-${post.id}" value="${htmlToText(post.title)}"></input>
+                                </div>
+                                <div class="card-text container-fluid g-2 center d-flex justify-content-start align-items-center p-0">
+                                    <p class="text-secondary w-auto">
+                                        Score:
+                                    </p>
+                                    <input
+                                    id = "editscore-${post.id}" name="editscore-${post.id}" 
+                                    class="form-control mb-2 mx-2 w-auto edit-score"
+                                    type="number"
+                                    min="0"
+                                    max="10">
+                                </div>
                             </div>
-                            <div class="mb-3 col">
-                                <label class="form-label" for="anime_type">Type</label>
-                                <select class="form-select" name="editanime_type-${post['id']}" id="editanime_type-${post['id']}">
-                                    <option value="tv">TV</option>
-                                    <option value="movie">Movie</option>
-                                    <option value="special">Special</option>
-                                    <option value="ova">OVA</option>
-                                    <option value="ona">ONA</option>
-                                    <option value="music">Music</option>
-                                    <option value="cm">CM</option>
-                                    <option value="pv">PV</option>
-                                    <option value="tv special">TV Special</option>
-                                    <option value="misc">Miscellaneous</option>
-                                </select>
+                            <p class="text-secondary">Description: </p>
+                            <textarea class="form-control mb-2 edit-desc" id="editdesc-${post.id}" name="editdesc-${post.id}" rows="4" value="${htmlToText(post.description)}"></textarea>
+                            <div class="mt-3 row">
+                                <div class="mb-3 col">
+                                    <label class="form-label" for="watching_status">Status</label>
+                                    <select class="form-select" name="editwatching_status-${post['id']}" id="editwatching_status-${post['id']}">
+                                        <option value="watching">Watching</option>
+                                        <option value="completed">Completed</option>
+                                        <option value="planned">Planned</option>
+                                        <option value="dropped">Dropped</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3 col">
+                                    <label class="form-label" for="anime_type">Type</label>
+                                    <select class="form-select" name="editanime_type-${post['id']}" id="editanime_type-${post['id']}">
+                                        <option value="tv">TV</option>
+                                        <option value="movie">Movie</option>
+                                        <option value="special">Special</option>
+                                        <option value="ova">OVA</option>
+                                        <option value="ona">ONA</option>
+                                        <option value="music">Music</option>
+                                        <option value="cm">CM</option>
+                                        <option value="pv">PV</option>
+                                        <option value="tv special">TV Special</option>
+                                        <option value="misc">Miscellaneous</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <p class="text-warning small dhiddenarea" id="editmessage-${post.id}"></p>
-                        <button class="btn btn-success btn-sm" type="submit">Confirm</button>
+                            <p class="text-warning small dhiddenarea" id="editmessage-${post.id}"></p>
+                            <button class="btn btn-success btn-sm" type="submit">Confirm</button>
                     </form>
                 </div>
             </div>

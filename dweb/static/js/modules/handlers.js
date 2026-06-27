@@ -114,46 +114,56 @@ function editPostHandler(form) {
         const formData = new FormData(e.target)
 
         const postId = form.id.split("-").pop()
+        const title = formData.get(`edittitle-${postId}`).trim()
         const body = formData.get(`editdesc-${postId}`).trim()
         const score = formData.get(`editscore-${postId}`)
         const anime_type = formData.get(`editanime_type-${postId}`)
         const watching_status = formData.get(`editwatching_status-${postId}`)
 
-        const orgBody = document.getElementById(`post-${postId}-description`).textContent
-        const orgScore = document.getElementById(`post-${postId}-score`).textContent.split("/")[0]
-        const organime_type = document.getElementById(`post-${postId}-anime_type`).textContent
-        const orgwatching_status = document.getElementById(`post-${postId}-watching_status`).textContent
+        // const orgTitle = document.getElementById(`post-${postId}-description`).textContent
+        // const orgBody = document.getElementById(`post-${postId}-description`).textContent
+        // const orgScore = document.getElementById(`post-${postId}-score`).textContent.split("/")[0]
+        // const organime_type = document.getElementById(`post-${postId}-anime_type`).textContent
+        // const orgwatching_status = document.getElementById(`post-${postId}-watching_status`).textContent
         
         const message = document.getElementById(`editmessage-${postId}`)
         
 
-        if (body == orgBody && score == orgScore && anime_type == organime_type && watching_status == orgwatching_status) {
-            message.classList.remove("dhiddenarea")
-            message.textContent = "No changes detected."
-        } else {
-            message.classList.add("dhiddenarea")
-            message.textContent = ""
-            try {
-                const response = await fetch(`/api/posts/${postId}`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({description: body, score: score,
-                    anime_type: anime_type, watching_status: watching_status})
-                })
-                if (!response.ok) {
-                    throw new Error(response.statusText)
-                }
-                document.getElementById(`post-${postId}-description`).textContent = body
-                document.getElementById(`post-${postId}-score`).textContent = `${score? String(score) + "/10" : ""}`
-                document.getElementById(`post-${postId}-watching_status`).textContent = watching_status
-                document.getElementById(`post-${postId}-anime_type`).textContent = anime_type
-                showEditTextArea(postId)
-            } catch (err) {
-                console.error(err)
+        // if (body == orgBody && score == orgScore && anime_type == organime_type && watching_status == orgwatching_status) {
+        //     message.classList.remove("dhiddenarea")
+        //     message.textContent = "No changes detected."
+        // } else {
+
+        try {
+            const response = await fetch(`/api/posts/${postId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({title: title, description: body, score: score,
+                anime_type: anime_type, watching_status: watching_status})
+            })
+            if (!response.ok) {
+                throw new Error(response.statusText)
             }
+            if (response.status === 200) {
+                const data = await response.json()
+                message.classList.add("dhiddenarea")
+                message.textContent = ""
+                document.getElementById(`post-${postId}-title`).textContent = data.post["title"]
+                document.getElementById(`post-${postId}-description`).textContent = data.post["description"]
+                document.getElementById(`post-${postId}-score`).textContent = `${score? String(score) + "/10" : ""}`
+                document.getElementById(`post-${postId}-watching_status`).textContent = data.post["watching_status"]
+                document.getElementById(`post-${postId}-anime_type`).textContent = data.post["anime_type"]
+                showEditTextArea(postId)
+            } else if (response.status === 204) {
+                message.classList.remove("dhiddenarea")
+                message.textContent = "No changes detected."
+            }
+        } catch (err) {
+            console.error(err)
         }
+        // }
         })
 }
 
