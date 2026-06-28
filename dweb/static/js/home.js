@@ -1,9 +1,17 @@
 import {logoutHandler} from "./auth.js"
-import {createACVideoUpdates} from "./modules/render.js"
+import {renderVideoThumbnails} from "./modules/render.js"
 
 
 logoutHandler()
 
+function createACVideoUpdates(data) {
+    if (data) {
+        document.getElementById("update-videos-area").innerHTML = ""
+        for (let i in data.items){
+            renderVideoThumbnails(data.items[i])
+        }
+    }
+}
 
 async function updateACVideos(max) {
     const response = await fetch(`/api/videoupdates?max=${max}&key=youtube:ac black flag resynced`)
@@ -17,7 +25,3 @@ async function updateACVideos(max) {
 }
 
 updateACVideos(1800)
-
-document.getElementById("force-update-btn").addEventListener("click", (e) => {
-    updateACVideos(0)
-})

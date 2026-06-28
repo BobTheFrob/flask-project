@@ -11,7 +11,6 @@ import { jikanPostSearchHandler } from "./external-api-handlers.js";
 function emptyPostsHandler() {
     const postContainer = document.getElementById("posts-container")
     const emptyPostMsg = document.getElementById("posts-message")
-    console.log(postContainer.children.length)
     if (postContainer.children.length > 0) {
         emptyPostMsg.textContent = ""
         emptyPostMsg.style.display = "none"

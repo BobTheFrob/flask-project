@@ -1,4 +1,4 @@
-export { createPostCard, createACVideoUpdates, createTitleSearchThumbnails }
+export { createPostCard, createTitleSearchThumbnails, renderVideoThumbnails }
 import { deletePostHandler, editPostHandler, showEditTextArea } from "./handlers.js";
 
 function htmlToText(str) {
@@ -41,7 +41,7 @@ function createPostCard(post) {
                             </button>
                         </form>
                     </div>
-                    <form class="dhiddenarea mt-3 edit-form" data-mal-id="" data-img-url="">
+                    <form class="dhiddenarea mt-3 edit-form" data-mal-id="" data-img-url="" data-anime-type="">
                             <div class="card-text p-0 mt-4">
                                 <div class="mb-3">
                                     <p class="text-secondary w-auto mb-2">Title: </p>
@@ -75,7 +75,7 @@ function createPostCard(post) {
                                 </div>
                                 <div class="mb-3 col">
                                     <label class="form-label" for="anime_type">Type</label>
-                                    <select class="form-select" name="editanime_type-${post['id']}" id="editanime_type-${post['id']}">
+                                    <select class="form-select anime-type" name="editanime_type-${post['id']}" id="editanime_type-${post['id']}">
                                         <option value="tv">TV</option>
                                         <option value="movie">Movie</option>
                                         <option value="special">Special</option>
@@ -161,15 +161,6 @@ function renderVideoThumbnails(video) {
     videosContainer.appendChild(wrapper.firstElementChild)
 }
 
-function createACVideoUpdates(data) {
-    if (data) {
-        document.getElementById("update-videos-area").innerHTML = ""
-        for (let i in data.items){
-            renderVideoThumbnails(data.items[i])
-        }
-    }
-}
-
 function createTitleSearchThumbnails (data, suggestionsBox) {
     if(!suggestionsBox) return
     let wrapper = document.createElement("div")
@@ -178,7 +169,8 @@ function createTitleSearchThumbnails (data, suggestionsBox) {
         const entry = data[i]
         wrapper.innerHTML = `
             <button class="list-group-item list-group-item-action d-flex gap-2 py-2 dliitem" data-mal-id="${entry.mal_id}"
-            data-title="${entry.title}" data-img-url="${entry.images.webp.image_url}">
+            data-title="${entry.title}" data-img-url="${entry.images.webp.image_url}"
+            data-anime-type="${entry.type}">
                 <div class="d-flex w-100 justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
                             <div>

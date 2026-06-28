@@ -26,6 +26,8 @@ function setTitleValue(childElement, titleElement, formElement) {
         titleElement.value = childElement.dataset.title
         formElement.dataset.malId = childElement.dataset.malId
         formElement.dataset.imgUrl = childElement.dataset.imgUrl
+        formElement.dataset.animeType = childElement.dataset.animeType
+        formElement.querySelector(".anime-type").value = String(childElement.dataset.animeType).toLowerCase()
     } 
     else title.value = ""
 }
@@ -37,6 +39,7 @@ function jikanPostSearchHandler (suggestionsElement, titleElement, formElement) 
     let suggestionsChildren = suggestionsElement.children;
     let timerId = null
     let index = -1
+    let userInput = titleElement.value
     const clearHoverClasses = () => {
             for (let i = 0; i < suggestionsChildren.length; i++) {
                 suggestionsChildren[i].classList.remove("dliitemhover")
@@ -58,6 +61,10 @@ function jikanPostSearchHandler (suggestionsElement, titleElement, formElement) 
             setActive(suggestionsChildren, index)
             setTitleValue(suggestionsChildren[index], titleElement, formElement)
         } 
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            suggestionsElement.classList.add("d-none")
+        }
     })
     titleElement.addEventListener("focusin", async () => {
         suggestionsElement.classList.remove("d-none")        
