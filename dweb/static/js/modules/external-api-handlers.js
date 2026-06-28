@@ -8,7 +8,8 @@ async function updateTitleSearchSuggestions (q) {
     const response = await fetch(`/api/jikantitlesearch?q=${q}&limit=${MAX_SEARCH_LIMIT}`)
     const data = await response.json()
     const entries = data["data"]
-    createTitleSearchThumbnails(entries)
+    const suggestions = document.getElementById("suggestions")
+    createTitleSearchThumbnails(entries, suggestions)
     return data
 };
 
@@ -22,10 +23,8 @@ function setActive(suggestionsChildren, index) {
 
 
 function setTitleValue(childElement, titleElement, formElement) {
-    // let title = document.getElementById("title")
     if (childElement) {
         titleElement.value = childElement.dataset.title
-        // formElement = document.getElementById("post-form")
         formElement.dataset.malId = childElement.dataset.malId
         formElement.dataset.imgUrl = childElement.dataset.imgUrl
     } 
@@ -36,9 +35,7 @@ function setTitleValue(childElement, titleElement, formElement) {
 // Handles jikan api call search
 //
 function jikanPostSearchHandler (suggestionsElement, titleElement, formElement) {
-    // let suggestions = document.getElementById("suggestions")
     let suggestionsChildren = suggestionsElement.children;
-    // let title = document.getElementById("title")
     let timerId = null
     let index = -1
     const clearHoverClasses = () => {
@@ -76,7 +73,7 @@ function jikanPostSearchHandler (suggestionsElement, titleElement, formElement) 
         if(titleElement.value) {
             timerId = setTimeout(async ()=>{await updateTitleSearchSuggestions(titleElement.value)}, JIKAN_DEBOUNCE_TIMEOUT)
         } else {
-            createTitleSearchThumbnails(null)
+            createTitleSearchThumbnails(null, null)
         }
     })
     suggestionsElement.addEventListener("mouseover", (e) => {

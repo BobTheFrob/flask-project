@@ -168,10 +168,10 @@ function createACVideoUpdates(data) {
     }
 }
 
-function createTitleSearchThumbnails (data) {
-    const suggestions = document.getElementById("suggestions")
+function createTitleSearchThumbnails (data, suggestionsBox) {
+    if(!suggestionsBox) return
     let wrapper = document.createElement("div")
-    suggestions.innerHTML = ""
+    suggestionsBox.innerHTML = ""
     for (let i in data) {
         const entry = data[i]
         wrapper.innerHTML = `
@@ -190,6 +190,6 @@ function createTitleSearchThumbnails (data) {
                 </div>
             </button>
             `
-        suggestions.appendChild(wrapper.firstElementChild)
+        suggestionsBox.appendChild(wrapper.firstElementChild)
     }
 }
