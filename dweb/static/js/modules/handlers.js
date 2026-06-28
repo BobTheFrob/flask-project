@@ -1,8 +1,9 @@
 import { createPostCard, createTitleSearchThumbnails } from "./render.js"
 export {
-    emptyPostsHandler, getAllPostsHandler, deletePostHandler, editPostHandler, postHandler,
+    getAllPostsHandler, deletePostHandler, editPostHandler, postHandler,
     showEditTextArea
 }
+import { jikanPostSearchHandler } from "./external-api-handlers.js";
 
 // EMPTY POSTS HANDLER
 // Checks if there are any posts in the container and shows/hides the empty post message accordingly
@@ -10,7 +11,14 @@ export {
 function emptyPostsHandler() {
     const postContainer = document.getElementById("posts-container")
     const emptyPostMsg = document.getElementById("posts-message")
-    emptyPostMsg.style.display = postContainer.children.length > 0 ? emptyPostMsg.textContent = "" : emptyPostMsg.textContent = "No posts yet! Go post something!"
+    console.log(postContainer.children.length)
+    if (postContainer.children.length > 0) {
+        emptyPostMsg.textContent = ""
+        emptyPostMsg.style.display = "none"
+    } else {
+        emptyPostMsg.textContent = "No posts yet! Go post something!"
+        emptyPostMsg.style.display = "block"
+    }
 }
 
 // GET ALL POSTS HANDLER
@@ -23,14 +31,18 @@ async function getAllPostsHandler() {
     const data = await response.json()
     for (let i in data) {
         document.getElementById("posts-container").appendChild(createPostCard(data[i]))
+        const suggestionsBox = document.getElementById(`suggestions-${data[i].id}`)
+        const editTitle = document.getElementById(`edittitle-${data[i].id}`)
+        const formElement = document.getElementById(`editpost-${data[i].id}`)
+        jikanPostSearchHandler(suggestionsBox, editTitle, formElement)
     }
+    emptyPostsHandler()
 }
 
 // POST HANDLER
 // Handles the submission of the post form, sends a POST request to the server, and updates the UI with the new post without refreshing the page
 //
 function postHandler() {
-    emptyPostsHandler()
     document.getElementById("post-form").addEventListener("submit", async (e) => {
         e.preventDefault()
         const formData = new FormData(e.target)
@@ -49,7 +61,7 @@ function postHandler() {
                 },
                 body: JSON.stringify({
                 title: title, description: body, score: score, 
-                watching_status: status, anime_type: type, image_url: image_url
+                watching_status: status, anime_type: type, image_url: image_url, mal_id: mal_id
                 })
             })
             if (!response.ok) {
@@ -117,7 +129,8 @@ function editPostHandler(form) {
         const score = formData.get(`editscore-${postId}`)
         const anime_type = formData.get(`editanime_type-${postId}`)
         const watching_status = formData.get(`editwatching_status-${postId}`)
-
+        const mal_id = e.target.dataset.malId
+        const image_url = e.target.dataset.imgUrl
         const message = document.getElementById(`editmessage-${postId}`)
 
         try {
@@ -127,7 +140,8 @@ function editPostHandler(form) {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({title: title, description: body, score: score,
-                anime_type: anime_type, watching_status: watching_status})
+                anime_type: anime_type, watching_status: watching_status,
+                mal_id: mal_id, image_url: image_url})
             })
             if (!response.ok) {
                 throw new Error(response.statusText)
@@ -141,6 +155,7 @@ function editPostHandler(form) {
                 document.getElementById(`post-${postId}-score`).textContent = `${score? String(score) + "/10" : ""}`
                 document.getElementById(`post-${postId}-watching_status`).textContent = data.post["watching_status"]
                 document.getElementById(`post-${postId}-anime_type`).textContent = data.post["anime_type"]
+                document.getElementById(`postimg-${postId}`).src = data.post["image_url"]
                 showEditTextArea(postId)
             } else if (response.status === 204) {
                 message.classList.remove("dhiddenarea")

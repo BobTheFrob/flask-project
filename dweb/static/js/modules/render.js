@@ -23,7 +23,7 @@ function createPostCard(post) {
                     </div>
                     ${post.image_url? `
                         <div class="text-center my-2">
-                            <img class="img-fluid dpostimage rounded" src="${post['image_url']}">                    
+                            <img class="img-fluid dpostimage rounded" id="postimg-${post.id}" src="${post['image_url']}">                    
                         </div>
                         ` : ""}
                     <p class="card-text dyprintnewline" id="post-${post.id}-description">${htmlToText(post.description)}</p>
@@ -41,11 +41,13 @@ function createPostCard(post) {
                             </button>
                         </form>
                     </div>
-                    <form class="dhiddenarea mt-3 edit-form">
+                    <form class="dhiddenarea mt-3 edit-form" data-mal-id="" data-img-url="">
                             <div class="card-text p-0 mt-4">
                                 <div class="mb-3">
                                     <p class="text-secondary w-auto mb-2">Title: </p>
-                                    <input class="form-control edit-title" id="edittitle-${post.id}" name="edittitle-${post.id}" value="${htmlToText(post.title)}"></input>
+                                    <input autocomplete="off"
+                                    class="form-control edit-title" id="edittitle-${post.id}" name="edittitle-${post.id}" value="${htmlToText(post.title)}"></input>
+                                    <div id="suggestions-${post.id}" class="list-group position-absolute w-100 z-3 d-none"></div>
                                 </div>
                                 <div class="card-text container-fluid g-2 center d-flex justify-content-start align-items-center p-0">
                                     <p class="text-secondary w-auto">

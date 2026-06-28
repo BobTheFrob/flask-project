@@ -97,7 +97,10 @@ def edit_post(post):
             body = :body,
             score = :score,
             watching_status = :watching_status,
-            anime_type = :anime_type
+            anime_type = :anime_type,
+            mal_id = :mal_id,
+            image_url = :image_url,
+            miruro_watch_link = :miruro_watch_link
         WHERE user_id = :user_id
         AND id = :id
         '''    

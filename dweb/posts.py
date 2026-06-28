@@ -150,6 +150,10 @@ def get_post(post_id):
                 return jsonify({
                     "message": "Invalid score. Score must be between 0 and 10."
                 }), 400
+            # TODO:
+            # This merge fills unspecified edit fields from the existing DB post.
+            # It also implicitly restores id/user_id, which edit_post() depends on.
+            # Consider making this explicit during refactor.
             for key, value in post_dict(postValidate).items():
                 if not post.get(key):
                     post[key] = value

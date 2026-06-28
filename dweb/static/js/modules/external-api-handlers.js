@@ -4,11 +4,10 @@ import { createPostCard, createTitleSearchThumbnails } from "./render.js"
 const MAX_SEARCH_LIMIT = 4
 const JIKAN_DEBOUNCE_TIMEOUT = 500
 
-async function updateTitleSearchSuggestions (q) {
+async function updateTitleSearchSuggestions (q, suggestions) {
     const response = await fetch(`/api/jikantitlesearch?q=${q}&limit=${MAX_SEARCH_LIMIT}`)
     const data = await response.json()
     const entries = data["data"]
-    const suggestions = document.getElementById("suggestions")
     createTitleSearchThumbnails(entries, suggestions)
     return data
 };
@@ -61,17 +60,17 @@ function jikanPostSearchHandler (suggestionsElement, titleElement, formElement) 
         } 
     })
     titleElement.addEventListener("focusin", async () => {
-        suggestions.classList.remove("d-none")        
+        suggestionsElement.classList.remove("d-none")        
     })
     titleElement.addEventListener("focusout", async () => {
         clearTimeout(timerId)
-        suggestions.classList.add("d-none")
+        suggestionsElement.classList.add("d-none")
     })
     titleElement.addEventListener("input", async () => {
         index = -1
         clearTimeout(timerId)
         if(titleElement.value) {
-            timerId = setTimeout(async ()=>{await updateTitleSearchSuggestions(titleElement.value)}, JIKAN_DEBOUNCE_TIMEOUT)
+            timerId = setTimeout(async ()=>{await updateTitleSearchSuggestions(titleElement.value, suggestionsElement)}, JIKAN_DEBOUNCE_TIMEOUT)
         } else {
             createTitleSearchThumbnails(null, null)
         }
