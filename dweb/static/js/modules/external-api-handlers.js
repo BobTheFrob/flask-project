@@ -6,10 +6,12 @@ const JIKAN_DEBOUNCE_TIMEOUT = 500
 
 async function updateTitleSearchSuggestions (q, suggestions) {
     const response = await fetch(`/api/jikantitlesearch?q=${q}&limit=${MAX_SEARCH_LIMIT}`)
-    const data = await response.json()
-    const entries = data["data"]
-    createTitleSearchThumbnails(entries, suggestions)
-    return data
+    if (response.ok) {
+        const data = await response.json()
+        const entries = data["data"]
+        createTitleSearchThumbnails(entries, suggestions)
+        return data
+    }
 };
 
 
