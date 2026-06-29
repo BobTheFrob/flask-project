@@ -61,6 +61,13 @@ function createPostCard(post) {
                                     max="10">
                                 </div>
                             </div>
+                            <div class="card suggestion-selected text-light border-secondary my-2 dhiddenarea">
+                                <div class="card-body d-flex align-items-center justify-content-between gap-3">
+                                    <h5 class="fs-6 h5 text-truncate"></h5>
+                                    <img class="animethumbnail img-thumbnail">
+                                </div>
+                                <button type="button" class="position-absolute top-0 end-0 btn btn-sm btn-danger"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
                             <p class="text-secondary">Description: </p>
                             <textarea class="form-control mb-2 edit-desc" id="editdesc-${post.id}" name="editdesc-${post.id}" rows="4" value="${htmlToText(post.description)}"></textarea>
                             <div class="mt-3 row">

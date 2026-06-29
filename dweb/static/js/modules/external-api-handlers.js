@@ -23,13 +23,16 @@ function setActive(suggestionsChildren, index) {
 }
 
 
-function setTitleValue(childElement, titleElement, formElement) {
+function setTitleValue(childElement, titleElement, formElement, suggestionSelect) {
     if (childElement) {
         titleElement.value = childElement.dataset.title
         formElement.dataset.malId = childElement.dataset.malId
         formElement.dataset.imgUrl = childElement.dataset.imgUrl
         formElement.dataset.animeType = childElement.dataset.animeType
         formElement.querySelector(".anime-type").value = String(childElement.dataset.animeType).toLowerCase()
+        suggestionSelect.classList.remove("dhiddenarea")
+        suggestionSelect.querySelector("h5").textContent = childElement.dataset.title
+        suggestionSelect.querySelector("img").src = childElement.dataset.imgUrl 
     } 
     else title.value = ""
 }
@@ -42,6 +45,14 @@ function jikanPostSearchHandler (suggestionsElement, titleElement, formElement) 
     let timerId = null
     let index = -1
     let userInput = titleElement.value
+    const suggestionSelect = formElement.querySelector(".suggestion-selected")
+    suggestionSelect.querySelector("button").addEventListener("click", (e) => {
+        e.preventDefault()
+        suggestionSelect.classList.add("dhiddenarea")
+        formElement.dataset.malId = ""
+        formElement.dataset.imgUrl = ""
+        formElement.dataset.animeType = ""
+    })
     const clearHoverClasses = () => {
             for (let i = 0; i < suggestionsChildren.length; i++) {
                 suggestionsChildren[i].classList.remove("dliitemhover")
@@ -53,7 +64,7 @@ function jikanPostSearchHandler (suggestionsElement, titleElement, formElement) 
             if (index >= suggestionsChildren.length) index = -1
             clearHoverClasses()
             setActive(suggestionsChildren, index)
-            setTitleValue(suggestionsChildren[index], titleElement, formElement)
+            setTitleValue(suggestionsChildren[index], titleElement, formElement, suggestionSelect)
         } 
 
         else if (e.key == "ArrowUp") {
@@ -61,7 +72,7 @@ function jikanPostSearchHandler (suggestionsElement, titleElement, formElement) 
             if (index < -1) index = suggestionsChildren.length - 1
             clearHoverClasses()
             setActive(suggestionsChildren, index)
-            setTitleValue(suggestionsChildren[index], titleElement, formElement)
+            setTitleValue(suggestionsChildren[index], titleElement, formElement, suggestionSelect)
         } 
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -88,7 +99,7 @@ function jikanPostSearchHandler (suggestionsElement, titleElement, formElement) 
         const item = e.target.closest(".list-group-item")
         if (!item) return
         index = -1
-        setTitleValue(item, titleElement, formElement)
+        setTitleValue(item, titleElement, formElement, suggestionSelect)
         clearHoverClasses()
     })
 }
