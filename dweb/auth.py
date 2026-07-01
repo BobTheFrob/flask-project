@@ -1,5 +1,5 @@
 from flask import Blueprint
-import sqlite3
+import psycopg2
 from flask import (
     Blueprint, g, redirect, render_template, request, session, url_for, jsonify
 )
@@ -54,7 +54,7 @@ def register():
         userData["password"] = generate_password_hash(userData["password"])
         try:
             models.register_user(userData)
-        except sqlite3.IntegrityError:
+        except psycopg2.IntegrityError:
             return jsonify({"error": "Username already exists."}), 409
         except Exception:
             return jsonify({"error": "Registration failed."}), 500
