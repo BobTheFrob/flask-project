@@ -68,6 +68,12 @@ function postHandler() {
             }
             const data = await response.json()
             document.getElementById("posts-container").appendChild(createPostCard(data.post))
+            const suggestionsBox = document.getElementById(`suggestions-${data.post.id}`)
+            const editTitle = document.getElementById(`edittitle-${data.post.id}`)
+            const formElement = document.getElementById(`editpost-${data.post.id}`)
+            console.log(suggestionsBox, editTitle, formElement, data.post.id)
+            jikanPostSearchHandler(suggestionsBox, editTitle, formElement)
+
         } catch (err) {
             console.error(err)
         }
