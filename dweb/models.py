@@ -12,15 +12,26 @@ from datetime import datetime, timedelta, timezone
 # Return posts from the database. The returned list is ordered by the created date.
 #
 def get_all_posts(user_id):
-    con = db.get_db()
     with db.get_cursor() as cur:
         cur.execute("""
-            SELECT *
-            FROM posts
-            JOIN users
-                ON posts.user_id = users.id
-            WHERE posts.user_id = %s
-
+        SELECT
+            posts.id AS id,
+            posts.mal_id,
+            posts.user_id,
+            posts.created,
+            posts.title,
+            posts.body,
+            posts.score,
+            posts.watching_status,
+            posts.anime_type,
+            posts.image_url,
+            posts.miruro_watch_link,
+            users.username
+        FROM posts
+        JOIN users
+            ON posts.user_id = users.id
+        WHERE posts.user_id = %s
+        ORDER BY posts.created
         """, (user_id, ))
         return cur.fetchall()
 
@@ -29,15 +40,28 @@ def get_all_posts(user_id):
 # Return a post from the database by id. If the id does not exist, return None.
 #
 def get_post_by_id(user_id, post_id):
-    con = db.get_db()
     with db.get_cursor() as cur:
-        sql = '''
-        SELECT * FROM posts         
+        sql = """
+        SELECT
+            posts.id AS id,
+            posts.mal_id,
+            posts.user_id,
+            posts.created,
+            posts.title,
+            posts.body,
+            posts.score,
+            posts.watching_status,
+            posts.anime_type,
+            posts.image_url,
+            posts.miruro_watch_link,
+            users.username
+        FROM posts
         JOIN users
             ON posts.user_id = users.id
         WHERE posts.user_id = %s
         AND posts.id = %s
-        '''
+        ORDER BY posts.created
+        """
         cur.execute(sql, (user_id, post_id))
         return cur.fetchone()
 

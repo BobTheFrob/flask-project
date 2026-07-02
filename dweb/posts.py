@@ -89,6 +89,15 @@ def api_posts():
     if request.method == 'POST':
         data = request.get_json() or {}
         post = getRequestPost(data)
+        try:
+            if(post["score"] == ""):
+                post["score"] = 0
+            val = int(post["score"])
+        except ValueError:
+            print("That's not an int!")
+            return jsonify({
+                "error": "Score must be a number."
+            }), 400
         if post["score"] and (int(post["score"]) > 10 or int(post["score"])) < 0:
             return jsonify({
                 "message": "Invalid score. Score must be between 0 and 10."
@@ -146,6 +155,15 @@ def get_post(post_id):
         try:
             if not post["title"]:
                 post["title"] = postValidate["title"]
+            try:
+                if(post["score"] == ""):
+                    post["score"] = 0
+                val = int(post["score"])
+            except ValueError:
+                print("That's not an int!")
+                return jsonify({
+                    "error": "Score must be a number."
+                }), 400
             if post["score"] and (int(post["score"]) > 10 or int(post["score"])) < 0:
                 return jsonify({
                     "message": "Invalid score. Score must be between 0 and 10."
