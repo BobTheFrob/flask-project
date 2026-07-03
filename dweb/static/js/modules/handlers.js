@@ -160,7 +160,7 @@ function editPostHandler(form) {
                 document.getElementById(`post-${postId}-score`).textContent = `${score? String(score) + "/10" : ""}`
                 document.getElementById(`post-${postId}-watching_status`).textContent = data.post["watching_status"]
                 document.getElementById(`post-${postId}-anime_type`).textContent = data.post["anime_type"]
-                document.getElementById(`postimg-${postId}`).src = data.post["image_url"]
+                document.getElementById(`postimg-${postId}`)? document.getElementById(`postimg-${postId}`).src = data.post["image_url"] : ""
                 showEditTextArea(postId)
             } else if (response.status === 204) {
                 message.classList.remove("dhiddenarea")

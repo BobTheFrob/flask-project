@@ -12,34 +12,58 @@ from datetime import datetime, timedelta, timezone
 # Return posts from the database. The returned list is ordered by the created date.
 #
 def get_all_posts(user_id):
-    con = db.get_db()
-    posts = con.execute("""
-        SELECT *
+    with db.get_cursor() as cur:
+        cur.execute("""
+        SELECT
+            posts.id AS id,
+            posts.mal_id,
+            posts.user_id,
+            posts.created,
+            posts.title,
+            posts.body,
+            posts.score,
+            posts.watching_status,
+            posts.anime_type,
+            posts.image_url,
+            posts.miruro_watch_link,
+            users.username
         FROM posts
         JOIN users
             ON posts.user_id = users.id
-        WHERE posts.user_id = ?
-        ORDER BY created
-    """, [user_id]).fetchall()
-    return posts
+        WHERE posts.user_id = %s
+        ORDER BY posts.created
+        """, (user_id, ))
+        return cur.fetchall()
 
 
 # GET POST BY ID
 # Return a post from the database by id. If the id does not exist, return None.
 #
-def get_post_by_id(user_id ,id):
-    con = db.get_db()
-    cursor = con.cursor()
-    sql = '''
-    SELECT * FROM posts         
-    JOIN users
-        ON posts.user_id = users.id
-    WHERE posts.user_id = ?
-    AND posts.id = ?
-    '''
-    cursor.execute(sql, [user_id, id])
-    post = cursor.fetchone()
-    return post
+def get_post_by_id(user_id, post_id):
+    with db.get_cursor() as cur:
+        sql = """
+        SELECT
+            posts.id AS id,
+            posts.mal_id,
+            posts.user_id,
+            posts.created,
+            posts.title,
+            posts.body,
+            posts.score,
+            posts.watching_status,
+            posts.anime_type,
+            posts.image_url,
+            posts.miruro_watch_link,
+            users.username
+        FROM posts
+        JOIN users
+            ON posts.user_id = users.id
+        WHERE posts.user_id = %s
+        AND posts.id = %s
+        ORDER BY posts.created
+        """
+        cur.execute(sql, (user_id, post_id))
+        return cur.fetchone()
 
 # ADD POST
 # Add a post to the database. The post is added with the current date and time.
@@ -47,7 +71,7 @@ def get_post_by_id(user_id ,id):
 def add_post(post):
     con = db.get_db()
     sql = """
-    INSERT INTO posts(
+    INSERT INTO posts (
         title,
         body,
         score,
@@ -58,32 +82,35 @@ def add_post(post):
         image_url,
         miruro_watch_link
     )
-    VALUES(
-        :title,
-        :body,
-        :score,
-        :watching_status,
-        :anime_type,
-        :user_id,
-        :mal_id,
-        :image_url,
-        :miruro_watch_link
+    VALUES (
+        %(title)s,
+        %(body)s,
+        %(score)s,
+        %(watching_status)s,
+        %(anime_type)s,
+        %(user_id)s,
+        %(mal_id)s,
+        %(image_url)s,
+        %(miruro_watch_link)s
     )
-    """   
-    cursor = con.execute(sql, post)
-    new_id = cursor.lastrowid
-    con.commit()
-    return new_id
+    RETURNING id
+    """
+    with db.get_cursor() as cur:
+        cur.execute(sql, post)
+        new_id = cur.fetchone()["id"]
+        con.commit()
+        return new_id
 
 # DELETE POST
 # Delete a post from the database by id. If the id does not exist, do nothing.
 #
-def delete_post(user_id, id):
+def delete_post(user_id, post_id):
     con = db.get_db()
     sql = ''' DELETE FROM posts
-              WHERE user_id=(?) AND id=(?)'''    
-    con.execute(sql, [user_id, id])
-    con.commit()
+              WHERE user_id=%s AND id=%s'''    
+    with db.get_cursor() as cur:
+        cur.execute(sql, (user_id, post_id))
+        con.commit()
 
 # EDIT POST
 # Edit a post in the database by id. If the id does not exist, do nothing.
@@ -93,19 +120,20 @@ def edit_post(post):
     sql = ''' 
         UPDATE posts
         SET
-            title = :title,
-            body = :body,
-            score = :score,
-            watching_status = :watching_status,
-            anime_type = :anime_type,
-            mal_id = :mal_id,
-            image_url = :image_url,
-            miruro_watch_link = :miruro_watch_link
-        WHERE user_id = :user_id
-        AND id = :id
+            title = %(title)s,
+            body = %(body)s,
+            score = %(score)s,
+            watching_status = %(watching_status)s,
+            anime_type = %(anime_type)s,
+            mal_id = %(mal_id)s,
+            image_url = %(image_url)s,
+            miruro_watch_link = %(miruro_watch_link)s
+        WHERE user_id = %(user_id)s
+        AND id = %(id)s
         '''    
-    con.execute(sql, post)
-    con.commit()
+    with db.get_cursor() as cur:
+        cur.execute(sql, post)
+        con.commit()
 
 ####_____________________________####
 ####                             ####
@@ -118,66 +146,66 @@ def edit_post(post):
 def register_user(userData):
     con = db.get_db()
     sql = ''' INSERT INTO users(username, password)
-              VALUES(?,?) '''    
-    cursor = con.execute(sql, [userData['username'], userData['password']])
-    new_id = cursor.lastrowid
-    con.commit()
-    return new_id
+              VALUES(%s,%s) RETURNING id'''
+    with db.get_cursor() as cur:    
+        cur.execute(sql, (userData['username'], userData['password']))
+        new_id = cur.fetchone()["id"]
+        con.commit()
+        return new_id
 
 # LOGIN USER
 # Pass user id to fetch user from users table
 #
 def get_user_by_id(userData):
     con = db.get_db()
-    cursor = con.cursor()
-    cursor.execute('SELECT * FROM users WHERE id = ?', [userData['id']])
-    user = cursor.fetchone()
-    return user
+    with db.get_cursor() as cur:
+        cur.execute('SELECT * FROM users WHERE id = %s', (userData['id'], ))
+        return cur.fetchone()
 
 # LOGIN USER
 # Pass user data to fetch user from users table
 #
 def login_user(userData):
     con = db.get_db()
-    cursor = con.cursor()
-    cursor.execute('SELECT * FROM users WHERE username = ?', [userData['username']])
-    user = cursor.fetchone()
-    return user
+    with db.get_cursor() as cur:
+        cur.execute('SELECT * FROM users WHERE username = %s', (userData['username'], ))
+        return cur.fetchone()
 
 @cache.memoize(1800)
 def get_cache(key, max_age_seconds):
     con = db.get_db()
+    with db.get_cursor() as cur:
+        cur.execute(
+            "SELECT response_json, created FROM api_cache WHERE cache_key = %s",
+            (key, )
+        )
+        row = cur.fetchone()
+        if row is None:
+            return None
 
-    row = con.execute(
-        "SELECT response_json, created FROM api_cache WHERE cache_key = ?",
-        (key,)
-    ).fetchone()
-    if row is None:
-        return None
+        age = time.time() - row["created"]
+        if age > max_age_seconds:
+            return None
 
-    age = time.time() - row["created"]
-    if age > max_age_seconds:
-        return None
-
-    return json.loads(row["response_json"])
+        return json.loads(row["response_json"])
 
 
 def set_cache(key, data):
     con = db.get_db()
+    with db.get_cursor() as cur:
+        cur.execute("""
+            INSERT INTO api_cache (cache_key, response_json, created)
+            VALUES (%s, %s, %s)
+            ON CONFLICT(cache_key) DO UPDATE SET
+                response_json = excluded.response_json,
+                created = excluded.created
+        """, (  
+            key,
+            json.dumps(data),
+            int(time.time())
+        ))
 
-    con.execute("""
-        INSERT INTO api_cache (cache_key, response_json, created)
-        VALUES (?, ?, ?)
-        ON CONFLICT(cache_key) DO UPDATE SET
-            response_json = excluded.response_json,
-            created = excluded.created
-    """, (
-        key,
-        json.dumps(data),
-        int(time.time())
-    ))
-
-    con.commit()
+        con.commit()
 
 def get_youtube_videos(query):
     one_week_ago = (datetime.now(timezone.utc) 
