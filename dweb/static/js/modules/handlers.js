@@ -71,9 +71,12 @@ function postHandler() {
             const suggestionsBox = document.getElementById(`suggestions-${data.post.id}`)
             const editTitle = document.getElementById(`edittitle-${data.post.id}`)
             const formElement = document.getElementById(`editpost-${data.post.id}`)
-            console.log(suggestionsBox, editTitle, formElement, data.post.id)
             jikanPostSearchHandler(suggestionsBox, editTitle, formElement)
-
+            const form = document.getElementById("post-form")
+            form.querySelector(".suggestion-selected").classList.add("dhiddenarea")
+            form.dataset.malId = ""
+            form.dataset.imgUrl = ""
+            form.dataset.animeType = ""
         } catch (err) {
             console.error(err)
         }

@@ -166,14 +166,39 @@ def get_user_by_id(userData):
 # Pass user data to fetch user from users table
 #
 def login_user(userData):
-    con = db.get_db()
     with db.get_cursor() as cur:
         cur.execute('SELECT * FROM users WHERE username = %s', (userData['username'], ))
         return cur.fetchone()
 
+def get_youtube_videos(query):
+    two_days_ago = (datetime.now(timezone.utc) 
+    - timedelta(days=2)).isoformat().replace("+00:00", "Z")
+    response = requests.get(
+        "https://www.googleapis.com/youtube/v3/search",
+        params={
+            "part": "snippet",
+            "q": query,
+            "maxResults": 6,
+            "type": "video",
+            "publishedAfter": two_days_ago,
+            "key": os.getenv("YOUTUBE_API_KEY")
+        }
+    )
+
+    return response.json()
+
+def clearOldCache(api_name, seconds):
+    age = time.time() - seconds
+    con = db.get_db()
+    with db.get_cursor() as cur:
+        cur.execute(
+            "DELETE FROM api_cache WHERE cache_key LIKE %s AND created < %s",
+            (f"{api_name}:%", age)
+        )
+        con.commit()
+
 @cache.memoize(1800)
 def get_cache(key, max_age_seconds):
-    con = db.get_db()
     with db.get_cursor() as cur:
         cur.execute(
             "SELECT response_json, created FROM api_cache WHERE cache_key = %s",
@@ -192,6 +217,11 @@ def get_cache(key, max_age_seconds):
 
 def set_cache(key, data):
     con = db.get_db()
+    
+    # TODO Delete this and make it a background worker process thing. Currently deletes all api_caches after a day when another cache is set.
+    api_name = key.split(':')[0]
+    clearOldCache(api_name, 86400)
+
     with db.get_cursor() as cur:
         cur.execute("""
             INSERT INTO api_cache (cache_key, response_json, created)
@@ -207,28 +237,10 @@ def set_cache(key, data):
 
         con.commit()
 
-def get_youtube_videos(query):
-    one_week_ago = (datetime.now(timezone.utc) 
-    - timedelta(days=7)).isoformat().replace("+00:00", "Z")
-    response = requests.get(
-        "https://www.googleapis.com/youtube/v3/search",
-        params={
-            "part": "snippet",
-            "q": query,
-            "maxResults": 6,
-            "type": "video",
-            "publishedAfter": one_week_ago,
-            "key": os.getenv("YOUTUBE_API_KEY")
-        }
-    )
-
-    return response.json()
-
-
-def make_cache_key(path, params=None):
+def make_cache_key(api_name, path, params=None):
     params = params or {}
     stable_params = json.dumps(params, sort_keys=True)
-    return f"jikan:{path}:{stable_params}"
+    return f"{api_name}:{path}:{stable_params}"
 
 @cache.memoize(86400)
 def get_jikan_response(path: str, params: dict | None = None, to_cache = True):
@@ -236,12 +248,10 @@ def get_jikan_response(path: str, params: dict | None = None, to_cache = True):
     if params:
         params = dict((k.lower(), v.lower()) for k,v in params.items()) or {}
     
-    cache_key = make_cache_key(path, params)
-    if to_cache:
-        cached = get_cache(cache_key, max_age_seconds=86400)
-        if cached is not None:
-            print("cached result given")
-            return cached
+    cache_key = make_cache_key("jikan", path, params)
+    cached = get_cache(cache_key, max_age_seconds=86400)
+    if cached is not None:
+        return cached
 
     response = requests.get(
         f"{JIKAN_BASE_URL}{path}",
@@ -251,6 +261,7 @@ def get_jikan_response(path: str, params: dict | None = None, to_cache = True):
     response.raise_for_status()
 
     data = response.json()
-    set_cache(cache_key, data)
-    print("jikan result given")
+
+    if to_cache:
+        set_cache(cache_key, data)
     return data

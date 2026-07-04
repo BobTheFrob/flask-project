@@ -3,6 +3,7 @@ from flask import (
     Blueprint, render_template, request, jsonify
 )
 from . import models, cache
+from .auth import login_required_api
 
 home_bp = Blueprint('home', __name__)
 
@@ -14,9 +15,10 @@ def index():
     return render_template("home.html")
 
 # MAIN PAGE
-# Main page route. Render the main page template.
-#
+# Call the youtube api to get video updates
+# Needs a q argument for the search and max for maximum age in seconds
 @home_bp.route('/api/videoupdates', methods = ['GET'])
+@login_required_api
 def get_update_videos():
     key = request.args.get("key")
     try:
