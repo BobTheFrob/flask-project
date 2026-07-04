@@ -37,7 +37,7 @@ def post_dict(post):
         "anime_type": post["anime_type"],
         "created": post["created"],
         "image_url": post["image_url"],
-        "miruro_watch_link": post["miruro_watch_link"]
+        "watch_link": post["watch_link"]
     })
 
 # Helper function to validate dropdown fields like anime_type and watching_status
@@ -72,7 +72,7 @@ def getRequestPost (data):
         "watching_status": (data.get('watching_status')),
         "anime_type": data.get('anime_type'),
         "image_url": data.get('image_url') or "",
-        "miruro_watch_link": data.get('miruro_watch_link') or ""
+        "watch_link": data.get('watch_link') or ""
     }
     return post
 

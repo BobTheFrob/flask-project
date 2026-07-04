@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS posts (
   watching_status TEXT CHECK (watching_status IN ('completed', 'watching', 'dropped', 'planned')) NOT NULL DEFAULT 'watching',
   anime_type TEXT CHECK (anime_type IN ('tv', 'ova', 'movie', 'special', 'ona', 'music', 'cm', 'pv', 'tv special', 'misc')) NOT NULL DEFAULT 'misc',
   image_url TEXT,
-  miruro_watch_link TEXT
+  watch_link TEXT
 );
 
 CREATE TABLE IF NOT EXISTS api_cache (

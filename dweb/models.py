@@ -25,7 +25,7 @@ def get_all_posts(user_id):
             posts.watching_status,
             posts.anime_type,
             posts.image_url,
-            posts.miruro_watch_link,
+            posts.watch_link,
             users.username
         FROM posts
         JOIN users
@@ -53,7 +53,7 @@ def get_post_by_id(user_id, post_id):
             posts.watching_status,
             posts.anime_type,
             posts.image_url,
-            posts.miruro_watch_link,
+            posts.watch_link,
             users.username
         FROM posts
         JOIN users
@@ -80,7 +80,7 @@ def add_post(post):
         user_id,
         mal_id,
         image_url,
-        miruro_watch_link
+        watch_link
     )
     VALUES (
         %(title)s,
@@ -91,7 +91,7 @@ def add_post(post):
         %(user_id)s,
         %(mal_id)s,
         %(image_url)s,
-        %(miruro_watch_link)s
+        %(watch_link)s
     )
     RETURNING id
     """
@@ -127,7 +127,7 @@ def edit_post(post):
             anime_type = %(anime_type)s,
             mal_id = %(mal_id)s,
             image_url = %(image_url)s,
-            miruro_watch_link = %(miruro_watch_link)s
+            watch_link = %(watch_link)s
         WHERE user_id = %(user_id)s
         AND id = %(id)s
         '''    
