@@ -40,6 +40,11 @@ def post_dict(post):
         "watch_link": post["watch_link"]
     })
 
+def post_dict_sql(post):
+    postReturn = post_dict(post)
+    postReturn['body'] = postReturn.pop('description')
+    return postReturn
+
 # Helper function to validate dropdown fields like anime_type and watching_status
 def validateEnumFields(post):
     MEDIA_TYPES = {
@@ -62,18 +67,89 @@ def validateEnumFields(post):
     }
     return post["anime_type"] in MEDIA_TYPES and post["watching_status"] in WATCH_STATUSES
 
+# Return nomralized data from a request json
 def getRequestPost (data):
     post = {
         "title": (data.get("title") or "").strip(),
         "user_id": session.get("user_id"),
-        "mal_id": data.get('mal_id'),
+        "mal_id": None,
         "body": (data.get("description") or "").strip(),
-        "score": data.get('score'),
+        "score": None,
         "watching_status": (data.get('watching_status')),
         "anime_type": data.get('anime_type'),
         "image_url": data.get('image_url') or "",
         "watch_link": data.get('watch_link') or ""
     }
+    if data.get('score') not in ("", None):
+        post["score"] = data.get('score')
+    if data.get('mal_id') not in ("", None):
+        post["mal_id"] = data.get('mal_id')
+    return post
+
+# Helper for returning 204, returns true if nothing changed: semantically makes sense not PostChanged
+def postChanged(postPut, postGet):
+    return not (str(postGet["body"]) == str(postPut["body"]) 
+            and (postGet["score"] == postPut["score"] and postPut["score"] is not None)
+            and str(postGet["watching_status"]) == str(postPut["watching_status"])
+            and str(postGet["anime_type"]) == str(postPut["anime_type"])
+            and str(postGet["title"]) == str(postPut["title"])
+            and str(postGet["image_url"]) == str(postPut["image_url"])
+            )
+
+# Check int inputs from regulated post
+def checkRequestIntInputs(post):
+    if post.get("score") is not None:
+        try:
+            post["score"] = int(post["score"])
+        except (ValueError, TypeError):
+            return jsonify({"error": "Score must be a number."}), 400
+        if not 0 <= post["score"] <= 10:
+            return jsonify({
+                "message": "Invalid score. Score must be between 0 and 10."
+            }), 400
+        
+    if post.get("mal_id") is not None:
+        try:
+            post["mal_id"] = int(post["mal_id"])
+        except (ValueError, TypeError):
+            return jsonify({"error": "mal_id must be a number."}), 400
+        if post["mal_id"] <= 0:
+            return jsonify({
+                "message": "Invalid mal_id. mal_id must be greater than 0."
+            }), 400
+
+# Only populate post with request parameters
+def getPatchRequestPost(data, post_id):
+    post = {}
+    allowed_fields = {
+    "title",
+    "description",
+    "score",
+    "watching_status",
+    "anime_type",
+    "mal_id",
+    "image_url",
+    "watch_link",
+    }
+    post["user_id"] = session.get("user_id")
+    post["id"] = post_id
+    for key, value in data.items():
+        if key not in allowed_fields:
+            continue
+
+        if key in ("title", "description"):
+            if (key == "description"):
+                post["body"] = (value or "").strip()
+            else: post[key] = (value or "").strip()
+
+        elif key in ("score", "mal_id"):
+            post[key] = None if value in ("", None) else value
+
+        # elif key in ("image_url", "watch_link"):
+        #     post[key] = value or ""
+
+        else:
+            post[key] = value
     return post
 
 # GET ALL POSTS API
@@ -89,19 +165,9 @@ def api_posts():
     if request.method == 'POST':
         data = request.get_json() or {}
         post = getRequestPost(data)
-        try:
-            if(post["score"] == ""):
-                post["score"] = 0
-            val = int(post["score"])
-        except ValueError:
-            print("That's not an int!")
-            return jsonify({
-                "error": "Score must be a number."
-            }), 400
-        if post["score"] and (int(post["score"]) > 10 or int(post["score"])) < 0:
-            return jsonify({
-                "message": "Invalid score. Score must be between 0 and 10."
-            }), 400
+        error = checkRequestIntInputs(post)
+        if error:
+            return error
         if not post["title"] or not post["title"].strip():
             return jsonify({
                 "error": "Post must have a title.",
@@ -118,22 +184,12 @@ def api_posts():
             "post": postReturned
         }), 200
 
-def postChanged(postPut, postGet):
-    return not (str(postGet["body"]) == str(postPut["body"]) 
-            and str(postGet["score"]) == str(postPut["score"])
-            and str(postGet["watching_status"]) == str(postPut["watching_status"])
-            and str(postGet["anime_type"]) == str(postPut["anime_type"])
-            and str(postGet["title"]) == str(postPut["title"])
-            and str(postGet["image_url"]) == str(postPut["image_url"])
-            )
-
-
 # POST BY ID API
-# Post api routed by id. Return the post in json. If the request method is PUT, 
+# Post api routed by id. Return the post in json. If the request method is PATCH, 
 # edit the post in the database and return 200. 
 # If the request method is DELETE, delete the post from the database and return 200. If the post does not exist, return 404.
 #
-@posts_apibp.route('/posts/<int:post_id>',  methods = ['GET', 'PUT', 'DELETE'])
+@posts_apibp.route('/posts/<int:post_id>',  methods = ['GET', 'PATCH', 'DELETE'])
 @login_required_api
 def get_post(post_id):
 
@@ -149,31 +205,15 @@ def get_post(post_id):
         return jsonify(post_dict(postValidate))
     
     # EDIT POST
-    if request.method == 'PUT':
+    if request.method == 'PATCH':
         data = request.get_json() or {}
-        post = getRequestPost(data)
+        post = getPatchRequestPost(data, post_id)
         try:
-            if not post["title"]:
-                post["title"] = postValidate["title"]
-            try:
-                if(post["score"] == ""):
-                    post["score"] = 0
-                val = int(post["score"])
-            except ValueError:
-                print("That's not an int!")
-                return jsonify({
-                    "error": "Score must be a number."
-                }), 400
-            if post["score"] and (int(post["score"]) > 10 or int(post["score"])) < 0:
-                return jsonify({
-                    "message": "Invalid score. Score must be between 0 and 10."
-                }), 400
-            # TODO:
-            # This merge fills unspecified edit fields from the existing DB post.
-            # It also implicitly restores id/user_id, which edit_post() depends on.
-            # Consider making this explicit during refactor.
-            for key, value in post_dict(postValidate).items():
-                if not post.get(key):
+            error = checkRequestIntInputs(post)
+            if error:
+                return error
+            for key, value in post_dict_sql(postValidate).items():
+                if key not in post:
                     post[key] = value
             if not validateEnumFields(post):
                 return jsonify({
@@ -188,7 +228,6 @@ def get_post(post_id):
                 "post": postReturn
             }), 200
         except Exception as e:
-            print(e)
             return jsonify({
                 "error": "Internal Server Error"
             }), 500

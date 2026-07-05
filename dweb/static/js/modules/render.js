@@ -15,7 +15,7 @@ function createPostCard(post) {
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start">
                         <h2 class="h4 card-title" id="post-${post.id}-title">${htmlToText(post.title)}</h2>
-                        <h4><span class="badge text-bg-secondary" id="post-${post.id}-score">${post.score? String(post.score) + "/10" : ""}</span></h4>
+                        <h4><span class="badge text-bg-secondary" id="post-${post.id}-score">${post.score === 0 || post.score? String(post.score) + "/10" : ""}</span></h4>
                     </div>
                     <div class="d-flex justify-content-start gap-2 align-items-start mb-3">
                         <span class="badge text-bg-secondary text-capitalize fw-light" id="post-${post.id}-watching_status">${post['watching_status']}</span>

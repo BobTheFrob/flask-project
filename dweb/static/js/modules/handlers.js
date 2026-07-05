@@ -123,7 +123,7 @@ function deletePostHandler(form) {
 
 
 // EDIT POST HANDLER
-// Handles the submission of the edit form, sends a PUT request to the server with the updated post data, and updates the post in the UI without refreshing the page
+// Handles the submission of the edit form, sends a PATCH request to the server with the updated post data, and updates the post in the UI without refreshing the page
 //
 function editPostHandler(form) {
     form.addEventListener("submit", async (e) => {
@@ -143,7 +143,7 @@ function editPostHandler(form) {
 
         try {
             const response = await fetch(`/api/posts/${postId}`, {
-                method: "PUT",
+                method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"
                 },
