@@ -140,7 +140,7 @@ function editPostHandler(form) {
         const mal_id = e.target.dataset.malId
         const image_url = e.target.dataset.imgUrl
         const message = document.getElementById(`editmessage-${postId}`)
-
+        
         try {
             const response = await fetch(`/api/posts/${postId}`, {
                 method: "PATCH",

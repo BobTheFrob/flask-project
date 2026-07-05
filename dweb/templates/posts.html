@@ -11,16 +11,17 @@
     {% if warning %}
         <p class="text-warning">{{ warning }}</p>
     {% endif %}
+    <p id="posts-api-message" class="dpostsapimessage mb-4"></p>
     <div class="row row-cols-1 row-cols-lg-4">
         <div class="col-lg-6">
             <div class="card bg-black text-light border-secondary mb-4">
                 <div class="card-body mt-3">
                     <h2 class="h4 card-title">Track an anime</h2>
-                    <p class="card-text">Share your thoughts and opinions by tracking an anime! Just give it a title, a score out of 10, and a description if you want.</p>
+                    <p class="card-text">Share your thoughts and opinions by tracking an anime! Just give it a title, and any other field inside if you want.</p>
                     <form method="post" id="post-form" data-mal-id="" data-img-url="" data-anime-type="">
                         <div class="row"> 
                             <div class="mb-3 col-lg-9">
-                                <label class="form-label" for="title">Title</label>
+                                <label class="form-label" for="title">Title<i class="text-danger">*</i></label>
                                 <div class="position-relative">
                                 <input class="form-control" name="title" id="title" required>
                                 <div id="suggestions" class="list-group position-absolute w-100 z-3 d-none">
@@ -44,7 +45,9 @@
 
                         <div class="mb-3">
                             <label class="form-label" for="description">Description</label>
-                            <textarea class="form-control" name="description" id="description" rows="4"></textarea>
+                            <textarea class="form-control mb-3" name="description" id="description" rows="4"></textarea>
+                            <label class="form-label" for="watch_link">Watch Link</label>
+                            <input class="form-control" name="watch_link" id="watch_link">
                             <div class="mt-3 row">
                                 <div class="mb-3 col">
                                     <label class="form-label" for="watching_status">Status</label>

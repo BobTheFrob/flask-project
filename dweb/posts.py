@@ -75,8 +75,8 @@ def getRequestPost (data):
         "mal_id": None,
         "body": (data.get("description") or "").strip(),
         "score": None,
-        "watching_status": (data.get('watching_status')),
-        "anime_type": data.get('anime_type'),
+        "watching_status": (data.get('watching_status')) or "watching",
+        "anime_type": data.get('anime_type') or "tv",
         "image_url": data.get('image_url') or "",
         "watch_link": data.get('watch_link') or ""
     }
@@ -86,7 +86,7 @@ def getRequestPost (data):
         post["mal_id"] = data.get('mal_id')
     return post
 
-# Helper for returning 204, returns true if nothing changed: semantically makes sense not PostChanged
+# Helper for returning 204, returns true if nothing changed: semantically makes sense i.e. not PostChanged
 def postChanged(postPut, postGet):
     return not (str(postGet["body"]) == str(postPut["body"]) 
             and (postGet["score"] == postPut["score"] and postPut["score"] is not None)
@@ -145,14 +145,14 @@ def getPatchRequestPost(data, post_id):
         elif key in ("score", "mal_id"):
             post[key] = None if value in ("", None) else value
 
-        # elif key in ("image_url", "watch_link"):
-        #     post[key] = value or ""
+        elif key in ("image_url", "watch_link"):
+            post[key] = value or ""
 
         else:
             post[key] = value
     return post
 
-# GET ALL POSTS API
+# ALL POSTS API
 # Posts api route. Return the posts in json. If the request method is POST, add a post to the database and redirect to the posts page.
 #
 @posts_apibp.route('/posts',  methods = ['GET', 'POST'])

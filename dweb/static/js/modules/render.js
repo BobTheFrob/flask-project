@@ -41,7 +41,7 @@ function createPostCard(post) {
                             </button>
                         </form>
                     </div>
-                    <form class="dhiddenarea mt-3 edit-form" data-mal-id="" data-img-url="" data-anime-type="">
+                    <form class="dhiddenarea mt-3 edit-form" data-mal-id="${htmlToText(post.mal_id)}" data-img-url="${htmlToText(post.image_url)}" data-anime-type="${post.anime_type}">
                             <div class="card-text p-0 mt-4">
                                 <div class="mb-3">
                                     <p class="text-secondary w-auto mb-2">Title: </p>
@@ -74,25 +74,25 @@ function createPostCard(post) {
                                 <div class="mb-3 col">
                                     <label class="form-label" for="watching_status">Status</label>
                                     <select class="form-select" name="editwatching_status-${post['id']}" id="editwatching_status-${post['id']}">
-                                        <option value="watching">Watching</option>
-                                        <option value="completed">Completed</option>
-                                        <option value="planned">Planned</option>
-                                        <option value="dropped">Dropped</option>
+                                        <option value="watching" ${post.watching_status === "watching"? "selected" : ""}>Watching</option>
+                                        <option value="completed" ${post.watching_status === "completed"? "selected" : ""}>Completed</option>
+                                        <option value="planned" ${post.watching_status === "planned"? "selected" : ""}>Planned</option>
+                                        <option value="dropped" ${post.watching_status === "dropped"? "selected" : ""}>Dropped</option>
                                     </select>
                                 </div>
                                 <div class="mb-3 col">
                                     <label class="form-label" for="anime_type">Type</label>
                                     <select class="form-select anime-type" name="editanime_type-${post['id']}" id="editanime_type-${post['id']}">
-                                        <option value="tv">TV</option>
-                                        <option value="movie">Movie</option>
-                                        <option value="special">Special</option>
-                                        <option value="ova">OVA</option>
-                                        <option value="ona">ONA</option>
-                                        <option value="music">Music</option>
-                                        <option value="cm">CM</option>
-                                        <option value="pv">PV</option>
-                                        <option value="tv special">TV Special</option>
-                                        <option value="misc">Miscellaneous</option>
+                                        <option value="tv" ${post.anime_type === "tv"? "selected" : ""}>TV</option>
+                                        <option value="movie" ${post.anime_type === "movie"? "selected" : ""}>Movie</option>
+                                        <option value="special" ${post.anime_type === "special"? "selected" : ""}>Special</option>
+                                        <option value="ova" ${post.anime_type === "ova"? "selected" : ""}>OVA</option>
+                                        <option value="ona" ${post.anime_type === "ona"? "selected" : ""}>ONA</option>
+                                        <option value="music" ${post.anime_type === "music"? "selected" : ""}>Music</option>
+                                        <option value="cm" ${post.anime_type === "cm"? "selected" : ""}>CM</option>
+                                        <option value="pv" ${post.anime_type === "pv"? "selected" : ""}>PV</option>
+                                        <option value="tv special" ${post.anime_type === "tv special"? "selected" : ""}>TV Special</option>
+                                        <option value="misc" ${post.anime_type === "misc"? "selected" : ""}>Miscellaneous</option>
                                     </select>
                                 </div>
                             </div>

@@ -4,7 +4,9 @@ import {renderVideoThumbnails} from "./modules/render.js"
 
 logoutHandler()
 
-function createACVideoUpdates(data) {
+const QUERY = "ac black flag resynced"
+
+function createVideoUpdates(data) {
     if (data) {
         document.getElementById("update-videos-area").innerHTML = ""
         for (let i in data.items){
@@ -13,15 +15,15 @@ function createACVideoUpdates(data) {
     }
 }
 
-async function updateACVideos(max) {
-    const response = await fetch(`/api/videoupdates?max=${max}&key=youtube:ac black flag resynced`)
+async function createUpdatedVideos(max, query) {
+    const response = await fetch(`/api/videoupdates?max=${max}&key=youtube:${query}`)
     if (response.status == 200) {
         const json = await response.json()
-        createACVideoUpdates(json)
+        createVideoUpdates(json)
     }
     else {
-        createACVideoUpdates(null)
+        createVideoUpdates(null)
     }
 }
 
-updateACVideos(1800)
+createUpdatedVideos(1800, QUERY)

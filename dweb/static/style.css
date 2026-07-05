@@ -50,8 +50,12 @@ h2 {
     line-height: 1.1;
 }
 
-h3, h4, h5, h6 {
+h3, h4, h5, h6, label {
     font-family: "Bebas Neue", "Georgia";
+}
+
+textarea, input {
+    font-family: "Oswald", "Georgia";
 }
 
 p, span {

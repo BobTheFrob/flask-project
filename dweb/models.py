@@ -170,6 +170,11 @@ def login_user(userData):
         cur.execute('SELECT * FROM users WHERE username = %s', (userData['username'], ))
         return cur.fetchone()
 
+####___________________________________________####
+####                                           ####
+####            EXTERNAL AND CACHE             ####
+####___________________________________________####
+
 def get_youtube_videos(query):
     two_days_ago = (datetime.now(timezone.utc) 
     - timedelta(days=2)).isoformat().replace("+00:00", "Z")
@@ -184,7 +189,6 @@ def get_youtube_videos(query):
             "key": os.getenv("YOUTUBE_API_KEY")
         }
     )
-
     return response.json()
 
 def clearOldCache(api_name, seconds):
@@ -246,22 +250,27 @@ def make_cache_key(api_name, path, params=None):
 def get_jikan_response(path: str, params: dict | None = None, to_cache = True):
     JIKAN_BASE_URL = "https://api.jikan.moe/v4"
     if params:
-        params = dict((k.lower(), v.lower()) for k,v in params.items()) or {}
+        params = {
+            k.lower(): v.lower() if isinstance(v, str) else v
+            for k, v in params.items()
+        }
     
     cache_key = make_cache_key("jikan", path, params)
     cached = get_cache(cache_key, max_age_seconds=86400)
     if cached is not None:
         return cached
+    try:
+        response = requests.get(
+            f"{JIKAN_BASE_URL}{path}",
+            params=params,
+            timeout=10
+        )
+    except requests.exceptions.RequestException as e: 
+        print(e)
+        return None
+    if (response.ok):
+        data = response.json()
 
-    response = requests.get(
-        f"{JIKAN_BASE_URL}{path}",
-        params=params,
-        timeout=10
-    )
-    response.raise_for_status()
-
-    data = response.json()
-
-    if to_cache:
-        set_cache(cache_key, data)
-    return data
+        if to_cache:
+            set_cache(cache_key, data)
+    return response

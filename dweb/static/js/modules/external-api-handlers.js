@@ -2,15 +2,29 @@ export { jikanPostSearchHandler }
 import { createPostCard, createTitleSearchThumbnails } from "./render.js"
 
 const MAX_SEARCH_LIMIT = 4
-const JIKAN_DEBOUNCE_TIMEOUT = 500
+const JIKAN_DEBOUNCE_TIMEOUT = 1000
 
 async function updateTitleSearchSuggestions (q, suggestions) {
+    let message = document.querySelector(".dpostsapimessage")
     const response = await fetch(`/api/jikantitlesearch?q=${q}&limit=${MAX_SEARCH_LIMIT}`)
     if (response.ok) {
         const data = await response.json()
         const entries = data["data"]
         createTitleSearchThumbnails(entries, suggestions)
+        message.classList.remove("text-danger", "text-warning")
         return data
+    } else if (response.status == 504) {
+        message.textContent = "The jikan api is down rn. :("
+        message.classList.add("text-warning")
+        message.classList.remove("text-success", "text-danger")
+    } else if (response.status == 429) {
+        message.textContent = "Too many requests! >:("
+        message.classList.add("text-danger")
+        message.classList.remove("text-success", "text-warning")
+    } else {
+        message.textContent = "Something went wrong. :("
+        message.classList.add("text-warning")
+        message.classList.remove("text-success", "text-warning")
     }
 };
 
