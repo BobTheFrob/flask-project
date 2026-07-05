@@ -29,7 +29,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse d-flex justify-content-between" id="mainNav">
+            <div class="collapse navbar-collapse" id="mainNav">
                 <ul class="navbar-nav me-auto mb-2 mb-sm-0">
                     <li class="nav-item me-2">
                         <a class="nav-link" href="{{ url_for('home.index') }}">Home</a>
@@ -57,7 +57,7 @@
             {% block header %}{% endblock %}
             <hr>
         </header>
-        <div class="px-5">
+        <div class="px-lg-5 px-md-3 px-sm-6">
         {% block content %}{% endblock %}
         </div>
     </main>

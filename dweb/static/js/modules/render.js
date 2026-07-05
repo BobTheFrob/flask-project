@@ -10,7 +10,7 @@ function htmlToText(str) {
 function createPostCard(post) {
     const wrapper = document.createElement("div")
     wrapper.innerHTML = `
-        <div class="col-lg-4 col-md-6 post-card" id="post-${post.id}">
+        <div class="col-xl-3 col-lg-4 col-md-6 col-6 post-card" id="post-${post.id}">
             <div class="card bg-black text-light border-secondary">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start">
@@ -28,8 +28,8 @@ function createPostCard(post) {
                         ` : ""}
                     <p class="card-text dyprintnewline" id="post-${post.id}-description">${htmlToText(post.description)}</p>
                     <div class="d-flex align-items-center">
-                        <p class="text-secondary small mb-3 post-meta">Post #${post.id} — </p>
-                        <span class="text-secondary small mb-3 post-time">${new Date(post.created + " UTC").toLocaleString()}</span>
+                        <p class="text-secondary small metadata-text mb-3 post-meta">Post #${post.id} — </p>
+                        <span class="text-secondary small metadata-text mb-3 post-time">${new Date(post.created + " UTC").toLocaleString()}</span>
                     </div>
                     <div class="card-text d-flex justify-content-between gap-2">
                         <button class="btn btn-outline-light btn-sm flex-grow-1 edit-btn" id="editbtn-${post.id}">

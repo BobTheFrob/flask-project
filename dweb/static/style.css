@@ -92,6 +92,11 @@ a:hover {
 
 .dyprintnewline {
     white-space: pre-wrap;
+    font-size: 0.95rem;
+}
+
+.metadata-text {
+    font-size: 0.7rem;
 }
 
 .animethumbnail {
@@ -119,4 +124,15 @@ a:hover {
 .dliitemhover h5 {
     color: var(--bs-list-group-action-hover-color);
     background-color: var(--bs-list-group-action-hover-bg);
+}
+
+.navbar-collapse.collapsing,
+.navbar-collapse.show {
+    padding-top: 2rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.navbar-collapse {
+    padding: 0;
 }
