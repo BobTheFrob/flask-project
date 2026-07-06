@@ -2,7 +2,7 @@ from . import db, cache
 import json, time, os
 import requests
 from datetime import datetime, timedelta, timezone
-
+import os, dotenv
 ####_____________________________####
 ####                             ####
 ####            POSTS            ####
@@ -264,6 +264,38 @@ def get_jikan_response(path: str, params: dict | None = None, to_cache = True):
             f"{JIKAN_BASE_URL}{path}",
             params=params,
             timeout=10
+        )
+    except requests.exceptions.RequestException as e: 
+        print(e)
+        return None
+    if (response.ok):
+        data = response.json()
+
+        if to_cache:
+            set_cache(cache_key, data)
+    return response
+
+@cache.memoize(86400)
+def get_mal_response(path: str, params: dict | None = None, to_cache = True):
+    MAL_API_BASE_URL = "https://api.myanimelist.net/v2/"
+    if params:
+        params = {
+            k.lower(): v.lower() if isinstance(v, str) else v
+            for k, v in params.items()
+        }
+    
+    cache_key = make_cache_key("mal_api", path, params)
+    cached = get_cache(cache_key, max_age_seconds=86400)
+    if cached is not None:
+        return cached
+    try:
+        response = requests.get(
+            f"{MAL_API_BASE_URL}{path}",
+            params=params,
+            timeout=10,
+            headers={
+                "X-MAL-CLIENT-ID": os.getenv("MAL_CLIENT_ID")
+            }
         )
     except requests.exceptions.RequestException as e: 
         print(e)

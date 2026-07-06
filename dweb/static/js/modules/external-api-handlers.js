@@ -2,15 +2,57 @@ export { jikanPostSearchHandler }
 import { createPostCard, createTitleSearchThumbnails } from "./render.js"
 
 const MAX_SEARCH_LIMIT = 4
-const JIKAN_DEBOUNCE_TIMEOUT = 1000
+const API_SEARCH_DEBOUNCE_TIMEOUT = 500
+
+function getJikanSearchEntries (data) {
+    let entries = []
+    for (let i in data) {
+        let item = data[i]
+        let entry = {
+            "title": item.title,
+            "mal_id": item.mal_id,
+            "type": item.type,
+            "image_url": item.images.webp.large_image_url,
+            "episodes": item.episodes
+        }
+        entries.push(entry)
+    }
+    return entries
+}
+
+function getMalSearchEntries (data) {
+    let entries = []
+    for (let i in data) {
+        let item = data[i]
+        console.log(item)
+        let entry = {
+            "title": item.node.title,
+            "mal_id": item.node.id,
+            "type": item.node.media_type,
+            "image_url": item.node.main_picture.large,
+            "episodes": item.node.num_episodes
+        }
+        if (entry["type"] == "unknown") entry["type"] = "misc" 
+        entries.push(entry)
+    }
+    return entries
+}
+
 
 async function updateTitleSearchSuggestions (q, suggestions) {
     let message = document.querySelector(".dpostsapimessage")
-    const response = await fetch(`/api/jikantitlesearch?q=${q}&limit=${MAX_SEARCH_LIMIT}`)
+    //
+    // SWITCH SEARCH METHOD HERE WHEN NEEDED!
+    //
+    const response = await fetch(`/api/maltitlesearch?q=${q}&limit=${MAX_SEARCH_LIMIT}&fields=media_type,num_episodes`)
     if (response.ok) {
         const data = await response.json()
+        // get actual data, not pagination and stuff
         const entries = data["data"]
-        createTitleSearchThumbnails(entries, suggestions)
+        //
+        // SWITCH SEARCH METHOD HERE WHEN NEEDED!
+        //
+        createTitleSearchThumbnails(getMalSearchEntries(entries), suggestions)
         message.classList.remove("text-danger", "text-warning")
         return data
     } else if (response.status == 504) {
@@ -103,8 +145,8 @@ function jikanPostSearchHandler (suggestionsElement, titleElement, formElement) 
     titleElement.addEventListener("input", async () => {
         index = -1
         clearTimeout(timerId)
-        if(titleElement.value) {
-            timerId = setTimeout(async ()=>{await updateTitleSearchSuggestions(titleElement.value, suggestionsElement)}, JIKAN_DEBOUNCE_TIMEOUT)
+        if(titleElement.value && titleElement.value.length >= 3) {
+            timerId = setTimeout(async ()=>{await updateTitleSearchSuggestions(titleElement.value, suggestionsElement)}, API_SEARCH_DEBOUNCE_TIMEOUT)
         } else {
             createTitleSearchThumbnails(null, null)
         }
