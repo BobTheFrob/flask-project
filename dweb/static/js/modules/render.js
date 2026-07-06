@@ -10,7 +10,7 @@ function htmlToText(str) {
 function createPostCard(post) {
     const wrapper = document.createElement("div")
     wrapper.innerHTML = `
-        <div class="col-xl-3 col-lg-4 col-md-6 col-6 post-card" id="post-${post.id}">
+        <div class="col-xl-3 col-lg-4 col-md-6 post-card" id="post-${post.id}">
             <div class="card bg-black text-light border-secondary">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start">
@@ -26,6 +26,10 @@ function createPostCard(post) {
                             <img class="img-fluid dpostimage rounded" id="postimg-${post.id}" src="${post['image_url']}">                    
                         </div>
                         ` : ""}
+                    ${post.watch_link?  `
+                        <a class="nav-link dwatchbtn text-center" href="${post.watch_link}" id="post-${post.id}-watch_link" target="_blank">Watch</a>
+                        ` : ""
+                    }
                     <p class="card-text dyprintnewline" id="post-${post.id}-description">${htmlToText(post.description)}</p>
                     <div class="d-flex align-items-center">
                         <p class="text-secondary small metadata-text mb-3 post-meta">Post #${post.id} — </p>
@@ -70,6 +74,8 @@ function createPostCard(post) {
                             </div>
                             <p class="text-secondary">Description: </p>
                             <textarea class="form-control mb-2 edit-desc" id="editdesc-${post.id}" name="editdesc-${post.id}" rows="4" value="${htmlToText(post.description)}"></textarea>
+                            <p class="text-secondary w-auto mb-2">Watch Link: </p>
+                            <input autocomplete="off" class="form-control edit-watch-link" id="editwatchlink-${post.id}" name="editwatchlink-${post.id}" value="${htmlToText(post.watch_link)}"></input>
                             <div class="mt-3 row">
                                 <div class="mb-3 col">
                                     <label class="form-label" for="watching_status">Status</label>

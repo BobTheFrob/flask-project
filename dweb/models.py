@@ -31,7 +31,7 @@ def get_all_posts(user_id):
         JOIN users
             ON posts.user_id = users.id
         WHERE posts.user_id = %s
-        ORDER BY posts.created
+        ORDER BY posts.created DESC
         """, (user_id, ))
         return cur.fetchall()
 

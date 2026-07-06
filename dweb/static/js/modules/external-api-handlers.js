@@ -24,7 +24,6 @@ function getMalSearchEntries (data) {
     let entries = []
     for (let i in data) {
         let item = data[i]
-        console.log(item)
         let entry = {
             "title": item.node.title,
             "mal_id": item.node.id,

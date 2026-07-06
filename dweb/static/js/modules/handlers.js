@@ -50,6 +50,7 @@ function postHandler() {
         const score = formData.get("score")
         const status = formData.get("watching_status")
         const type = formData.get("anime_type")
+        const watch_link = formData.get("watch_link")
         const mal_id = e.target.dataset.malId
         const image_url = e.target.dataset.imgUrl
         try {
@@ -60,14 +61,15 @@ function postHandler() {
                 },
                 body: JSON.stringify({
                 title: title, description: body, score: score, 
-                watching_status: status, anime_type: type, image_url: image_url, mal_id: mal_id
+                watching_status: status, anime_type: type, image_url: image_url, mal_id: mal_id,
+                watch_link: watch_link
                 })
             })
             if (!response.ok) {
                 throw new Error("Request failed")
             }
             const data = await response.json()
-            document.getElementById("posts-container").appendChild(createPostCard(data.post))
+            document.getElementById("posts-container").prepend(createPostCard(data.post))
             const suggestionsBox = document.getElementById(`suggestions-${data.post.id}`)
             const editTitle = document.getElementById(`edittitle-${data.post.id}`)
             const formElement = document.getElementById(`editpost-${data.post.id}`)
@@ -137,6 +139,7 @@ function editPostHandler(form) {
         const score = formData.get(`editscore-${postId}`)
         const anime_type = formData.get(`editanime_type-${postId}`)
         const watching_status = formData.get(`editwatching_status-${postId}`)
+        const watch_link = formData.get(`editwatchlink-${postId}`)
         const mal_id = e.target.dataset.malId
         const image_url = e.target.dataset.imgUrl
         const message = document.getElementById(`editmessage-${postId}`)
@@ -149,7 +152,7 @@ function editPostHandler(form) {
                 },
                 body: JSON.stringify({title: title, description: body, score: score,
                 anime_type: anime_type, watching_status: watching_status,
-                mal_id: mal_id, image_url: image_url})
+                mal_id: mal_id, image_url: image_url, watch_link: watch_link})
             })
             if (!response.ok) {
                 throw new Error(response.statusText)
@@ -164,6 +167,7 @@ function editPostHandler(form) {
                 document.getElementById(`post-${postId}-watching_status`).textContent = data.post["watching_status"]
                 document.getElementById(`post-${postId}-anime_type`).textContent = data.post["anime_type"]
                 document.getElementById(`postimg-${postId}`)? document.getElementById(`postimg-${postId}`).src = data.post["image_url"] : ""
+                document.getElementById(`post-${postId}-watch_link`)? document.getElementById(`post-${postId}-watch_link`).href = data.post["watch_link"] : ""
                 showEditTextArea(postId)
             } else if (response.status === 204) {
                 message.classList.remove("dhiddenarea")
