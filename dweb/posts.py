@@ -4,8 +4,19 @@ from flask import (
 )
 from . import models, cache
 from .auth import login_required_api, login_required_page
+from urllib.parse import urlparse
 
 bp = Blueprint('posts', __name__)
+
+ALLOWED_DOMAINS = {
+    "crunchyroll.com",
+    "www.crunchyroll.com",
+    "netflix.com",
+    "www.netflix.com",
+    "hidive.com",
+    "www.hidive.com",
+    "www.miruro.to"
+}
 
 # POSTS
 # Posts page route. Render the posts page template. If the request method is POST, add a post to the database and redirect to the posts page.
@@ -94,6 +105,7 @@ def postChanged(postPut, postGet):
             and str(postGet["anime_type"]) == str(postPut["anime_type"])
             and str(postGet["title"]) == str(postPut["title"])
             and str(postGet["image_url"]) == str(postPut["image_url"])
+            and str(postGet["watch_link"]) == str(postPut["watch_link"])
             )
 
 # Check int inputs from regulated post
@@ -105,7 +117,7 @@ def checkRequestIntInputs(post):
             return jsonify({"error": "Score must be a number."}), 400
         if not 0 <= post["score"] <= 10:
             return jsonify({
-                "message": "Invalid score. Score must be between 0 and 10."
+                "error": "Invalid score. Score must be between 0 and 10."
             }), 400
         
     if post.get("mal_id") is not None:
@@ -115,8 +127,14 @@ def checkRequestIntInputs(post):
             return jsonify({"error": "mal_id must be a number."}), 400
         if post["mal_id"] <= 0:
             return jsonify({
-                "message": "Invalid mal_id. mal_id must be greater than 0."
+                "error": "Invalid mal_id. mal_id must be greater than 0."
             }), 400
+        
+    if urlparse(post.get("watch_link")).hostname not in ALLOWED_DOMAINS:
+        return jsonify({
+                "error": f"Watch link must be in one of the following: {', '.join(str(x) for x in ALLOWED_DOMAINS)}" 
+            }), 400
+        
 
 # Only populate post with request parameters
 def getPatchRequestPost(data, post_id):

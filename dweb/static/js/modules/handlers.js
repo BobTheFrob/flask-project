@@ -53,6 +53,7 @@ function postHandler() {
         const watch_link = formData.get("watch_link")
         const mal_id = e.target.dataset.malId
         const image_url = e.target.dataset.imgUrl
+        const postMessage = document.getElementById("postmessage")
         try {
             const response = await fetch("/api/posts", {
                 method: "POST",
@@ -65,10 +66,17 @@ function postHandler() {
                 watch_link: watch_link
                 })
             })
+            const data = await response.json()
             if (!response.ok) {
+                if (response.status === 400) {
+                    postMessage.textContent = data.error
+                    postMessage.classList = "card-text text-danger"
+                    return
+                }
                 throw new Error("Request failed")
             }
-            const data = await response.json()
+            postMessage.textContent = ""
+            postMessage.classList = "dhidddenarea"
             document.getElementById("posts-container").prepend(createPostCard(data.post))
             const suggestionsBox = document.getElementById(`suggestions-${data.post.id}`)
             const editTitle = document.getElementById(`edittitle-${data.post.id}`)
