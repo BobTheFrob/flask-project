@@ -163,6 +163,12 @@ function editPostHandler(form) {
                 mal_id: mal_id, image_url: image_url, watch_link: watch_link})
             })
             if (!response.ok) {
+                if (response.status === 400) {
+                    const data = await response.json()
+                    message.textContent = data.error
+                    message.classList = "card-text small text-danger"
+                    return
+                }
                 throw new Error(response.statusText)
             }
             if (response.status === 200) {

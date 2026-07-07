@@ -130,7 +130,7 @@ def checkRequestIntInputs(post):
                 "error": "Invalid mal_id. mal_id must be greater than 0."
             }), 400
         
-    if urlparse(post.get("watch_link")).hostname not in ALLOWED_DOMAINS:
+    if urlparse(post.get("watch_link")).hostname not in ALLOWED_DOMAINS and post.get("watch_link"):
         return jsonify({
                 "error": f"Watch link must be in one of the following: {', '.join(str(x) for x in ALLOWED_DOMAINS)}" 
             }), 400
