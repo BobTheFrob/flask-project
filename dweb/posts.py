@@ -5,6 +5,7 @@ from flask import (
 from . import models, cache
 from .auth import login_required_api, login_required_page
 from urllib.parse import urlparse
+import math
 
 bp = Blueprint('posts', __name__)
 
@@ -226,11 +227,12 @@ def api_posts_paginate():
     total = dict(offsetPosts["total"])["count"]
     return jsonify({
         "paginate": {
-            "previousPage": offset > 0,
-            "nextPage": offset + limit < total,
+            "hasPreviousPage": offset > 0,
+            "hasNextPage": offset + limit < total,
             "total": total,
             "limit": limit,
-            "offset": offset
+            "total_pages": math.ceil(total / limit),
+            "current_page": (offset // limit) + 1
         },
         "posts": [post_dict(post) for post in offsetPosts["posts"]]
     }) 

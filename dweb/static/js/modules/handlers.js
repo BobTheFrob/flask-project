@@ -42,8 +42,8 @@ async function getAllPostsHandler() {
 // GET ALL POSTS HANDLER
 // Gets and renders all posts in db
 //
-async function getAllPostsPaginateHandler() {
-    const response = await fetch("/api/posts/paginatetest?limit=8&offset=0", {
+async function getAllPostsPaginateHandler(limit, offset) {
+    const response = await fetch(`/api/posts/paginatetest?limit=${limit}&offset=${offset}`, {
         method: "GET"
     })
     const data = await response.json()
@@ -56,7 +56,12 @@ async function getAllPostsPaginateHandler() {
         const formElement = document.getElementById(`editpost-${posts[i].id}`)
         jikanPostSearchHandler(suggestionsBox, editTitle, formElement)
     }
+    generatePaginateNav(limit, offset, data["paginate"])
     emptyPostsHandler()
+}
+
+function generatePaginateNav(limit, offset, paginateData) {
+    console.log(...arguments)
 }
 
 // POST HANDLER

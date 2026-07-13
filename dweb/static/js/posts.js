@@ -10,8 +10,8 @@ import { jikanPostSearchHandler } from "./modules/external-api-handlers.js"
 
 // STARTUP
 // Get and render all posts
-// getAllPostsHandler()
-getAllPostsPaginateHandler()
+getAllPostsHandler()
+// getAllPostsPaginateHandler(8, 0)
 // Add event listeners to existing edit buttons to toggle the visibility of the edit textarea when clicked
 document.querySelectorAll(".edit-btn").forEach(button => {
     button.addEventListener("click", () => {
