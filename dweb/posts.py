@@ -24,8 +24,8 @@ ALLOWED_DOMAINS = {
 @bp.route('/posts',  methods = ['GET'])
 @login_required_page
 def posts_page():
-    posts = models.get_all_posts(session.get("user_id"))
-    return render_template("posts.html", posts=posts)
+    # posts = models.get_all_posts(session.get("user_id")) 
+    return render_template("posts.html")
 
 ####___________________________####
 ####                           ####
@@ -201,6 +201,40 @@ def api_posts():
             "message": "Post created.",
             "post": postReturned
         }), 200
+
+@posts_apibp.route('/posts/paginatetest')
+@login_required_api
+def api_posts_paginate():
+    limit = request.args.get("limit")
+    offset = request.args.get("offset")
+
+    try:
+        limit = int(limit)
+    except (ValueError, TypeError):
+        return jsonify({"error": "Limit must be provided with an integer."}), 400
+    try:
+        offset = int(offset)
+    except (ValueError, TypeError):
+        return jsonify({"error": "Offset must be provided with an integer."}), 400
+    
+    if limit < 1 or limit > 50:
+        return jsonify({"error": "Limit must be between 1 and 50."}), 400
+    if offset < 0:
+        return jsonify({"error": "Offset cannot be negative."}), 400
+    
+    offsetPosts = models.get_posts_paginate(session.get("user_id"), limit, offset)
+    total = dict(offsetPosts["total"])["count"]
+    return jsonify({
+        "paginate": {
+            "previousPage": offset > 0,
+            "nextPage": offset + limit < total,
+            "total": total,
+            "limit": limit,
+            "offset": offset
+        },
+        "posts": [post_dict(post) for post in offsetPosts["posts"]]
+    }) 
+
 
 # POST BY ID API
 # Post api routed by id. Return the post in json. If the request method is PATCH, 

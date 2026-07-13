@@ -25,16 +25,52 @@ def get_all_posts(user_id):
             posts.watching_status,
             posts.anime_type,
             posts.image_url,
-            posts.watch_link,
-            users.username
+            posts.watch_link
         FROM posts
-        JOIN users
-            ON posts.user_id = users.id
         WHERE posts.user_id = %s
         ORDER BY posts.created DESC
         """, (user_id, ))
         return cur.fetchall()
 
+
+# GET POSTS PAGINATE
+# Return posts from the database. The returned list is ordered by the created date.
+# Starting paginate
+def get_posts_paginate(user_id, limit, offset):
+    with db.get_cursor() as cur:
+        cur.execute("""
+        SELECT
+            posts.id AS id,
+            posts.mal_id,
+            posts.user_id,
+            posts.created,
+            posts.title,
+            posts.body,
+            posts.score,
+            posts.watching_status,
+            posts.anime_type,
+            posts.image_url,
+            posts.watch_link
+        FROM posts
+        WHERE posts.user_id = %s
+        ORDER BY posts.created DESC
+        LIMIT %s OFFSET %s
+        """, (user_id, limit, offset))
+
+        posts = cur.fetchall()
+
+        cur.execute("""
+        SELECT COUNT(*)
+        FROM posts 
+        WHERE posts.user_id = %s
+        """, (user_id, ))
+
+        count = cur.fetchone()
+
+        return {
+            "total": count,
+            "posts": posts
+        }
 
 # GET POST BY ID
 # Return a post from the database by id. If the id does not exist, return None.
@@ -185,7 +221,7 @@ def get_youtube_videos(query):
             "q": query,
             "maxResults": 6,
             "type": "video",
-            "publishedAfter": two_days_ago,
+            # "publishedAfter": two_days_ago,
             "key": os.getenv("YOUTUBE_API_KEY")
         }
     )
@@ -225,6 +261,7 @@ def set_cache(key, data):
     # TODO Delete this and make it a background worker process thing. Currently deletes all api_caches after a day when another cache is set.
     api_name = key.split(':')[0]
     clearOldCache(api_name, 86400)
+    clearOldCache("jikan", 86400)
 
     with db.get_cursor() as cur:
         cur.execute("""

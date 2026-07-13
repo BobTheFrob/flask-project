@@ -4,7 +4,7 @@ import {renderVideoThumbnails} from "./modules/render.js"
 
 logoutHandler()
 
-const QUERY = "ac black flag resynced"
+const QUERY = "jojos bizarre adventure sbr"
 
 function createVideoUpdates(data) {
     if (data) {

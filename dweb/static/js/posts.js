@@ -1,6 +1,7 @@
 import {
     getAllPostsHandler, postHandler, deletePostHandler, editPostHandler,
-    showEditTextArea
+    showEditTextArea,
+    getAllPostsPaginateHandler
 } from "./modules/handlers.js"
 
 import { logoutHandler } from "./auth.js"
@@ -9,7 +10,8 @@ import { jikanPostSearchHandler } from "./modules/external-api-handlers.js"
 
 // STARTUP
 // Get and render all posts
-getAllPostsHandler()
+// getAllPostsHandler()
+getAllPostsPaginateHandler()
 // Add event listeners to existing edit buttons to toggle the visibility of the edit textarea when clicked
 document.querySelectorAll(".edit-btn").forEach(button => {
     button.addEventListener("click", () => {

@@ -1,7 +1,8 @@
 import { createPostCard, createTitleSearchThumbnails } from "./render.js"
 export {
     getAllPostsHandler, deletePostHandler, editPostHandler, postHandler,
-    showEditTextArea
+    showEditTextArea,
+    getAllPostsPaginateHandler
 }
 import { jikanPostSearchHandler } from "./external-api-handlers.js";
 
@@ -33,6 +34,26 @@ async function getAllPostsHandler() {
         const suggestionsBox = document.getElementById(`suggestions-${data[i].id}`)
         const editTitle = document.getElementById(`edittitle-${data[i].id}`)
         const formElement = document.getElementById(`editpost-${data[i].id}`)
+        jikanPostSearchHandler(suggestionsBox, editTitle, formElement)
+    }
+    emptyPostsHandler()
+}
+
+// GET ALL POSTS HANDLER
+// Gets and renders all posts in db
+//
+async function getAllPostsPaginateHandler() {
+    const response = await fetch("/api/posts/paginatetest?limit=8&offset=0", {
+        method: "GET"
+    })
+    const data = await response.json()
+    console.log(data)
+    const posts = data["posts"]
+    for (let i in posts) {
+        document.getElementById("posts-container").appendChild(createPostCard(posts[i]))
+        const suggestionsBox = document.getElementById(`suggestions-${posts[i].id}`)
+        const editTitle = document.getElementById(`edittitle-${posts[i].id}`)
+        const formElement = document.getElementById(`editpost-${posts[i].id}`)
         jikanPostSearchHandler(suggestionsBox, editTitle, formElement)
     }
     emptyPostsHandler()
