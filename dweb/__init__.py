@@ -1,7 +1,8 @@
 import os
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_caching import Cache
 from dotenv import load_dotenv
+from pathlib import Path
 
 load_dotenv()
 
@@ -10,9 +11,14 @@ cache = Cache(config=
     'CACHE_DEFAULT_TIMEOUT': 3600
 })
 
-def create_app(test_config=None):
-    # create and configure the app
-    app = Flask(__name__, instance_relative_config=True)
+DIST_DIR = Path(__file__).resolve().parent.parent / "frontend" / "dist"
+
+def create_app(test_config = None):
+    app = Flask(
+        __name__,
+        static_folder=str(DIST_DIR / "assets"),
+        static_url_path="/assets",
+    )
     app.config.from_mapping(
         SECRET_KEY=os.getenv("APP_SECRET_KEY"),
     )
@@ -39,5 +45,15 @@ def create_app(test_config=None):
 
     from . import db
     db.init_app(app)
+
+    @app.route("/", defaults={"path": ""})
+    @app.route("/<path:path>")
+    def serve_react(path):
+        requested = DIST_DIR / path
+
+        if path and requested.is_file():
+            return send_from_directory(DIST_DIR, path)
+
+        return send_from_directory(DIST_DIR, "index.html")
 
     return app

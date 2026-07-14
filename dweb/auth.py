@@ -10,12 +10,12 @@ from . import models
 authbp = Blueprint('auth', __name__, url_prefix='/auth')
 auth_apibp = Blueprint('authapi', __name__, url_prefix='/api')
 
-# LOGIN ROUTE
-# Return login/register template
-#
-@authbp.route('/login',  methods = ['GET'])
-def login_page():
-    return render_template("login.html")
+# # LOGIN ROUTE
+# # Return login/register template
+# #
+# @authbp.route('/login',  methods = ['GET'])
+# def login_page():
+#     return render_template("login.html")
 
 # VALIDATE DATA
 # Return validated data or message from json
@@ -82,6 +82,12 @@ def login():
     return jsonify({
         "message": "Logged in."
     }), 200
+
+# # LOGIN API
+# # Login and get data from models
+# #
+# @auth_apibp.route('/login', methods = ['POST'])
+# def login():
 
 # LOGIN FOR EVERY REQUEST
 # Call flask decorator everytime a request is made

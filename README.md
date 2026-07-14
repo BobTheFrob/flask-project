@@ -47,6 +47,12 @@ A small web application built with Flask and SQLite to practice fullstack develo
    `
    flask --app dweb run --debug --port 8000
    `
+   On /flask-project
+   
+   `
+   nmp run dev
+   `
+   On /frontend
 
    To clear and initialize the db:
    `

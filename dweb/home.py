@@ -7,12 +7,12 @@ from .auth import login_required_api
 
 home_bp = Blueprint('home', __name__)
 
-# MAIN PAGE
-# Main page route. Render the main page template.
-#
-@home_bp.route('/')
-def index():
-    return render_template("home.html")
+# # MAIN PAGE
+# # Main page route. Render the main page template.
+# #
+# @home_bp.route('/')
+# def index():
+#     return render_template("home.html")
 
 # MAIN PAGE
 # Call the youtube api to get video updates

@@ -19,14 +19,14 @@ ALLOWED_DOMAINS = {
     "www.miruro.to"
 }
 
-# POSTS
-# Posts page route. Render the posts page template. If the request method is POST, add a post to the database and redirect to the posts page.
-#
-@bp.route('/posts',  methods = ['GET'])
-@login_required_page
-def posts_page():
-    # posts = models.get_all_posts(session.get("user_id")) 
-    return render_template("posts.html")
+# # POSTS
+# # Posts page route. Render the posts page template. If the request method is POST, add a post to the database and redirect to the posts page.
+# #
+# @bp.route('/posts',  methods = ['GET'])
+# @login_required_page
+# def posts_page():
+#     # posts = models.get_all_posts(session.get("user_id")) 
+#     return render_template("posts.html")
 
 ####___________________________####
 ####                           ####
