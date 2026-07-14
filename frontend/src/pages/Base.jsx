@@ -1,0 +1,96 @@
+function Base ({title}) {
+    return (
+        <>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>
+            {"{"}% block title %{"}"}
+            {"{"}% endblock %{"}"} - DMedias
+        </title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@200..700&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            rel="icon"
+            type="image/x-icon"
+            href="{{ url_for('static', filename='icon.png') }}"
+        />
+        <nav className="navbar navbar-expand-sm navbar-dark bg-black sticky-top border-bottom border-secondary">
+            <div className="container">
+            <a className="navbar-brand fs-2" href="{{ url_for('home.index') }}">
+                <img
+                width={30}
+                height={30}
+                className="img-responsive rounded float-start mx-2"
+                src="https://imgs.search.brave.com/VgBo9e5yrVE37YZFBxg_HjV01zPM0ljrEb8P05-GXJQ/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzY1L2U4/L2YzLzY1ZThmMzhl/ZmEyMTllNjY2MmNl/MWU2YTNkNzFiMzI3/LmpwZw"
+                />
+                DMedias
+            </a>
+            <button
+                className="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mainNav"
+            >
+                <span className="navbar-toggler-icon" />
+            </button>
+            <div className="collapse navbar-collapse" id="mainNav">
+                <ul className="navbar-nav me-auto mb-2 mb-sm-0">
+                <li className="nav-item me-2">
+                    <a className="nav-link" href="{{ url_for('home.index') }}">
+                    Home
+                    </a>
+                </li>
+                <li className="nav-item me-2">
+                    <a className="nav-link" href="{{ url_for('posts.posts_page') }}">
+                    Anime
+                    </a>
+                </li>
+                </ul>
+                <ul className="navbar-nav mb-2 mb-sm-0 d-flex flex-row-reverse pe-5">
+                {"{"}% if g.user %{"}"}
+                <button className="btn btn-danger btn-sm p-2 px-3" id="logout-btn">
+                    Logout
+                </button>
+                <li className="nav-item mx-4 rounded bg-secondary p-2 px-3">
+                    {"{"}
+                    {"{"} g.user["username"] {"}"}
+                    {"}"}
+                </li>
+                {"{"}% else %{"}"}
+                <a
+                    className="btn btn-outline-light btn-sm p-2 px-3"
+                    href="{{ url_for('auth.login_page') }}"
+                >
+                    Login
+                </a>
+                {"{"}% endif %{"}"}
+                </ul>
+            </div>
+            </div>
+        </nav>
+        <main className="container py-4">
+            <header className="mb-4">
+            {"{"}% block header %{"}"}
+            {"{"}% endblock %{"}"}
+            <hr />
+            </header>
+            <div className="px-lg-5 px-md-3 px-sm-6">
+            {"{"}% block content %{"}"}
+            {"{"}% endblock %{"}"}
+            </div>
+        </main>
+        {"{"}% block script %{"}"}
+        {"{"}% endblock %{"}"}
+        </>
+
+    )
+}

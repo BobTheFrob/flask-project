@@ -1,0 +1,142 @@
+* {
+    color: rgb(205, 205, 205);
+    box-sizing: border-box;
+}
+
+
+/* Bootstrap overrides: */
+:root {
+    --bs-primary-rgb: #ebebeb;
+    --bs-body-color: #ebebeb;
+    --bs-danger: #ff4444;
+    --bs-body-bg: #212529 !important;
+    --bs-border-color: #ebebeb;
+}
+.btn {
+    --bs-btn-font-family: "Oswald", Georgia;
+}
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+.form-control:focus{
+    border-color: #787878;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+body {
+    background-color: rgb(19, 19, 19);
+    padding-bottom: 100px;
+    margin: 0;
+    font-size: 1rem;
+}
+
+h1 {
+    color: white;
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    font-family: "Bebas Neue", "Georgia";
+    margin: 10px 0;
+    line-height: 1;
+}
+
+h2 {
+    color: white;
+    margin: 0 0 10px 0;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-family: "Bebas Neue", "Georgia";
+    line-height: 1.1;
+}
+
+h3, h4, h5, h6, label {
+    font-family: "Bebas Neue", "Georgia";
+}
+
+textarea, input {
+    font-family: "Oswald", "Georgia";
+}
+
+p, span {
+    font-family: "Oswald", "Georgia";
+    text-align: left;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+a {
+    font-family: "Oswald", "Georgia";
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.55rem 0.8rem;
+    border-radius: 10px;
+    transition: background 0.15s ease;
+}
+
+a:hover {
+    background: grey;
+}
+
+.maintitle {
+    text-align: center;
+    margin-bottom: 0 !important;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+}
+
+.dhiddenarea {
+    display: none;
+}
+
+.dyprintnewline {
+    white-space: pre-wrap;
+    font-size: 0.95rem;
+}
+
+.metadata-text {
+    font-size: 0.7rem;
+}
+
+.animethumbnail {
+    width: 60px;
+    height: 100px;
+    min-width: 60px;
+    object-fit: cover;
+}
+
+.dpostimage {
+    max-height: 200px !important;
+}
+
+
+.dliitem:hover,
+.dliitem:hover small,
+.dliitem:hover h5 {
+    /* --bs-list-group-action-hover-bg: #cdcdcd; */
+    color: var(--bs-list-group-action-hover-color);
+    /* background-color: var(--bs-list-group-action-hover-bg); */
+}
+
+.dliitemhover,
+.dliitemhover small,
+.dliitemhover h5 {
+    color: var(--bs-list-group-action-hover-color);
+    background-color: var(--bs-list-group-action-hover-bg);
+}
+
+.navbar-collapse.collapsing,
+.navbar-collapse.show {
+    padding-top: 2rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.navbar-collapse {
+    padding: 0;
+}
+
+.dwatchbtn {
+    padding: 0.5rem;
+}
