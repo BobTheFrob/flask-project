@@ -101,6 +101,22 @@ def load_logged_in_user():
     else:
         g.user = models.get_user_by_id({"id": user_id})
 
+@auth_apibp.route("/user")
+def get_user():
+    user_id = session.get('user_id')
+
+    if user_id is None:
+        return jsonify({
+            "message": "User not logged in."
+        })
+    else:
+        g.user = models.get_user_by_id({"id": user_id})
+        if g.user:
+            print(g.user)
+            return jsonify({
+                "message": f'Username: {g.user["username"]} logged in.'
+            })
+
 # LOGOUT API
 # Logout and clear session
 #

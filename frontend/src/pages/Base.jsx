@@ -1,11 +1,10 @@
-function Base ({title}) {
+export default function Base ({title, header, content}) {
     return (
         <>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>
-            {"{"}% block title %{"}"}
-            {"{"}% endblock %{"}"} - DMedias
+            {title} - DMedias
         </title>
         <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
@@ -79,17 +78,13 @@ function Base ({title}) {
         </nav>
         <main className="container py-4">
             <header className="mb-4">
-            {"{"}% block header %{"}"}
-            {"{"}% endblock %{"}"}
+            <h1 className="display-3 px-5">{header? header : title}</h1>
             <hr />
             </header>
             <div className="px-lg-5 px-md-3 px-sm-6">
-            {"{"}% block content %{"}"}
-            {"{"}% endblock %{"}"}
+            {content}
             </div>
         </main>
-        {"{"}% block script %{"}"}
-        {"{"}% endblock %{"}"}
         </>
 
     )

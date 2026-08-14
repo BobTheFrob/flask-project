@@ -195,7 +195,7 @@ def register_user(userData):
 def get_user_by_id(userData):
     con = db.get_db()
     with db.get_cursor() as cur:
-        cur.execute('SELECT * FROM users WHERE id = %s', (userData['id'], ))
+        cur.execute('SELECT id, username, bio, created FROM users WHERE id = %s', (userData['id'], ))
         return cur.fetchone()
 
 # LOGIN USER
