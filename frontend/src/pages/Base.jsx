@@ -1,6 +1,16 @@
 import { useAuth } from '../components/UserProvider';
 
-function BasicBSSpinner () {
+// LOGOUT HANDLER
+// Handles the logout button, sends a POST request to the server
+//
+async function logoutHandler() {
+    const response = await fetch("/api/logout", {
+        method: "POST",
+    })
+    window.location.href = '/login';
+}
+
+export function BasicBSSpinner () {
     return (
         <div className="spinner-border" role="status">
             <span className="visually-hidden">Loading...</span>
@@ -12,7 +22,7 @@ function LoggedInNavUser () {
     const {user} = useAuth()
     return (
         <>
-         <button className="btn btn-danger btn-sm p-2 px-3" id="logout-btn">
+         <button className="btn btn-danger btn-sm p-2 px-3" id="logout-btn" onClick={logoutHandler}>
             Logout
         </button>
         <li className="nav-item mx-4 rounded bg-secondary p-2 px-3">
@@ -50,7 +60,7 @@ export default function Base ({title, header, children}) {
 
             <nav className="navbar navbar-expand-sm navbar-dark bg-black sticky-top border-bottom border-secondary">
                 <div className="container">
-                <a className="navbar-brand fs-2" href="{{ url_for('home.index') }}">
+                <a className="navbar-brand fs-2" href="/">
                     <img
                     width={30}
                     height={30}
@@ -86,7 +96,7 @@ export default function Base ({title, header, children}) {
             </nav>
             <main className="container py-4">
                 <header className="mb-4">
-                <h1 className="display-3 px-5">{header? header : title}</h1>
+                <h1 className="display-3">{header? header : title}</h1>
                 <hr />
                 </header>
                 <div className="px-lg-5 px-md-3 px-sm-6">

@@ -12,10 +12,8 @@ export function UserProvider({children}) {
             const data = await response.json();
 
             if (response.ok) {
-                console.log("ok", data)
                 setUser(data);
             } else {
-                console.log("not ok not ok", data)
                 setUser(null);
             }
 
