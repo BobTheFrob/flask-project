@@ -1,6 +1,6 @@
-import { useAuth } from "../components/UserProvider";
+import { useAuth } from "./UserProvider";
 import { Navigate } from "react-router-dom"
-import { BasicBSSpinner } from "./Base"
+import { BasicBSSpinner } from "../pages/Base"
 
 export default function ProtectedPage({ children }) {
     const { user, userLoading } = useAuth()

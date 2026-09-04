@@ -2,6 +2,7 @@ import Base from './Base'
 import { BasicBSSpinner } from './Base'
 import { useEffect, useState } from 'react';
 import { useAuth } from '../components/UserProvider';
+import LoadingPageSection from '../components/LoadingPageSection';
 
 const QUERY = "jojos bizarre adventure sbr"
 const MAXSECONDS = 1800
@@ -98,16 +99,7 @@ export default function Home () {
             </div>
             <div>
                 <div className="row g-3" id="update-videos-area">
-                    {
-                    userLoading?
-                        <div className="w-100 h-100 d-flex flex-column justify-content-center align-items-center pt-5">
-                        <BasicBSSpinner styles={{width: "5rem", height: "5rem"}}></BasicBSSpinner> 
-                        <p className="pt-3">Videos are loading.</p>
-                        </div>
-                    : 
-                        user?
-                            videos : <p>Please log in to see video updates.</p>
-                    }
+                    <LoadingPageSection content={videos} loadingText={"Videos are loading"} contentText={"video updates"}></LoadingPageSection>
                 </div>
             </div>
         </Base>
