@@ -99,10 +99,14 @@ export default function Home () {
             <div>
                 <div className="row g-3" id="update-videos-area">
                     {
-                    user?
-                        userLoading?
-                        <BasicBSSpinner styles={{width: "13rem", height: "13rem"}}></BasicBSSpinner> : videos
-                    : <p>Please log in to see video updates.</p>
+                    userLoading?
+                        <div className="w-100 h-100 d-flex flex-column justify-content-center align-items-center pt-5">
+                        <BasicBSSpinner styles={{width: "5rem", height: "5rem"}}></BasicBSSpinner> 
+                        <p className="pt-3">Videos are loading.</p>
+                        </div>
+                    : 
+                        user?
+                            videos : <p>Please log in to see video updates.</p>
                     }
                 </div>
             </div>
