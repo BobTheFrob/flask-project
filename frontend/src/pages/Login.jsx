@@ -39,7 +39,7 @@ async function parseAuthResponse(response) {
     }
 }
 
-function RegisterSection ({ setMessage, setMessageType, setHiddenMessage }) {
+function RegisterSection ({ setMessage, setMessageType }) {
     const [registerDetails, setRegisterDetails] = useState({
         username: "",
         password: ""
@@ -132,7 +132,7 @@ function RegisterSection ({ setMessage, setMessageType, setHiddenMessage }) {
     )
 }
 
-function LoginSection ({ setMessage, setMessageType, setHiddenMessage }) {
+function LoginSection ({ setMessage, setMessageType }) {
     const [loginDetails, setLoginDetails] = useState({
         username: "",
         password: ""
@@ -238,8 +238,8 @@ export default function Login () {
                 </div>
             </div>
             <div className="row row-cols-1 row-cols-lg-4 pt-5">
-                <LoginSection setMessage={setMessage} setMessageType={setMessageType} setHiddenMessage={setHiddenMessage}></LoginSection>
-                <RegisterSection setMessage={setMessage} setMessageType={setMessageType} setHiddenMessage={setHiddenMessage}></RegisterSection>
+                <LoginSection setMessage={setMessage} setMessageType={setMessageType}></LoginSection>
+                <RegisterSection setMessage={setMessage} setMessageType={setMessageType}></RegisterSection>
             </div>
         </Base>
     )

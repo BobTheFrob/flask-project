@@ -10,9 +10,9 @@ async function logoutHandler() {
     window.location.href = '/login';
 }
 
-export function BasicBSSpinner () {
+export function BasicBSSpinner ({ styles }) {
     return (
-        <div className="spinner-border" role="status">
+        <div className="spinner-grow" role="status" style={styles}>
             <span className="visually-hidden">Loading...</span>
         </div>
     )
@@ -96,7 +96,7 @@ export default function Base ({title, header, children}) {
             </nav>
             <main className="container py-4">
                 <header className="mb-4">
-                <h1 className="display-3">{header? header : title}</h1>
+                <h1 className="display-3 px-5">{header? header : title}</h1>
                 <hr />
                 </header>
                 <div className="px-lg-5 px-md-3 px-sm-6">
