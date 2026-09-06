@@ -3,21 +3,10 @@ import { BasicBSSpinner } from './Base'
 import { useEffect, useState } from 'react';
 import { useAuth } from '../components/UserProvider';
 import LoadingPageSection from '../components/LoadingPageSection';
+import { decodeHtml, htmlToText } from '../utils/helpers';
 
 const QUERY = "jojos bizarre adventure sbr"
 const MAXSECONDS = 1800
-
-function htmlToText(str) {
-    const div = document.createElement("div")
-    div.textContent = str
-    return div.innerHTML
-}
-
-function decodeHtml(html) {
-    var txt = document.createElement("textarea");
-    txt.innerHTML = html;
-    return txt.value;
-}
 
 function VideoCard({ video }) {
     const [loading, setLoading] = useState(true)
