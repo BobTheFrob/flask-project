@@ -14,7 +14,17 @@ import LoadingPageSection from '../components/LoadingPageSection';
 //     </div>
 // </div>
 
-function PostCard ({post}) {
+function PostCard ({post, isActive, onShowEdit, fetchPosts}) {
+    // const [editPost, setEditPost] = useState({
+ 
+    // })
+
+    async function deleteHandler() {
+        await fetch(`/api/posts/${post.id}`, {
+            method: "DELETE"})
+            fetchPosts()
+    }
+
     return (
         <div className="col-xl-3 col-lg-4 col-md-6 post-card">
             <div className="card bg-black text-light border-secondary">
@@ -42,16 +52,14 @@ function PostCard ({post}) {
                         <span className="text-secondary small metadata-text mb-3 post-time">{new Date(post.created + " UTC").toLocaleString()}</span>
                     </div>
                     <div className="card-text d-flex justify-content-between gap-2">
-                        <button className="btn btn-outline-light btn-sm flex-grow-1 edit-btn">
+                        <button className="btn btn-outline-light btn-sm flex-grow-1 edit-btn" onClick={onShowEdit}>
                             Edit
                         </button>
-                        {/* <form className="m-0 delete-form"> */}
-                            <button className="btn btn-danger btn-sm" type="submit">
-                                Delete
-                            </button>
-                        {/* </form> */}
+                        <button className="btn btn-danger btn-sm" onClick={deleteHandler}>
+                            Delete
+                        </button>
                     </div>
-
+                    {isActive? <PostFields postId={post.id} postData={post}></PostFields> : <></>}
                 </div>
             </div>
         </div>
@@ -79,7 +87,7 @@ function PostFields ({postId, postData, setPostData}) {
                 </div>
                 <div className="mb-3 col">
                     <label className="form-label" htmlFor={fieldId("score")}>Score</label>
-                    <input className="form-control" type="number" min="0" max="10" name="score" id={fieldId("score")} value={postData.score} onChange={handleChange}/>
+                    <input className="form-control" type="number" min="0" max="10" name="score" id={fieldId("score")} value={postData.score? postData.score : ""} onChange={handleChange}/>
                 </div>
             </div>
 
@@ -120,7 +128,7 @@ function PostFields ({postId, postData, setPostData}) {
     )
 }
 
-function NewPostSection () {
+function NewPostSection ({fetchPosts}) {
     const [postData, setPostData] = useState({
         title: "",
         score: "",
@@ -132,7 +140,7 @@ function NewPostSection () {
 
     async function handleSubmit(e) {
         e.preventDefault()
-        const response = await fetch("/api/posts", {
+        await fetch("/api/posts", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -143,6 +151,15 @@ function NewPostSection () {
             mal_id: postData.mal_id, watch_link: postData.watch_link
             })
         })
+        setPostData({
+        title: "",
+        score: "",
+        description: "",
+        watch_link: "",
+        watching_status: "watching",
+        anime_type: "tv"
+        })
+        fetchPosts()
     }
 
     return (
@@ -163,23 +180,31 @@ function NewPostSection () {
 
 export default function Posts () {
     const [postsJson, setPostsJson] = useState([])
+    const [editIndex, setEditIndex] = useState(-1)
 
     const posts = postsJson.posts?.map(post => (
-                        <PostCard
-                            key={post.id}
-                            post={post}
-                        />
-                    ))
+            <PostCard
+                key={post.id}
+                post={post}
+                isActive={editIndex === post.id}
+                onShowEdit={() => {
+                    editIndex !== post.id? setEditIndex(post.id) : setEditIndex(-1)
+                    }
+                }
+                fetchPosts={fetchPosts}
+            />
+        ))
 
+    async function fetchPosts() {
+        const response = await fetch("/api/posts?limit=16&offset=0", {
+            method: "GET"
+        })
+        const json = await response.json()
+        setPostsJson(json)
+    }
+                    
     useEffect(() => {
-        async function fetchData() {
-            const response = await fetch("/api/posts?limit=16&offset=0", {
-                method: "GET"
-            })
-            const json = await response.json()
-            setPostsJson(json)
-        }
-        fetchData()
+        fetchPosts()
     }, [])
 
 
@@ -187,7 +212,7 @@ export default function Posts () {
         <Base title="Anime">
             <p id="posts-api-message" className="dpostsapimessage mb-4"></p>
             <div className="row row-cols-1 row-cols-lg-4">
-                <NewPostSection></NewPostSection>
+                <NewPostSection fetchPosts={fetchPosts}></NewPostSection>
             </div>
             <p id="posts-message" className="dpostsmessage mb-4"></p>
             <div className="row g-3" id="posts-container">
