@@ -1,28 +1,46 @@
 import Base from './Base'
 import { useState, useEffect } from 'react'
-import { decodeHtml, htmlToText } from '../utils/helpers';
-import LoadingPageSection from '../components/LoadingPageSection';
+import { parseResponse, htmlToText } from '../utils/helpers';
+import { HiddenMessage } from '../components/CuteSmallerComponentsRawrXdUwU';
 
-// anime picked thumbnail from suggestions
-// <div className="row px-3">
-//     <div className="card suggestion-selected text-light border-secondary my-2 col-lg-5 dhiddenarea">
-//         <div className="card-body d-flex align-items-center justify-content-between gap-3">
-//             <h5 className="fs-6 h5 text-truncate"></h5>
-//             <img className="animethumbnail img-thumbnail"/>
-//         </div>
-//         <button type="button" className="position-absolute top-0 end-0 btn btn-sm btn-danger"><i className="fa-solid fa-xmark"></i></button>
-//     </div>
-// </div>
 
-function PostCard ({post, isActive, onShowEdit, fetchPosts}) {
-    // const [editPost, setEditPost] = useState({
- 
-    // })
+function PostCard ({post, toggleEditIndex, isActive, fetchPosts}) {
+    const [submitResponseJson, setSubmitResponseJson] = useState({
+        success: null,
+        message: "",
+        type: ""
+    })
+    const [editPost, setEditPost] = useState({
+        id: post.id,
+        title: post.title,
+        score: post.score || null,
+        description: post.description,
+        watch_link: post.watch_link,
+        watching_status: post.watching_status,
+        anime_type: post.anime_type
+    })
 
     async function deleteHandler() {
         await fetch(`/api/posts/${post.id}`, {
             method: "DELETE"})
             fetchPosts()
+    }
+
+    async function editHandler() {
+        const response = await fetch(`/api/posts/${post.id}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                title: editPost.title, description: editPost.description, score: editPost.score, 
+                watching_status: editPost.watching_status, anime_type: editPost.anime_type, image_url: editPost.image_url,
+                mal_id: editPost.mal_id, watch_link: editPost.watch_link
+                })
+            })
+        setSubmitResponseJson(await parseResponse(response))
+        response.status === 200 && toggleEditIndex()
+        fetchPosts()
     }
 
     return (
@@ -42,33 +60,37 @@ function PostCard ({post, isActive, onShowEdit, fetchPosts}) {
                             <img className="img-fluid dpostimage rounded" src={post['image_url']}/>                    
                         </div>
                         : <></>}
-                    {post.watch_link?
-                        <a className="nav-link dwatchbtn text-center" href={post.watch_link} target="_blank">Watch</a>
-                        : ""
-                    }
+                    {post.watch_link && <a className="nav-link dwatchbtn text-center" href={post.watch_link} target="_blank">Watch</a>}
                     <p className="card-text dyprintnewline">{htmlToText(post.description)}</p>
                     <div className="d-flex align-items-center">
                         <p className="text-secondary small metadata-text mb-3 post-meta">Post #{post.id} — </p>
                         <span className="text-secondary small metadata-text mb-3 post-time">{new Date(post.created + " UTC").toLocaleString()}</span>
                     </div>
                     <div className="card-text d-flex justify-content-between gap-2">
-                        <button className="btn btn-outline-light btn-sm flex-grow-1 edit-btn" onClick={onShowEdit}>
+                        <button className="btn btn-outline-light btn-sm flex-grow-1 edit-btn" onClick={toggleEditIndex}>
                             Edit
                         </button>
                         <button className="btn btn-danger btn-sm" onClick={deleteHandler}>
                             Delete
                         </button>
                     </div>
-                    {isActive? <PostFields postId={post.id} postData={post}></PostFields> : <></>}
+                        {isActive &&                         
+                            <div className='mt-4'><PostFields compact={true}
+                            postData={editPost} setPostData={setEditPost}>
+                            </PostFields>
+                            <HiddenMessage messageJson={submitResponseJson}></HiddenMessage>
+                            <button className="btn btn-success w-100 mt-2" type="submit" onClick={editHandler}>Edit Post</button>
+                            </div>
+                        }
                 </div>
             </div>
         </div>
     )
 }
 
-function PostFields ({postId, postData, setPostData}) {
+function PostFields ({postData, setPostData, compact=false}) {
 
-    const fieldId = name => postId ? `edit-${name}-${postId}` : name
+    const fieldId = name => postData.id ? `edit-${name}-${postData.id}` : name
 
     function handleChange(e) {
         setPostData(current => ({
@@ -81,13 +103,14 @@ function PostFields ({postId, postData, setPostData}) {
         <>
         
             <div className="row">
-                <div className="mb-3 col-lg-9">
+                <div className={compact? "mb-3" : "mb-3 col-lg-9"}>
                     <label className="form-label" htmlFor={fieldId("title")}>Title<i className="text-danger">*</i></label>
                     <input className="form-control" name="title" id={fieldId("title")} value={postData.title} onChange={handleChange} autoComplete="off" required/>
                 </div>
                 <div className="mb-3 col">
                     <label className="form-label" htmlFor={fieldId("score")}>Score</label>
-                    <input className="form-control" type="number" min="0" max="10" name="score" id={fieldId("score")} value={postData.score? postData.score : ""} onChange={handleChange}/>
+                    <input className={compact? "form-control w-auto" : "form-control"} type="number" min="0" max="10" name="score" id={fieldId("score")} 
+                    value={postData.score? postData.score : ""} onChange={handleChange}/>
                 </div>
             </div>
 
@@ -129,6 +152,11 @@ function PostFields ({postId, postData, setPostData}) {
 }
 
 function NewPostSection ({fetchPosts}) {
+    const [submitResponseJson, setSubmitResponseJson] = useState({
+        success: null,
+        message: "",
+        type: ""
+    })
     const [postData, setPostData] = useState({
         title: "",
         score: "",
@@ -140,7 +168,7 @@ function NewPostSection ({fetchPosts}) {
 
     async function handleSubmit(e) {
         e.preventDefault()
-        await fetch("/api/posts", {
+        const response = await fetch("/api/posts", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -159,6 +187,7 @@ function NewPostSection ({fetchPosts}) {
         watching_status: "watching",
         anime_type: "tv"
         })
+        setSubmitResponseJson(await parseResponse(response))
         fetchPosts()
     }
 
@@ -171,6 +200,9 @@ function NewPostSection ({fetchPosts}) {
                     <form method="post" onSubmit={handleSubmit}>
                         <PostFields postData={postData} setPostData={setPostData}></PostFields>
                         <button className="btn btn-success w-100" type="submit">Post</button>
+                        <div className="mt-4">
+                        <HiddenMessage messageJson={submitResponseJson}></HiddenMessage>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -187,7 +219,7 @@ export default function Posts () {
                 key={post.id}
                 post={post}
                 isActive={editIndex === post.id}
-                onShowEdit={() => {
+                toggleEditIndex={() => {
                     editIndex !== post.id? setEditIndex(post.id) : setEditIndex(-1)
                     }
                 }
@@ -210,11 +242,9 @@ export default function Posts () {
 
     return (
         <Base title="Anime">
-            <p id="posts-api-message" className="dpostsapimessage mb-4"></p>
             <div className="row row-cols-1 row-cols-lg-4">
                 <NewPostSection fetchPosts={fetchPosts}></NewPostSection>
             </div>
-            <p id="posts-message" className="dpostsmessage mb-4"></p>
             <div className="row g-3" id="posts-container">
                 {posts}
             </div>

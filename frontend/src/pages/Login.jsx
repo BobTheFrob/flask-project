@@ -1,45 +1,10 @@
 import { useState } from 'react';
 import Base from './Base'
+import { parseResponse } from '../utils/helpers';
+import { HiddenMessage } from '../components/CuteSmallerComponentsRawrXdUwU';
 
-async function parseAuthResponse(response) {
-    const data = await response.json()
-    if (response.status === 201) {
-        return {
-            success: true,
-            message: data.message,
-            type: "success"
-        }
-    }
-    if (response.status === 400) {
-        return {
-            success: false,
-            message: data.error,
-            type: "danger"
-        }
-    }
-    if (response.status === 409) {
-        return {
-            success: false,
-            message: data.error,
-            type: "warning"
-        }
-    }
-    if (!response.ok) {
-        return {
-            success: false,
-            message: data.error || "Something went wrong.",
-            type: "danger"
-        }
-    }
 
-    return {
-        success: true,
-        message: data.message,
-        type: "success"
-    }
-}
-
-function RegisterSection ({ setMessage, setMessageType }) {
+function RegisterSection () {
     const [registerDetails, setRegisterDetails] = useState({
         username: "",
         password: ""
@@ -56,6 +21,11 @@ function RegisterSection ({ setMessage, setMessageType }) {
             password: e.target.value
         })
     }
+    const [submitResponseJson, setSubmitResponseJson] = useState({
+        success: null,
+        message: "",
+        type: ""
+    })
 
     async function registerHandler(e) {
         e.preventDefault()
@@ -66,11 +36,8 @@ function RegisterSection ({ setMessage, setMessageType }) {
             },
             body: JSON.stringify({username: registerDetails.username, password: registerDetails.password})
         })
-        
-        const result = await parseAuthResponse(response)
 
-        setMessage(result.message)
-        setMessageType(result.type)
+        const result = await parseResponse(response)
 
         if (result.success) {
             setRegisterDetails({
@@ -79,6 +46,7 @@ function RegisterSection ({ setMessage, setMessageType }) {
             })
         }
         e.target.reset()
+        setSubmitResponseJson(result)
         }
     return (
         <div className="col-lg-6">
@@ -122,6 +90,9 @@ function RegisterSection ({ setMessage, setMessageType }) {
                         />
                     </div>
                     </div>
+                    <div className='mb-3'>
+                        <HiddenMessage messageJson={submitResponseJson}></HiddenMessage>
+                    </div>
                     <button className="btn btn-success w-100" type="submit">
                     Register
                     </button>
@@ -132,7 +103,7 @@ function RegisterSection ({ setMessage, setMessageType }) {
     )
 }
 
-function LoginSection ({ setMessage, setMessageType }) {
+function LoginSection () {
     const [loginDetails, setLoginDetails] = useState({
         username: "",
         password: ""
@@ -149,6 +120,11 @@ function LoginSection ({ setMessage, setMessageType }) {
             password: e.target.value
         })
     }
+    const [submitResponseJson, setSubmitResponseJson] = useState({
+        success: null,
+        message: "",
+        type: ""
+    })
 
     async function loginHandler(e) {
         e.preventDefault()
@@ -160,15 +136,14 @@ function LoginSection ({ setMessage, setMessageType }) {
             body: JSON.stringify({username: loginDetails.username, password: loginDetails.password})
         })
         
-        const result = await parseAuthResponse(response)
+        const result = await parseResponse(response)
 
         if (response.ok) {
             window.location.href = "/posts"
             return
         }
 
-        setMessage(result.message)
-        setMessageType(result.type)
+        setSubmitResponseJson(result)
         e.target.reset()
         }
 
@@ -214,6 +189,9 @@ function LoginSection ({ setMessage, setMessageType }) {
                         />
                     </div>
                     </div>
+                    <div className='mb-3'>
+                        <HiddenMessage messageJson={submitResponseJson}></HiddenMessage>
+                    </div>
                     <button className="btn btn-success w-100" type="submit">
                     Login
                     </button>
@@ -225,21 +203,11 @@ function LoginSection ({ setMessage, setMessageType }) {
 }
 
 export default function Login () {
-    const [message, setMessage] = useState("")
-    const [messageType, setMessageType] = useState("")
-    const [hiddenMessage, setHiddenMessage] = useState("dhiddenarea")
     return (
         <Base title="Login" header="Welcome To DMedias!">
-            <div className={`card bg-black text-light border-secondary text-${messageType} ${hiddenMessage}`} id="dmessage">
-                <div className="card-body">
-                <p className={`card-text text-${messageType}`}>
-                {message}
-                </p>
-                </div>
-            </div>
             <div className="row row-cols-1 row-cols-lg-4 pt-5">
-                <LoginSection setMessage={setMessage} setMessageType={setMessageType}></LoginSection>
-                <RegisterSection setMessage={setMessage} setMessageType={setMessageType}></RegisterSection>
+                <LoginSection></LoginSection>
+                <RegisterSection></RegisterSection>
             </div>
         </Base>
     )

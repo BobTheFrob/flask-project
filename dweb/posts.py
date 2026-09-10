@@ -101,7 +101,7 @@ def getRequestPost (data):
 # Helper for returning 204, returns true if nothing changed: semantically makes sense i.e. not PostChanged
 def postChanged(postPut, postGet):
     return not (str(postGet["body"]) == str(postPut["body"]) 
-            and (postGet["score"] == postPut["score"] and postPut["score"] is not None)
+            and (postGet["score"] == postPut["score"])
             and str(postGet["watching_status"]) == str(postPut["watching_status"])
             and str(postGet["anime_type"]) == str(postPut["anime_type"])
             and str(postGet["title"]) == str(postPut["title"])
@@ -253,6 +253,7 @@ def get_post(post_id):
     if request.method == 'PATCH':
         data = request.get_json() or {}
         post = getPatchRequestPost(data, post_id)
+
         try:
             error = checkRequestIntInputs(post)
             if error:
